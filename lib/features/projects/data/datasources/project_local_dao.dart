@@ -79,6 +79,116 @@ class ProjectLocalDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
+  Future<int> insertLocal(Project p) async {
+    return into(projects).insert(
+      _toCompanionFromEntity(
+        p.copyWithSync(SyncStatus.pendingCreate),
+        forInsert: true,
+      ),
+    );
+  }
+
+  Future<void> updateLocal(Project p) async {
+    final existing = await (select(projects)
+          ..where((row) => row.id.equals(p.localId)))
+        .getSingleOrNull();
+    if (existing == null) return;
+    final nextStatus = existing.syncStatus == SyncStatus.pendingCreate
+        ? SyncStatus.pendingCreate
+        : SyncStatus.pendingUpdate;
+    await (update(projects)..where((r) => r.id.equals(p.localId))).write(
+      _toCompanionFromEntity(
+        p.copyWithSync(nextStatus),
+        forInsert: false,
+      ),
+    );
+  }
+
+  Future<void> markPendingDelete(int localId) async {
+    await (update(projects)..where((r) => r.id.equals(localId))).write(
+      ProjectsCompanion(
+        syncStatus: const Value(SyncStatus.pendingDelete),
+        localUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  Future<int> hardDelete(int localId) {
+    return (delete(projects)..where((r) => r.id.equals(localId))).go();
+  }
+
+  Future<void> markSyncedWithRemote({
+    required int localId,
+    required int remoteId,
+    DateTime? tms,
+  }) async {
+    await (update(projects)..where((r) => r.id.equals(localId))).write(
+      ProjectsCompanion(
+        remoteId: Value(remoteId),
+        tms: Value(tms ?? DateTime.now()),
+        syncStatus: const Value(SyncStatus.synced),
+        localUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  Future<void> markConflict(int localId) async {
+    await (update(projects)..where((r) => r.id.equals(localId))).write(
+      ProjectsCompanion(
+        syncStatus: const Value(SyncStatus.conflict),
+        localUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  Future<int> clearAfterServerDelete(int localId) {
+    return (delete(projects)..where((r) => r.id.equals(localId))).go();
+  }
+
+  /// Patche `socidRemote` pour les projets dont le tiers parent vient
+  /// d'être créé côté serveur. Appelé par le SyncEngine après le succès
+  /// de l'op create du parent (cf. cascade Outbox).
+  Future<int> patchSocidRemoteByParent({
+    required int parentLocalId,
+    required int parentRemoteId,
+  }) async {
+    return (update(projects)
+          ..where(
+            (p) =>
+                p.socidLocal.equals(parentLocalId) &
+                p.socidRemote.isNull(),
+          ))
+        .write(ProjectsCompanion(socidRemote: Value(parentRemoteId)));
+  }
+
+  ProjectsCompanion _toCompanionFromEntity(
+    Project p, {
+    required bool forInsert,
+  }) {
+    return ProjectsCompanion(
+      id: forInsert ? const Value.absent() : Value(p.localId),
+      remoteId: Value(p.remoteId),
+      socidRemote: Value(p.socidRemote),
+      socidLocal: Value(p.socidLocal),
+      ref: Value(p.ref),
+      title: Value(p.title),
+      description: Value(p.description),
+      status: Value(p.status.apiValue),
+      publicLevel: Value(p.publicLevel),
+      fkUserResp: Value(p.fkUserResp),
+      dateStart: Value(p.dateStart),
+      dateEnd: Value(p.dateEnd),
+      budgetAmount: Value(p.budgetAmount),
+      oppStatus: Value(p.oppStatus),
+      oppAmount: Value(p.oppAmount),
+      oppPercent: Value(p.oppPercent),
+      extrafields: Value(jsonEncode(p.extrafields)),
+      tms: Value(p.tms),
+      localUpdatedAt: Value(DateTime.now()),
+      syncStatus: Value(p.syncStatus),
+    );
+  }
+
   Project _fromRow(ProjectRow r) => Project(
         localId: r.id,
         remoteId: r.remoteId,

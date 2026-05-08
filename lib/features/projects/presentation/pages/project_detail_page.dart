@@ -3,6 +3,7 @@ import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:dolibarr_mobile/features/projects/domain/entities/project.dart';
 import 'package:dolibarr_mobile/features/projects/presentation/providers/project_providers.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/providers/third_party_providers.dart';
+import 'package:dolibarr_mobile/shared/widgets/confirm_dialog.dart';
 import 'package:dolibarr_mobile/shared/widgets/error_state.dart';
 import 'package:dolibarr_mobile/shared/widgets/loading_skeleton.dart';
 import 'package:dolibarr_mobile/shared/widgets/sync_status_badge.dart';
@@ -22,6 +23,19 @@ class ProjectDetailPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Projet'),
+        actions: [
+          IconButton(
+            icon: const Icon(LucideIcons.edit),
+            tooltip: 'Modifier',
+            onPressed: () =>
+                context.go(RoutePaths.projectEditFor(localId)),
+          ),
+          IconButton(
+            icon: const Icon(LucideIcons.trash2),
+            tooltip: 'Supprimer',
+            onPressed: () => _confirmDelete(context, ref),
+          ),
+        ],
       ),
       body: async.when(
         data: (p) => p == null
@@ -35,6 +49,30 @@ class ProjectDetailPage extends ConsumerWidget {
           title: 'Impossible de charger le projet',
           description: '$e',
         ),
+      ),
+    );
+  }
+
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    final ok = await ConfirmDialog.showDestructive(
+      context,
+      title: 'Supprimer ce projet ?',
+      message:
+          'La suppression sera synchronisée au prochain passage en ligne.',
+    );
+    if (ok != true || !context.mounted) return;
+    final result =
+        await ref.read(projectRepositoryProvider).deleteLocal(localId);
+    if (!context.mounted) return;
+    result.fold(
+      onSuccess: (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Suppression enregistrée.')),
+        );
+        context.go(RoutePaths.projects);
+      },
+      onFailure: (f) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Échec : $f')),
       ),
     );
   }

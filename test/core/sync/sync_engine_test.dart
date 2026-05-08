@@ -10,6 +10,8 @@ import 'package:dolibarr_mobile/core/sync/sync_engine.dart';
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_local_dao.dart';
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/contacts/domain/entities/contact.dart';
+import 'package:dolibarr_mobile/features/projects/data/datasources/project_local_dao.dart';
+import 'package:dolibarr_mobile/features/projects/data/datasources/project_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/thirdparties/data/datasources/third_party_local_dao.dart';
 import 'package:dolibarr_mobile/features/thirdparties/data/datasources/third_party_remote_datasource.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,6 +26,10 @@ class _MockTpDao extends Mock implements ThirdPartyLocalDao {}
 class _MockCtRemote extends Mock implements ContactRemoteDataSource {}
 
 class _MockCtDao extends Mock implements ContactLocalDao {}
+
+class _MockPjRemote extends Mock implements ProjectRemoteDataSource {}
+
+class _MockPjDao extends Mock implements ProjectLocalDao {}
 
 class _StubNetwork implements NetworkInfo {
   _StubNetwork({bool online = true}) : _online = online;
@@ -82,6 +88,8 @@ void main() {
   late _MockTpDao tpDao;
   late _MockCtRemote ctRemote;
   late _MockCtDao ctDao;
+  late _MockPjRemote pjRemote;
+  late _MockPjDao pjDao;
   late _StubNetwork network;
   late SyncEngine engine;
 
@@ -93,6 +101,8 @@ void main() {
     tpDao = _MockTpDao();
     ctRemote = _MockCtRemote();
     ctDao = _MockCtDao();
+    pjRemote = _MockPjRemote();
+    pjDao = _MockPjDao();
     network = _StubNetwork();
     now = DateTime(2026, 5, 9, 12);
 
@@ -102,6 +112,8 @@ void main() {
       thirdpartyDao: tpDao,
       contactRemote: ctRemote,
       contactDao: ctDao,
+      projectRemote: pjRemote,
+      projectDao: pjDao,
       network: network,
       now: () => now,
     );
@@ -155,6 +167,15 @@ void main() {
     when(() => ctDao.markConflict(any())).thenAnswer((_) async {});
     when(() => ctDao.clearAfterServerDelete(any()))
         .thenAnswer((_) async => 1);
+
+    // Cascade thirdparty → projects (no-op par défaut, certains tests
+    // override pour vérifier l'appel).
+    when(
+      () => pjDao.patchSocidRemoteByParent(
+        parentLocalId: any(named: 'parentLocalId'),
+        parentRemoteId: any(named: 'parentRemoteId'),
+      ),
+    ).thenAnswer((_) async => 0);
   });
 
   group('runOnce — thirdparty create', () {

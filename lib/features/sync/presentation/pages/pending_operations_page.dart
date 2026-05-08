@@ -69,6 +69,7 @@ class _OpCard extends ConsumerWidget {
     final entity = switch (op.entityType) {
       PendingOpEntity.thirdparty => 'Tiers',
       PendingOpEntity.contact => 'Contact',
+      PendingOpEntity.project => 'Projet',
     };
     final type = switch (op.opType) {
       PendingOpType.create => 'Création',

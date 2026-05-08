@@ -16,7 +16,9 @@ abstract final class RoutePaths {
   static const String contactDetail = '/app/contacts/:id';
   static const String contactEdit = '/app/contacts/:id/edit';
   static const String projects = '/app/projects';
+  static const String projectNew = '/app/projects/new';
   static const String projectDetail = '/app/projects/:id';
+  static const String projectEdit = '/app/projects/:id/edit';
   static const String settings = '/app/settings';
   static const String pendingOperations = '/app/sync';
 
@@ -37,4 +39,12 @@ abstract final class RoutePaths {
 
   static String projectDetailFor(int localId) =>
       '/app/projects/$localId';
+
+  static String projectEditFor(int localId) =>
+      '/app/projects/$localId/edit';
+
+  /// Crée la route "nouveau projet" en pré-sélectionnant un tiers
+  /// parent par sa PK locale.
+  static String projectNewForParent(int parentLocalId) =>
+      '/app/projects/new?parent=$parentLocalId';
 }

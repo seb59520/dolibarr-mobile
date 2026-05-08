@@ -8,6 +8,8 @@ import 'package:dolibarr_mobile/core/storage/pending_operation_dao.dart';
 import 'package:dolibarr_mobile/core/storage/sync_status.dart';
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_local_dao.dart';
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_remote_datasource.dart';
+import 'package:dolibarr_mobile/features/projects/data/datasources/project_local_dao.dart';
+import 'package:dolibarr_mobile/features/projects/data/datasources/project_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/thirdparties/data/datasources/third_party_local_dao.dart';
 import 'package:dolibarr_mobile/features/thirdparties/data/datasources/third_party_remote_datasource.dart';
 import 'package:logger/logger.dart';
@@ -62,6 +64,8 @@ class SyncEngine {
     required ThirdPartyLocalDao thirdpartyDao,
     required ContactRemoteDataSource contactRemote,
     required ContactLocalDao contactDao,
+    required ProjectRemoteDataSource projectRemote,
+    required ProjectLocalDao projectDao,
     required NetworkInfo network,
     Logger? logger,
     DateTime Function() now = DateTime.now,
@@ -70,6 +74,8 @@ class SyncEngine {
         _thirdpartyDao = thirdpartyDao,
         _contactRemote = contactRemote,
         _contactDao = contactDao,
+        _projectRemote = projectRemote,
+        _projectDao = projectDao,
         _network = network,
         _logger = logger ?? Logger(printer: SimplePrinter()),
         _now = now;
@@ -79,6 +85,8 @@ class SyncEngine {
   final ThirdPartyLocalDao _thirdpartyDao;
   final ContactRemoteDataSource _contactRemote;
   final ContactLocalDao _contactDao;
+  final ProjectRemoteDataSource _projectRemote;
+  final ProjectLocalDao _projectDao;
   final NetworkInfo _network;
   final Logger _logger;
   final DateTime Function() _now;
@@ -170,6 +178,8 @@ class SyncEngine {
           await _thirdpartyDao.hardDelete(row.targetLocalId);
         case PendingOpEntity.contact:
           await _contactDao.hardDelete(row.targetLocalId);
+        case PendingOpEntity.project:
+          await _projectDao.hardDelete(row.targetLocalId);
       }
     }
     await _outbox.deleteById(opId);
@@ -185,6 +195,8 @@ class SyncEngine {
           await _dispatchThirdParty(op);
         case PendingOpEntity.contact:
           await _dispatchContact(op);
+        case PendingOpEntity.project:
+          await _dispatchProject(op);
       }
       await _outbox.completeAndUnblockChildren(op.id);
       return _Outcome.success;
@@ -238,6 +250,8 @@ class SyncEngine {
         await _thirdpartyDao.markConflict(op.targetLocalId);
       case PendingOpEntity.contact:
         await _contactDao.markConflict(op.targetLocalId);
+      case PendingOpEntity.project:
+        await _projectDao.markConflict(op.targetLocalId);
     }
   }
 
@@ -281,8 +295,13 @@ class SyncEngine {
           remoteId: remoteId,
           tms: serverTms,
         );
-        // Cascade : patche les enfants en attente.
+        // Cascade : patche les enfants directs (contacts + projets)
+        // en attente avec le nouveau socidRemote.
         await _contactDao.patchSocidRemoteByParent(
+          parentLocalId: op.targetLocalId,
+          parentRemoteId: remoteId,
+        );
+        await _projectDao.patchSocidRemoteByParent(
           parentLocalId: op.targetLocalId,
           parentRemoteId: remoteId,
         );
@@ -371,6 +390,66 @@ class SyncEngine {
     }
   }
 
+  // -------------------------- Project ----------------------------------
+
+  Future<void> _dispatchProject(PendingOperationRow op) async {
+    final payload = _decodePayload(op.payload);
+    switch (op.opType) {
+      case PendingOpType.create:
+        // Ré-injecte le `socid` depuis l'entité courante (cas où le
+        // tiers parent vient juste d'être créé et son remoteId a été
+        // patché en cascade).
+        final fresh = await _projectDao.watchById(op.targetLocalId).first;
+        if (fresh != null && fresh.socidRemote != null) {
+          payload['socid'] = fresh.socidRemote;
+        }
+        if (payload['socid'] == null) {
+          throw const ValidationException(
+            message: 'Tiers parent non synchronisé — '
+                'impossible de créer le projet.',
+          );
+        }
+        final remoteId = await _projectRemote.create(payload);
+        DateTime? serverTms;
+        try {
+          final got = await _projectRemote.fetchById(remoteId);
+          serverTms = _parseTms(got['tms']);
+        } catch (_) {
+          // pas critique
+        }
+        await _projectDao.markSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: remoteId,
+          tms: serverTms,
+        );
+
+      case PendingOpType.update:
+        if (op.expectedTms != null) {
+          final freshFromServer =
+              await _projectRemote.fetchById(op.targetRemoteId!);
+          final serverTms = _parseTms(freshFromServer['tms']);
+          if (serverTms != null && serverTms.isAfter(op.expectedTms!)) {
+            throw _ConflictDetected(
+              'Modifié sur le serveur (tms=$serverTms vs ${op.expectedTms})',
+            );
+          }
+        }
+        final body = await _projectRemote.update(
+          op.targetRemoteId!,
+          payload,
+        );
+        await _projectDao.markSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: op.targetRemoteId!,
+          tms: _parseTms(body['tms']),
+        );
+
+      case PendingOpType.delete:
+        await _projectRemote.delete(op.targetRemoteId!);
+        await _projectDao.clearAfterServerDelete(op.targetLocalId);
+    }
+  }
+
   // -------------------------- Helpers ----------------------------------
 
   Future<void> _applyAfterDelete(PendingOperationRow op) async {
@@ -379,6 +458,8 @@ class SyncEngine {
         await _thirdpartyDao.clearAfterServerDelete(op.targetLocalId);
       case PendingOpEntity.contact:
         await _contactDao.clearAfterServerDelete(op.targetLocalId);
+      case PendingOpEntity.project:
+        await _projectDao.clearAfterServerDelete(op.targetLocalId);
     }
   }
 

@@ -114,6 +114,11 @@ class _ProjectsListPageState extends ConsumerState<ProjectsListPage> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.go(RoutePaths.projectNew),
+        icon: const Icon(LucideIcons.plus),
+        label: const Text('Nouveau'),
+      ),
       body: Column(
         children: [
           const NetworkBanner(),

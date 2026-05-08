@@ -6,6 +6,7 @@ import 'package:dolibarr_mobile/features/projects/data/repositories/project_repo
 import 'package:dolibarr_mobile/features/projects/domain/entities/project.dart';
 import 'package:dolibarr_mobile/features/projects/domain/entities/project_filters.dart';
 import 'package:dolibarr_mobile/features/projects/domain/repositories/project_repository.dart';
+import 'package:dolibarr_mobile/features/thirdparties/presentation/providers/third_party_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final projectRemoteDataSourceProvider =
@@ -22,6 +23,8 @@ final projectRepositoryProvider = Provider<ProjectRepository>((ref) {
     remote: ref.watch(projectRemoteDataSourceProvider),
     dao: ref.watch(projectLocalDaoProvider),
     network: ref.watch(networkInfoProvider),
+    draftDao: ref.watch(draftLocalDaoProvider),
+    outbox: ref.watch(pendingOperationDaoProvider),
   );
 });
 

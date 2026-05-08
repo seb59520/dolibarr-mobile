@@ -35,6 +35,13 @@ class ThirdPartyProjectsSection extends ConsumerWidget {
                   child:
                       Text('Projets', style: theme.textTheme.titleMedium),
                 ),
+                TextButton.icon(
+                  onPressed: () => context.go(
+                    RoutePaths.projectNewForParent(thirdPartyLocalId),
+                  ),
+                  icon: const Icon(LucideIcons.plus, size: 16),
+                  label: const Text('Ajouter'),
+                ),
               ],
             ),
             const SizedBox(height: AppTokens.spaceXs),
