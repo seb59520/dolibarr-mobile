@@ -5,6 +5,8 @@ import 'package:dolibarr_mobile/features/auth/presentation/pages/placeholder_pag
 import 'package:dolibarr_mobile/features/auth/presentation/pages/shell_page.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/pages/splash_page.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_providers.dart';
+import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/third_party_detail_page.dart';
+import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/thirdparties_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -53,7 +55,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(
             path: RoutePaths.thirdparties,
-            builder: (_, __) => const ThirdPartiesPlaceholderPage(),
+            builder: (_, __) => const ThirdPartiesListPage(),
+            routes: [
+              GoRoute(
+                path: ':id',
+                builder: (_, state) => ThirdPartyDetailPage(
+                  localId: int.parse(state.pathParameters['id']!),
+                ),
+              ),
+            ],
           ),
           GoRoute(
             path: RoutePaths.contacts,
