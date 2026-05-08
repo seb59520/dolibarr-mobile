@@ -77,6 +77,83 @@ sur la web UI Dolibarr.
 Lecture seule. Les valeurs sont incluses dans les payloads tiers /
 contacts via le champ `array_options`.
 
+## Projets (`/projects`)
+
+| Méthode | Path                       | Usage                                                  |
+| ------- | -------------------------- | ------------------------------------------------------ |
+| GET     | `/projects`                | Liste paginée — `limit`, `page`, `sqlfilters`           |
+| GET     | `/projects/:id`            | Détail d'un projet                                      |
+| POST    | `/projects`                | Création (champ `socid` requis) — retourne le `rowid`   |
+| PUT     | `/projects/:id`            | Mise à jour                                             |
+| DELETE  | `/projects/:id`            | Suppression                                             |
+| GET     | `/projects/:id/tasks`      | Tâches rattachées à un projet                           |
+
+`sqlfilters` reconnus :
+
+- `t.fk_soc:=:<remoteId>` (par tiers parent) ;
+- `t.fk_statut:in:'0,1'` (statut, valeurs 0/1/2 — brouillon/ouvert/clos) ;
+- `t.fk_user_resp:=:<userId>` (mes projets uniquement) ;
+- `t.ref:like:'%X%' OR t.title:like:'%X%'` (recherche libre).
+
+## Tâches projet (`/tasks`)
+
+| Méthode | Path             | Usage                                              |
+| ------- | ---------------- | -------------------------------------------------- |
+| GET     | `/tasks`         | Liste paginée — `limit`, `page`, `sqlfilters`       |
+| GET     | `/tasks/:id`     | Détail d'une tâche                                  |
+| POST    | `/tasks`         | Création (champ `fk_projet` requis)                 |
+| PUT     | `/tasks/:id`     | Mise à jour                                         |
+| DELETE  | `/tasks/:id`     | Suppression                                         |
+
+`sqlfilters` reconnus :
+
+- `t.fk_projet:=:<remoteId>` (par projet parent) ;
+- `t.status:in:'0,1'` (0=en cours, 1=terminée) ;
+- `t.fk_user:=:<userId>` (mes tâches uniquement) ;
+- `t.label:like:'%X%' OR t.ref:like:'%X%'` (recherche libre).
+
+## Factures (`/invoices`)
+
+| Méthode | Path                                         | Usage                                                  |
+| ------- | -------------------------------------------- | ------------------------------------------------------ |
+| GET     | `/invoices`                                  | Liste paginée — `limit`, `page`, `sqlfilters`           |
+| GET     | `/invoices/:id`                              | Détail d'une facture (inclut `lines`)                   |
+| POST    | `/invoices`                                  | Création header (`socid` requis)                        |
+| PUT     | `/invoices/:id`                              | Mise à jour header                                      |
+| DELETE  | `/invoices/:id`                              | Suppression                                             |
+| POST    | `/invoices/:id/lines`                        | Ajout d'une ligne (`label`, `qty`, `subprice`, etc.)    |
+| PUT     | `/invoices/:id/lines/:lineid`                | Mise à jour d'une ligne                                 |
+| DELETE  | `/invoices/:id/lines/:lineid`                | Suppression d'une ligne                                 |
+| POST    | `/invoices/:id/validate`                     | Passe en validée (`fk_statut` 0→1, génère `ref`)        |
+| POST    | `/invoices/:id/markaspaid`                   | Marque payée (`paye=1`)                                 |
+| GET     | `/invoices/:id/payments`                     | Liste les paiements                                     |
+| POST    | `/invoices/:id/payments`                     | Ajoute un paiement (`amount`, `datepaye`, `paymentid`)  |
+
+`sqlfilters` reconnus :
+
+- `t.fk_soc:=:<remoteId>` (par client) ;
+- combinaison statut + paye :
+  `(t.fk_statut:=:0)` brouillons,
+  `(t.fk_statut:=:1 AND t.paye:=:0)` validées non payées,
+  `(t.paye:=:1)` payées,
+  `(t.fk_statut:=:3)` abandonnées ;
+- `t.paye:=:0` (impayées seulement) ;
+- `t.datef:>=:<ts>` et `t.datef:<=:<ts>` (range période sur date facture) ;
+- `t.ref:like:'%X%' OR t.ref_client:like:'%X%'` (recherche libre).
+
+## Documents (PDF)
+
+| Méthode | Path                  | Usage                                                  |
+| ------- | --------------------- | ------------------------------------------------------ |
+| GET     | `/documents/download` | Téléchargement d'un PDF en base64 (body JSON)           |
+
+Paramètres requis :
+
+- `modulepart=facture` (ou `propal`, `commande`, ...)
+- `original_file=<REF>/<REF>.pdf` (chemin relatif au stockage Dolibarr)
+
+Le body retourné est `{content: <base64>, filename: <ref.pdf>}`.
+
 ## Conventions de mapping local ↔ remote
 
 - `tms` Dolibarr est un timestamp en seconds-epoch — converti en

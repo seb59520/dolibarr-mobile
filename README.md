@@ -1,14 +1,15 @@
 # Dolibarr Mobile
 
 Application mobile cross-platform (Android / iOS / Web PWA) de
-consultation et gestion des **tiers** et **contacts** d'une instance
+consultation et gestion des **tiers**, **contacts**, **projets**,
+**tâches** et **factures** d'une instance
 [Dolibarr ERP/CRM](https://www.dolibarr.org/) via son API REST native.
 
 Cible : commerciaux et techniciens en mobilité. **Mode offline complet
 obligatoire** sur Android / iOS. La PWA web est livrée **online-only**
-en v1.0 (cf. [ADR 0008](docs/adr/0008-web-online-only.md)).
+en v1.0+ (cf. [ADR 0008](docs/adr/0008-web-online-only.md)).
 
-> **Statut : v1.0.0-mvp** — voir [CHANGELOG](CHANGELOG.md).
+> **Statut : v1.1.0** — voir [CHANGELOG](CHANGELOG.md).
 
 ## Sommaire
 
@@ -64,9 +65,18 @@ L'offline complet sur le web est planifié pour v1.1
   (kinds, actifs, mes tiers, catégories), fiche détail (sections
   collapsibles, carte OSM, actions terrain), création / édition /
   suppression offline.
-- **Contacts** : CRUD complet, lien tiers parent (cascade Outbox
-  quand le tiers est encore en `pendingCreate`,
-  cf. [ADR 0005](docs/adr/0005-cascade-outbox.md)).
+- **Contacts** : CRUD complet, lien tiers parent.
+- **Projets** : CRUD complet (statuts brouillon/ouvert/clos, dates,
+  budget, opportunité), section sur la fiche tiers, cascade
+  tiers→projet.
+- **Tâches projet** : CRUD complet (statut, progression slider 0-100%,
+  charge prévue, dates), section sur la fiche projet, cascade
+  triple tiers→projet→tâche.
+- **Factures** : CRUD complet header + lignes éditables (calcul live
+  HT/TVA/TTC), workflow Valider / Marquer payée / Ajouter paiement
+  (online-only, cf. [ADR 0010](docs/adr/0010-invoice-workflow-online.md)),
+  téléchargement PDF avec partage natif, cascade 4 niveaux
+  tiers→facture→lignes (cf. [ADR 0009](docs/adr/0009-cascade-multi-level.md)).
 - **Catégories** & **champs personnalisés** lecture seule, formulaire
   dynamique pour les extrafields (varchar, text, integer, double,
   date, datetime, boolean, select).
@@ -76,7 +86,8 @@ L'offline complet sur le web est planifié pour v1.1
 - **Sync engine** : drain de la file Outbox au retour réseau,
   backoff exponentiel borné, détection de conflits via comparaison
   `tms` (cf. [ADR 0006](docs/adr/0006-conflict-resolution.md)),
-  patch automatique de `socidRemote` après création du parent.
+  cascade Outbox sur 5 chaînes (tiers→contact, tiers→projet,
+  tiers→facture, projet→tâche, facture→ligne).
 - **Page "Opérations en attente"** : visibilité sur la file Outbox,
   actions *Réessayer* et *Discarder* par op.
 - **Onboarding** + **Splash** + **Settings** (compte, instance,
@@ -123,7 +134,7 @@ flutter build web --release   # PWA online-only
 
 ```bash
 flutter analyze            # 0 issue (strict, very_good_analysis 6.0)
-flutter test               # 102/102 verts au tag v1.0.0-mvp
+flutter test               # 153/153 verts au tag v1.1.0
 flutter test --coverage
 ```
 

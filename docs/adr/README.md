@@ -14,3 +14,5 @@ ADR `Statut: superseded by NNNN`.
 | 0006 | [Résolution de conflits via comparaison tms](0006-conflict-resolution.md) | accepté  |
 | 0007 | [Authentification dual-mode](0007-auth-modes.md)                     | accepté  |
 | 0008 | [Web online-only en v1.0](0008-web-online-only.md)                   | accepté  |
+| 0009 | [Cascade Outbox multi-niveaux](0009-cascade-multi-level.md)          | accepté  |
+| 0010 | [Workflow facture online-only](0010-invoice-workflow-online.md)      | accepté  |

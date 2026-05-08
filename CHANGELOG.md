@@ -3,6 +3,102 @@
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Les versions suivent [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] — 2026-05-09
+
+Extension du périmètre : ajout des **projets** (avec tâches) et des
+**factures** (avec lignes éditables, validation, paiements et
+téléchargement PDF) en mode offline-first cohérent avec le MVP.
+La cascade Outbox passe à 4 niveaux et 5 chaînes parallèles.
+
+### Étape 11 — Projets (lecture)
+
+- Domain `Project` (statut draft/opened/closed) + `ProjectFilters`.
+- Drift v3, table `projects` + migration.
+- Liste paginée + filtres bottom-sheet, fiche détail collapsibles,
+  `ThirdPartyProjectsSection` injectée sur la fiche tiers.
+- 5ᵉ tab pas encore (réservé v1.1.6 factures).
+- 7 tests sqlfilters projets.
+
+### Étape 12 — Projets (écriture + cascade)
+
+- `ProjectRepository` étendu CRUD + drafts + cascade tiers→projet.
+- `PendingOpEntity.project` + dispatch dans le SyncEngine.
+- `ProjectFormPage` Material 3 avec autosave brouillon.
+- 7 tests writes projet.
+
+### Étape 13 — Tâches (CRUD + cascade triple)
+
+- Domain `Task` + filters, Drift v4, table `tasks` + migration.
+- `TaskRepository` full CRUD avec cascade projet→tâche.
+- `PendingOpEntity.task` + dispatch SyncEngine.
+- À la création d'un projet, cascade `taskDao.patchProjectRemote
+  ByParent` qui patche `fk_projet` sur les tâches orphelines.
+- `TaskFormPage` (slider progression auto-sync à 100% → terminée),
+  `ProjectTasksSection` sur la fiche projet.
+- 14 tests (sqlfilters + writes).
+
+### Étape 14 — Factures (lecture)
+
+- Domain `Invoice`, `InvoiceLine`, `InvoiceFilters` (statut combiné
+  `fk_statut` + `paye`, range date `datef`).
+- Drift v5, tables `invoices` + `invoice_lines` + migration.
+- `InvoiceRemoteDataSource` avec sqlfilters builder spécifique au
+  statut combiné (clauses OR sur fk_statut/paye).
+- `InvoiceLocalDao` avec upsert transactionnel qui upsert aussi les
+  lignes via `json['lines']` et nettoie les lignes serveur disparues.
+- `InvoicesListPage`, `InvoiceDetailPage` (sections Dates / Lignes /
+  Totaux / Notes), `ThirdPartyInvoicesSection`.
+- 5ᵉ tab "Factures" dans le shell (icon receipt).
+- 7 tests sqlfilters factures.
+
+### Étape 15 — Factures (écriture header + lignes + cascade 4-niveau)
+
+- Header CRUD + Lignes CRUD avec cascade interne facture→ligne.
+- `PendingOpEntity.invoice` + `PendingOpEntity.invoiceLine`.
+- `InvoiceFormPage` (header) + `InvoiceLineEditDialog` (lignes
+  éditables depuis la fiche détail quand statut=draft, calcul live
+  des totaux HT/TVA/TTC).
+- À la création d'un tiers : cascade aussi vers `invoiceDao.patch
+  SocidRemoteByParent` (4 niveaux : contacts + projets + factures).
+- À la création d'une facture : cascade aussi vers `invoiceLineDao.
+  patchInvoiceRemoteByParent` (cascade 2ᵉ niveau interne factures).
+- 9 tests (header + lignes write).
+
+### Étape 16 — Factures (workflow + paiements + PDF)
+
+- Actions online-only : Valider (`POST /:id/validate`), Marquer
+  payée (`POST /:id/markaspaid`), Ajouter paiement
+  (`POST /:id/payments`), Télécharger PDF
+  (`GET /documents/download` + base64 → fichier temp +
+  `share_plus.shareXFiles`).
+- `InvoicePayment` entity + `_PaymentEntryDialog` (montant pré-rempli
+  `totalTtc`, datepicker, code mode VIR/CHQ/CB/LIQ/PRE, num,
+  commentaire).
+- `_WorkflowActions` row contextuel sur la fiche détail.
+- `_PaymentsSection` qui FutureBuilder fetch les paiements (online).
+- 6 tests workflow (validate, markAsPaid, downloadPdf base64
+  decode + tolérance sauts de ligne, createPayment).
+
+### Étape 17 — Polish v1.1
+
+- ADR 0009 cascade multi-niveaux (formalise les 5 cascades).
+- ADR 0010 workflow factures online-only (justifie pourquoi ces 4
+  actions ne passent pas par l'Outbox).
+- `docs/api/dolibarr-endpoints.md` enrichi (projets, tâches,
+  factures, paiements, /documents/download).
+- README mis à jour avec les nouvelles features.
+- Bundle web rebuildé + redéployé sur
+  `https://dolibarr-mobile.lab.scinnova-academy.cloud`.
+
+### Métriques au tag v1.1.0
+
+- `flutter analyze` : `No issues found`.
+- `flutter test` : **153/153 verts**.
+- 10 ADRs, référence API exhaustive.
+- Drift v5, 11 tables.
+- 6 entités métier (tiers, contact, catégorie, projet, tâche,
+  facture), 7 chaînes Outbox (incl. ligne facture).
+
 ## [1.0.0-mvp] — 2026-05-09
 
 Première version livrable du MVP. Couvre la consultation et l'édition
