@@ -66,6 +66,34 @@ final class ThirdParty extends Equatable {
   final DateTime localUpdatedAt;
   final SyncStatus syncStatus;
 
+  ThirdParty copyWithSync(SyncStatus status) => ThirdParty(
+        localId: localId,
+        remoteId: remoteId,
+        name: name,
+        codeClient: codeClient,
+        codeFournisseur: codeFournisseur,
+        clientFlags: clientFlags,
+        fournisseur: fournisseur,
+        status: this.status,
+        address: address,
+        zip: zip,
+        town: town,
+        countryCode: countryCode,
+        phone: phone,
+        email: email,
+        url: url,
+        siren: siren,
+        siret: siret,
+        tvaIntra: tvaIntra,
+        notePublic: notePublic,
+        notePrivate: notePrivate,
+        categories: categories,
+        extrafields: extrafields,
+        tms: tms,
+        localUpdatedAt: localUpdatedAt,
+        syncStatus: status,
+      );
+
   bool get isCustomer => (clientFlags & 1) != 0;
   bool get isProspect => (clientFlags & 2) != 0;
   bool get isSupplier => fournisseur;

@@ -23,4 +23,30 @@ abstract interface class ThirdPartyRepository {
 
   /// Refetch la fiche détail depuis l'API et la met en cache.
   Future<Result<ThirdParty>> refreshById(int remoteId);
+
+  // -------------- Écritures (Outbox + Optimistic UI) ----------------
+
+  /// Crée un nouveau tiers localement (`pendingCreate`) et enqueue une
+  /// `PendingOperation` que le SyncEngine consommera. Retourne le
+  /// `localId` Drift.
+  Future<Result<int>> createLocal(ThirdParty draft);
+
+  /// Met à jour un tiers existant en `pendingUpdate` (sauf si déjà
+  /// `pendingCreate`, auquel cas on reste en pendingCreate) et enqueue
+  /// une `PendingOperation` update.
+  Future<Result<void>> updateLocal(ThirdParty entity);
+
+  /// Marque le tiers en `pendingDelete` et enqueue une op delete.
+  /// Si le tiers n'a pas de `remoteId` (jamais poussé), suppression
+  /// locale immédiate sans op.
+  Future<Result<void>> deleteLocal(int localId);
+
+  // ----------------------- Brouillons -------------------------------
+
+  Stream<Map<String, Object?>?> watchDraft({int? refLocalId});
+  Future<void> saveDraft({
+    required Map<String, Object?> fields,
+    int? refLocalId,
+  });
+  Future<void> discardDraft({int? refLocalId});
 }

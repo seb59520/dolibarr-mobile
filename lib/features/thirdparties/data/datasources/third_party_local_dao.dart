@@ -67,6 +67,84 @@ class ThirdPartyLocalDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
+  /// Crée une nouvelle entité localement avec `pendingCreate`.
+  /// Retourne le `localId` généré.
+  Future<int> insertLocal(ThirdParty t) async {
+    return into(thirdParties).insert(
+      _toCompanionFromEntity(
+        t.copyWithSync(SyncStatus.pendingCreate),
+        forInsert: true,
+      ),
+    );
+  }
+
+  /// Met à jour une entité existante localement et bascule en
+  /// `pendingUpdate` sauf si déjà `pendingCreate`.
+  Future<void> updateLocal(ThirdParty t) async {
+    final existing = await (select(thirdParties)
+          ..where((row) => row.id.equals(t.localId)))
+        .getSingleOrNull();
+    if (existing == null) return;
+    final nextStatus = existing.syncStatus == SyncStatus.pendingCreate
+        ? SyncStatus.pendingCreate
+        : SyncStatus.pendingUpdate;
+    await (update(thirdParties)..where((r) => r.id.equals(t.localId))).write(
+      _toCompanionFromEntity(
+        t.copyWithSync(nextStatus),
+        forInsert: false,
+      ),
+    );
+  }
+
+  /// Marque une entité comme `pendingDelete`. Le SyncEngine consommera
+  /// l'opération et fera le delete réseau + delete local.
+  Future<void> markPendingDelete(int localId) async {
+    await (update(thirdParties)..where((r) => r.id.equals(localId))).write(
+      ThirdPartiesCompanion(
+        syncStatus: const Value(SyncStatus.pendingDelete),
+        localUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  /// Supprime localement une entité jamais poussée serveur.
+  Future<int> hardDelete(int localId) {
+    return (delete(thirdParties)..where((r) => r.id.equals(localId))).go();
+  }
+
+  ThirdPartiesCompanion _toCompanionFromEntity(
+    ThirdParty t, {
+    required bool forInsert,
+  }) {
+    return ThirdPartiesCompanion(
+      id: forInsert ? const Value.absent() : Value(t.localId),
+      remoteId: Value(t.remoteId),
+      name: Value(t.name),
+      codeClient: Value(t.codeClient),
+      codeFournisseur: Value(t.codeFournisseur),
+      clientType: Value(t.clientFlags),
+      fournisseur: Value(t.fournisseur ? 1 : 0),
+      status: Value(t.status),
+      address: Value(t.address),
+      zip: Value(t.zip),
+      town: Value(t.town),
+      countryCode: Value(t.countryCode),
+      phone: Value(t.phone),
+      email: Value(t.email),
+      url: Value(t.url),
+      siren: Value(t.siren),
+      siret: Value(t.siret),
+      tvaIntra: Value(t.tvaIntra),
+      notePublic: Value(t.notePublic),
+      notePrivate: Value(t.notePrivate),
+      categoriesJson: Value(jsonEncode(t.categories)),
+      extrafields: Value(jsonEncode(t.extrafields)),
+      tms: Value(t.tms),
+      localUpdatedAt: Value(DateTime.now()),
+      syncStatus: Value(t.syncStatus),
+    );
+  }
+
   ThirdParty _fromRow(ThirdPartyRow r) => ThirdParty(
         localId: r.id,
         remoteId: r.remoteId,

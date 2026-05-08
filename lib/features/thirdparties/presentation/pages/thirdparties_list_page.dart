@@ -148,11 +148,7 @@ class _ThirdPartiesListPageState extends ConsumerState<ThirdPartiesListPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Création disponible Étape 7.')),
-          );
-        },
+        onPressed: () => context.go(RoutePaths.thirdpartyNew),
         icon: const Icon(LucideIcons.plus),
         label: const Text('Nouveau'),
       ),

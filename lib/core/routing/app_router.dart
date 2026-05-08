@@ -6,6 +6,7 @@ import 'package:dolibarr_mobile/features/auth/presentation/pages/shell_page.dart
 import 'package:dolibarr_mobile/features/auth/presentation/pages/splash_page.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_providers.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/third_party_detail_page.dart';
+import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/third_party_form_page.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/thirdparties_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -57,11 +58,26 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: RoutePaths.thirdparties,
             builder: (_, __) => const ThirdPartiesListPage(),
             routes: [
+              // Déclaré avant `:id` pour éviter que "new" ne soit
+              // capturé par le wildcard.
+              GoRoute(
+                path: 'new',
+                builder: (_, __) => const ThirdPartyFormPage(),
+              ),
               GoRoute(
                 path: ':id',
                 builder: (_, state) => ThirdPartyDetailPage(
                   localId: int.parse(state.pathParameters['id']!),
                 ),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    builder: (_, state) => ThirdPartyFormPage(
+                      existingLocalId:
+                          int.parse(state.pathParameters['id']!),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

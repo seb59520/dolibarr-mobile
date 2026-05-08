@@ -1,7 +1,9 @@
 import 'package:dolibarr_mobile/core/di/providers.dart';
+import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:dolibarr_mobile/features/thirdparties/domain/entities/third_party.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/providers/third_party_providers.dart';
+import 'package:dolibarr_mobile/shared/widgets/confirm_dialog.dart';
 import 'package:dolibarr_mobile/shared/widgets/error_state.dart';
 import 'package:dolibarr_mobile/shared/widgets/loading_skeleton.dart';
 import 'package:dolibarr_mobile/shared/widgets/quick_action_chip.dart';
@@ -9,6 +11,7 @@ import 'package:dolibarr_mobile/shared/widgets/sync_status_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -22,7 +25,22 @@ class ThirdPartyDetailPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(thirdPartyByIdProvider(localId));
     return Scaffold(
-      appBar: AppBar(title: const Text('Tiers')),
+      appBar: AppBar(
+        title: const Text('Tiers'),
+        actions: [
+          IconButton(
+            icon: const Icon(LucideIcons.edit),
+            tooltip: 'Modifier',
+            onPressed: () =>
+                context.go(RoutePaths.thirdpartyEditFor(localId)),
+          ),
+          IconButton(
+            icon: const Icon(LucideIcons.trash2),
+            tooltip: 'Supprimer',
+            onPressed: () => _confirmDelete(context, ref),
+          ),
+        ],
+      ),
       body: async.when(
         data: (tp) => tp == null
             ? const ErrorState(
@@ -35,6 +53,31 @@ class ThirdPartyDetailPage extends ConsumerWidget {
           title: 'Impossible de charger la fiche',
           description: '$e',
         ),
+      ),
+    );
+  }
+
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    final ok = await ConfirmDialog.showDestructive(
+      context,
+      title: 'Supprimer ce tiers ?',
+      message:
+          'La suppression sera synchronisée au prochain passage en ligne. '
+          'Les contacts liés non poussés seront aussi supprimés.',
+    );
+    if (ok != true || !context.mounted) return;
+    final result =
+        await ref.read(thirdPartyRepositoryProvider).deleteLocal(localId);
+    if (!context.mounted) return;
+    result.fold(
+      onSuccess: (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Suppression enregistrée.')),
+        );
+        context.go(RoutePaths.thirdparties);
+      },
+      onFailure: (f) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Échec : $f')),
       ),
     );
   }

@@ -1,5 +1,7 @@
 import 'package:dolibarr_mobile/core/di/providers.dart';
+import 'package:dolibarr_mobile/core/storage/pending_operation_dao.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_providers.dart';
+import 'package:dolibarr_mobile/features/thirdparties/data/datasources/draft_local_dao.dart';
 import 'package:dolibarr_mobile/features/thirdparties/data/datasources/third_party_local_dao.dart';
 import 'package:dolibarr_mobile/features/thirdparties/data/datasources/third_party_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/thirdparties/data/repositories/third_party_repository_impl.dart';
@@ -17,11 +19,21 @@ final thirdPartyLocalDaoProvider = Provider<ThirdPartyLocalDao>((ref) {
   return ThirdPartyLocalDao(ref.watch(appDatabaseProvider));
 });
 
+final draftLocalDaoProvider = Provider<DraftLocalDao>((ref) {
+  return DraftLocalDao(ref.watch(appDatabaseProvider));
+});
+
+final pendingOperationDaoProvider = Provider<PendingOperationDao>((ref) {
+  return PendingOperationDao(ref.watch(appDatabaseProvider));
+});
+
 final thirdPartyRepositoryProvider = Provider<ThirdPartyRepository>((ref) {
   return ThirdPartyRepositoryImpl(
     remote: ref.watch(thirdPartyRemoteDataSourceProvider),
     dao: ref.watch(thirdPartyLocalDaoProvider),
     network: ref.watch(networkInfoProvider),
+    draftDao: ref.watch(draftLocalDaoProvider),
+    outbox: ref.watch(pendingOperationDaoProvider),
   );
 });
 

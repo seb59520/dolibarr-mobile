@@ -1,5 +1,6 @@
 import 'package:dolibarr_mobile/core/storage/collections/categories.dart';
 import 'package:dolibarr_mobile/core/storage/collections/contacts.dart';
+import 'package:dolibarr_mobile/core/storage/collections/drafts.dart';
 import 'package:dolibarr_mobile/core/storage/collections/extrafield_definitions.dart';
 import 'package:dolibarr_mobile/core/storage/collections/pending_operations.dart';
 import 'package:dolibarr_mobile/core/storage/collections/sync_metadata.dart';
@@ -19,6 +20,7 @@ part 'app_database.g.dart';
     ThirdParties,
     Contacts,
     Categories,
+    Drafts,
     ExtrafieldDefinitions,
     PendingOperations,
     SyncMetadata,
@@ -31,7 +33,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -41,6 +43,11 @@ class AppDatabase extends _$AppDatabase {
           await into(syncMetadata).insert(
             SyncMetadataCompanion.insert(),
           );
+        },
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            await m.createTable(drafts);
+          }
         },
       );
 }
