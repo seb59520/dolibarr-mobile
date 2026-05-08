@@ -52,4 +52,13 @@ class AppDatabase extends _$AppDatabase {
       );
 }
 
-QueryExecutor _openConnection() => driftDatabase(name: 'dolibarr_mobile');
+QueryExecutor _openConnection() => driftDatabase(
+      name: 'dolibarr_mobile',
+      // Sur web, drift_flutter exige les URIs vers sqlite3.wasm + un
+      // worker compilé depuis drift_worker.dart, tous deux placés dans
+      // `web/` et donc servis depuis la racine du bundle PWA.
+      web: DriftWebOptions(
+        sqlite3Wasm: Uri.parse('sqlite3.wasm'),
+        driftWorker: Uri.parse('drift_worker.dart.js'),
+      ),
+    );
