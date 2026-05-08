@@ -15,6 +15,8 @@ dependencies:
   connectivity_plus: ^6.0.5
   cupertino_icons: ^1.0.8
   dio: ^5.7.0
+  drift: ^2.21.0
+  drift_flutter: ^0.2.4
   equatable: ^2.0.5
   flutter:
     sdk: flutter
@@ -38,12 +40,15 @@ dependencies:
   riverpod_annotation: ^2.6.1
   url_launcher: ^6.3.1
 
-  # Persistance locale (Isar/Drift) : voir ADR-0003. Choix tranché Étape 2
-  # avant la couche storage (Isar 3 d'origine bloquant sur analyzer 6+).
+  # Persistance locale : Drift 2 (SQLite typé Dart). Décision tranchée
+  # Étape 2 — voir docs/adr/0003-local-db.md. drift_flutter encapsule
+  # l'init multi-plateforme (sqlite3_flutter_libs sur mobile, sqlite3.wasm
+  # sur web).
 
 dev_dependencies:
   alchemist: ^0.11.0
   build_runner: ^2.4.13
+  drift_dev: ^2.21.0
   flutter_launcher_icons: ^0.14.1
   flutter_native_splash: ^2.4.2
   flutter_test:
