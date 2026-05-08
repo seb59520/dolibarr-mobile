@@ -1,8 +1,11 @@
+import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:dolibarr_mobile/features/auth/domain/entities/auth_session.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_providers.dart';
+import 'package:dolibarr_mobile/features/sync/presentation/providers/sync_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 /// Placeholders pour les onglets non encore implémentés.
@@ -31,6 +34,8 @@ class SettingsPlaceholderPage extends ConsumerWidget {
         padding: const EdgeInsets.all(AppTokens.spaceMd),
         children: [
           if (session != null) _SessionCard(session: session),
+          const SizedBox(height: AppTokens.spaceLg),
+          const _PendingOperationsTile(),
           const SizedBox(height: AppTokens.spaceLg),
           FilledButton.tonalIcon(
             onPressed: () => _confirmLogout(context, ref),
@@ -105,6 +110,33 @@ class _ComingSoon extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _PendingOperationsTile extends ConsumerWidget {
+  const _PendingOperationsTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(pendingOperationsCountProvider);
+    final value = count.maybeWhen(data: (c) => c, orElse: () => 0);
+    return Card(
+      child: ListTile(
+        leading: Badge(
+          isLabelVisible: value > 0,
+          label: Text('$value'),
+          child: const Icon(LucideIcons.refreshCw),
+        ),
+        title: const Text('Opérations en attente'),
+        subtitle: Text(
+          value == 0
+              ? 'Toutes les modifications sont synchronisées.'
+              : 'Vos modifications seront poussées au retour réseau.',
+        ),
+        trailing: const Icon(LucideIcons.chevronRight),
+        onTap: () => context.go(RoutePaths.pendingOperations),
       ),
     );
   }

@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:dolibarr_mobile/core/constants/api_paths.dart';
 import 'package:dolibarr_mobile/core/errors/error_mapper.dart';
+import 'package:dolibarr_mobile/core/errors/exceptions.dart';
 import 'package:dolibarr_mobile/features/thirdparties/domain/entities/third_party_filters.dart';
 
 abstract interface class ThirdPartyRemoteDataSource {
@@ -18,6 +19,18 @@ abstract interface class ThirdPartyRemoteDataSource {
 
   /// Récupère un tiers par son `rowid` Dolibarr.
   Future<Map<String, Object?>> fetchById(int remoteId);
+
+  /// Crée un tiers via `POST /thirdparties` et retourne le `rowid` créé.
+  Future<int> create(Map<String, Object?> payload);
+
+  /// Met à jour un tiers existant via `PUT /thirdparties/:id`.
+  Future<Map<String, Object?>> update(
+    int remoteId,
+    Map<String, Object?> payload,
+  );
+
+  /// Supprime un tiers via `DELETE /thirdparties/:id`.
+  Future<void> delete(int remoteId);
 }
 
 final class ThirdPartyRemoteDataSourceImpl
@@ -57,6 +70,59 @@ final class ThirdPartyRemoteDataSourceImpl
         ApiPaths.thirdpartyById(remoteId),
       );
       return res.data ?? const {};
+    } on DioException catch (e) {
+      throw ErrorMapper.fromDio(e);
+    }
+  }
+
+  @override
+  Future<int> create(Map<String, Object?> payload) async {
+    try {
+      // Dolibarr renvoie soit l'`id` créé en int, soit un Map { id: N }.
+      final res = await _dio.post<Object?>(
+        ApiPaths.thirdparties,
+        data: payload,
+      );
+      final body = res.data;
+      if (body is int) return body;
+      if (body is num) return body.toInt();
+      if (body is String) {
+        final n = int.tryParse(body);
+        if (n != null) return n;
+      }
+      if (body is Map<String, Object?>) {
+        final n = int.tryParse('${body['id'] ?? body['rowid'] ?? ''}');
+        if (n != null) return n;
+      }
+      throw const ServerException(
+        statusCode: 200,
+        message: 'Réponse de création inattendue',
+      );
+    } on DioException catch (e) {
+      throw ErrorMapper.fromDio(e);
+    }
+  }
+
+  @override
+  Future<Map<String, Object?>> update(
+    int remoteId,
+    Map<String, Object?> payload,
+  ) async {
+    try {
+      final res = await _dio.put<Map<String, Object?>>(
+        ApiPaths.thirdpartyById(remoteId),
+        data: payload,
+      );
+      return res.data ?? const {};
+    } on DioException catch (e) {
+      throw ErrorMapper.fromDio(e);
+    }
+  }
+
+  @override
+  Future<void> delete(int remoteId) async {
+    try {
+      await _dio.delete<void>(ApiPaths.thirdpartyById(remoteId));
     } on DioException catch (e) {
       throw ErrorMapper.fromDio(e);
     }

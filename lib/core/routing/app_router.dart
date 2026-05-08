@@ -8,6 +8,7 @@ import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_provid
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contact_detail_page.dart';
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contact_form_page.dart';
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contacts_list_page.dart';
+import 'package:dolibarr_mobile/features/sync/presentation/pages/pending_operations_page.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/third_party_detail_page.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/third_party_form_page.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/thirdparties_list_page.dart';
@@ -117,6 +118,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: RoutePaths.settings,
             builder: (_, __) => const SettingsPlaceholderPage(),
+          ),
+          GoRoute(
+            path: RoutePaths.pendingOperations,
+            builder: (_, __) => const PendingOperationsPage(),
           ),
         ],
       ),

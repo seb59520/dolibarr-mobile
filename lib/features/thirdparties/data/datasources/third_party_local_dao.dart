@@ -112,6 +112,38 @@ class ThirdPartyLocalDao extends DatabaseAccessor<AppDatabase>
     return (delete(thirdParties)..where((r) => r.id.equals(localId))).go();
   }
 
+  /// Marque une entité comme synced après push réussi vers Dolibarr,
+  /// en cachant le `remoteId` (création) et le `tms` retourné si présent.
+  Future<void> markSyncedWithRemote({
+    required int localId,
+    required int remoteId,
+    DateTime? tms,
+  }) async {
+    await (update(thirdParties)..where((r) => r.id.equals(localId))).write(
+      ThirdPartiesCompanion(
+        remoteId: Value(remoteId),
+        tms: Value(tms ?? DateTime.now()),
+        syncStatus: const Value(SyncStatus.synced),
+        localUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  /// Marque une entité en conflit (tms serveur > tms attendu).
+  Future<void> markConflict(int localId) async {
+    await (update(thirdParties)..where((r) => r.id.equals(localId))).write(
+      ThirdPartiesCompanion(
+        syncStatus: const Value(SyncStatus.conflict),
+        localUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  /// Suppression définitive après confirmation serveur.
+  Future<int> clearAfterServerDelete(int localId) {
+    return (delete(thirdParties)..where((r) => r.id.equals(localId))).go();
+  }
+
   ThirdPartiesCompanion _toCompanionFromEntity(
     ThirdParty t, {
     required bool forInsert,

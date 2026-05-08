@@ -1,6 +1,7 @@
 import 'package:dolibarr_mobile/app.dart';
 import 'package:dolibarr_mobile/core/di/providers.dart';
 import 'package:dolibarr_mobile/core/storage/secure_storage.dart';
+import 'package:dolibarr_mobile/core/sync/sync_providers.dart';
 import 'package:dolibarr_mobile/core/utils/result.dart';
 import 'package:dolibarr_mobile/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/auth/domain/entities/auth_session.dart';
@@ -82,6 +83,8 @@ void main() {
           authRepositoryProvider.overrideWithValue(_StubAuthRepository()),
           authRemoteDataSourceProvider.overrideWithValue(_NoopRemote()),
           secureStorageProvider.overrideWithValue(_NoopStorage()),
+          // Court-circuite l'engine sync (besoin de la base Drift sinon).
+          syncBootstrapProvider.overrideWith((_) {}),
         ],
         child: const DolibarrMobileApp(),
       ),

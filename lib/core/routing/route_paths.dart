@@ -16,6 +16,7 @@ abstract final class RoutePaths {
   static const String contactDetail = '/app/contacts/:id';
   static const String contactEdit = '/app/contacts/:id/edit';
   static const String settings = '/app/settings';
+  static const String pendingOperations = '/app/sync';
 
   static String thirdpartyDetailFor(int localId) =>
       '/app/thirdparties/$localId';

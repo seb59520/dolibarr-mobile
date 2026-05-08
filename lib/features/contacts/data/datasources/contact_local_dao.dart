@@ -120,6 +120,53 @@ class ContactLocalDao extends DatabaseAccessor<AppDatabase>
     return (delete(contacts)..where((r) => r.id.equals(localId))).go();
   }
 
+  /// Marque un contact synced après push réussi.
+  Future<void> markSyncedWithRemote({
+    required int localId,
+    required int remoteId,
+    DateTime? tms,
+  }) async {
+    await (update(contacts)..where((r) => r.id.equals(localId))).write(
+      ContactsCompanion(
+        remoteId: Value(remoteId),
+        tms: Value(tms ?? DateTime.now()),
+        syncStatus: const Value(SyncStatus.synced),
+        localUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  /// Marque un contact en conflit.
+  Future<void> markConflict(int localId) async {
+    await (update(contacts)..where((r) => r.id.equals(localId))).write(
+      ContactsCompanion(
+        syncStatus: const Value(SyncStatus.conflict),
+        localUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  /// Suppression définitive après confirmation serveur.
+  Future<int> clearAfterServerDelete(int localId) {
+    return (delete(contacts)..where((r) => r.id.equals(localId))).go();
+  }
+
+  /// Patche `socidRemote` pour tous les contacts dont le tiers parent
+  /// vient juste d'être créé côté serveur. Appelé par le SyncEngine
+  /// après le succès de l'op create du parent.
+  Future<int> patchSocidRemoteByParent({
+    required int parentLocalId,
+    required int parentRemoteId,
+  }) async {
+    return (update(contacts)
+          ..where(
+            (c) =>
+                c.socidLocal.equals(parentLocalId) &
+                c.socidRemote.isNull(),
+          ))
+        .write(ContactsCompanion(socidRemote: Value(parentRemoteId)));
+  }
+
   ContactsCompanion _toCompanionFromEntity(
     Contact c, {
     required bool forInsert,

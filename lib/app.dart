@@ -1,5 +1,6 @@
 import 'package:dolibarr_mobile/core/i18n/generated/app_localizations.dart';
 import 'package:dolibarr_mobile/core/routing/app_router.dart';
+import 'package:dolibarr_mobile/core/sync/sync_providers.dart';
 import 'package:dolibarr_mobile/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,6 +15,9 @@ class DolibarrMobileApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
+    // Démarre/arrête le SyncEngine selon l'état d'auth (effet de bord
+    // monté à l'éveil de la racine).
+    ref.watch(syncBootstrapProvider);
     return MaterialApp.router(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       theme: AppTheme.light(),
