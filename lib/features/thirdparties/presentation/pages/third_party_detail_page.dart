@@ -2,6 +2,7 @@ import 'package:dolibarr_mobile/core/di/providers.dart';
 import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:dolibarr_mobile/features/contacts/presentation/widgets/third_party_contacts_section.dart';
+import 'package:dolibarr_mobile/features/projects/presentation/widgets/third_party_projects_section.dart';
 import 'package:dolibarr_mobile/features/thirdparties/domain/entities/third_party.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/providers/third_party_providers.dart';
 import 'package:dolibarr_mobile/shared/widgets/confirm_dialog.dart';
@@ -126,6 +127,7 @@ class _DetailBody extends ConsumerWidget {
           _ContactSection(thirdParty: t),
           _IdsSection(thirdParty: t),
           ThirdPartyContactsSection(thirdPartyLocalId: t.localId),
+          ThirdPartyProjectsSection(thirdPartyLocalId: t.localId),
           if (t.notePublic != null || t.notePrivate != null)
             _NotesSection(thirdParty: t),
         ],

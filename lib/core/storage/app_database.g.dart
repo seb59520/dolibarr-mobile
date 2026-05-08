@@ -4658,6 +4658,1193 @@ class PendingOperationsCompanion extends UpdateCompanion<PendingOperationRow> {
   }
 }
 
+class $ProjectsTable extends Projects
+    with TableInfo<$ProjectsTable, ProjectRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProjectsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<int> remoteId = GeneratedColumn<int>(
+    'remote_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _socidRemoteMeta = const VerificationMeta(
+    'socidRemote',
+  );
+  @override
+  late final GeneratedColumn<int> socidRemote = GeneratedColumn<int>(
+    'socid_remote',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _socidLocalMeta = const VerificationMeta(
+    'socidLocal',
+  );
+  @override
+  late final GeneratedColumn<int> socidLocal = GeneratedColumn<int>(
+    'socid_local',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _refMeta = const VerificationMeta('ref');
+  @override
+  late final GeneratedColumn<String> ref = GeneratedColumn<String>(
+    'ref',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<int> status = GeneratedColumn<int>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _publicLevelMeta = const VerificationMeta(
+    'publicLevel',
+  );
+  @override
+  late final GeneratedColumn<int> publicLevel = GeneratedColumn<int>(
+    'public_level',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _fkUserRespMeta = const VerificationMeta(
+    'fkUserResp',
+  );
+  @override
+  late final GeneratedColumn<int> fkUserResp = GeneratedColumn<int>(
+    'fk_user_resp',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateStartMeta = const VerificationMeta(
+    'dateStart',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateStart = GeneratedColumn<DateTime>(
+    'date_start',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateEndMeta = const VerificationMeta(
+    'dateEnd',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateEnd = GeneratedColumn<DateTime>(
+    'date_end',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _budgetAmountMeta = const VerificationMeta(
+    'budgetAmount',
+  );
+  @override
+  late final GeneratedColumn<String> budgetAmount = GeneratedColumn<String>(
+    'budget_amount',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _oppStatusMeta = const VerificationMeta(
+    'oppStatus',
+  );
+  @override
+  late final GeneratedColumn<int> oppStatus = GeneratedColumn<int>(
+    'opp_status',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _oppAmountMeta = const VerificationMeta(
+    'oppAmount',
+  );
+  @override
+  late final GeneratedColumn<String> oppAmount = GeneratedColumn<String>(
+    'opp_amount',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _oppPercentMeta = const VerificationMeta(
+    'oppPercent',
+  );
+  @override
+  late final GeneratedColumn<double> oppPercent = GeneratedColumn<double>(
+    'opp_percent',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _extrafieldsMeta = const VerificationMeta(
+    'extrafields',
+  );
+  @override
+  late final GeneratedColumn<String> extrafields = GeneratedColumn<String>(
+    'extrafields',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
+  static const VerificationMeta _rawJsonMeta = const VerificationMeta(
+    'rawJson',
+  );
+  @override
+  late final GeneratedColumn<String> rawJson = GeneratedColumn<String>(
+    'raw_json',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tmsMeta = const VerificationMeta('tms');
+  @override
+  late final GeneratedColumn<DateTime> tms = GeneratedColumn<DateTime>(
+    'tms',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _localUpdatedAtMeta = const VerificationMeta(
+    'localUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> localUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'local_updated_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  @override
+  late final GeneratedColumnWithTypeConverter<SyncStatus, int> syncStatus =
+      GeneratedColumn<int>(
+        'sync_status',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: Constant(SyncStatus.synced.index),
+      ).withConverter<SyncStatus>($ProjectsTable.$convertersyncStatus);
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    remoteId,
+    socidRemote,
+    socidLocal,
+    ref,
+    title,
+    description,
+    status,
+    publicLevel,
+    fkUserResp,
+    dateStart,
+    dateEnd,
+    budgetAmount,
+    oppStatus,
+    oppAmount,
+    oppPercent,
+    extrafields,
+    rawJson,
+    tms,
+    localUpdatedAt,
+    syncStatus,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'projects';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ProjectRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    }
+    if (data.containsKey('socid_remote')) {
+      context.handle(
+        _socidRemoteMeta,
+        socidRemote.isAcceptableOrUnknown(
+          data['socid_remote']!,
+          _socidRemoteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('socid_local')) {
+      context.handle(
+        _socidLocalMeta,
+        socidLocal.isAcceptableOrUnknown(data['socid_local']!, _socidLocalMeta),
+      );
+    }
+    if (data.containsKey('ref')) {
+      context.handle(
+        _refMeta,
+        ref.isAcceptableOrUnknown(data['ref']!, _refMeta),
+      );
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('public_level')) {
+      context.handle(
+        _publicLevelMeta,
+        publicLevel.isAcceptableOrUnknown(
+          data['public_level']!,
+          _publicLevelMeta,
+        ),
+      );
+    }
+    if (data.containsKey('fk_user_resp')) {
+      context.handle(
+        _fkUserRespMeta,
+        fkUserResp.isAcceptableOrUnknown(
+          data['fk_user_resp']!,
+          _fkUserRespMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date_start')) {
+      context.handle(
+        _dateStartMeta,
+        dateStart.isAcceptableOrUnknown(data['date_start']!, _dateStartMeta),
+      );
+    }
+    if (data.containsKey('date_end')) {
+      context.handle(
+        _dateEndMeta,
+        dateEnd.isAcceptableOrUnknown(data['date_end']!, _dateEndMeta),
+      );
+    }
+    if (data.containsKey('budget_amount')) {
+      context.handle(
+        _budgetAmountMeta,
+        budgetAmount.isAcceptableOrUnknown(
+          data['budget_amount']!,
+          _budgetAmountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('opp_status')) {
+      context.handle(
+        _oppStatusMeta,
+        oppStatus.isAcceptableOrUnknown(data['opp_status']!, _oppStatusMeta),
+      );
+    }
+    if (data.containsKey('opp_amount')) {
+      context.handle(
+        _oppAmountMeta,
+        oppAmount.isAcceptableOrUnknown(data['opp_amount']!, _oppAmountMeta),
+      );
+    }
+    if (data.containsKey('opp_percent')) {
+      context.handle(
+        _oppPercentMeta,
+        oppPercent.isAcceptableOrUnknown(data['opp_percent']!, _oppPercentMeta),
+      );
+    }
+    if (data.containsKey('extrafields')) {
+      context.handle(
+        _extrafieldsMeta,
+        extrafields.isAcceptableOrUnknown(
+          data['extrafields']!,
+          _extrafieldsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('raw_json')) {
+      context.handle(
+        _rawJsonMeta,
+        rawJson.isAcceptableOrUnknown(data['raw_json']!, _rawJsonMeta),
+      );
+    }
+    if (data.containsKey('tms')) {
+      context.handle(
+        _tmsMeta,
+        tms.isAcceptableOrUnknown(data['tms']!, _tmsMeta),
+      );
+    }
+    if (data.containsKey('local_updated_at')) {
+      context.handle(
+        _localUpdatedAtMeta,
+        localUpdatedAt.isAcceptableOrUnknown(
+          data['local_updated_at']!,
+          _localUpdatedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_localUpdatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ProjectRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ProjectRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}remote_id'],
+      ),
+      socidRemote: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}socid_remote'],
+      ),
+      socidLocal: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}socid_local'],
+      ),
+      ref: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ref'],
+      ),
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}status'],
+      )!,
+      publicLevel: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}public_level'],
+      )!,
+      fkUserResp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fk_user_resp'],
+      ),
+      dateStart: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_start'],
+      ),
+      dateEnd: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_end'],
+      ),
+      budgetAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}budget_amount'],
+      ),
+      oppStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}opp_status'],
+      ),
+      oppAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}opp_amount'],
+      ),
+      oppPercent: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}opp_percent'],
+      ),
+      extrafields: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}extrafields'],
+      )!,
+      rawJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}raw_json'],
+      ),
+      tms: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}tms'],
+      ),
+      localUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}local_updated_at'],
+      )!,
+      syncStatus: $ProjectsTable.$convertersyncStatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}sync_status'],
+        )!,
+      ),
+    );
+  }
+
+  @override
+  $ProjectsTable createAlias(String alias) {
+    return $ProjectsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<SyncStatus, int, int> $convertersyncStatus =
+      const EnumIndexConverter<SyncStatus>(SyncStatus.values);
+}
+
+class ProjectRow extends DataClass implements Insertable<ProjectRow> {
+  final int id;
+  final int? remoteId;
+
+  /// `socid` côté Dolibarr — id du tiers parent (`remoteId` ThirdParty).
+  final int? socidRemote;
+
+  /// FK locale vers ThirdParties.id quand le parent est encore en
+  /// pendingCreate (cascade Outbox). Patché par le SyncEngine après
+  /// push du parent.
+  final int? socidLocal;
+
+  /// Référence Dolibarr (ex : `PJ2026-001`). Générée côté serveur à
+  /// la validation, peut être nulle en pendingCreate.
+  final String? ref;
+  final String title;
+  final String? description;
+
+  /// Statut Dolibarr : 0=brouillon, 1=ouvert, 2=fermé.
+  final int status;
+
+  /// 0 = privé (visible auteur seulement), 1 = public projet.
+  final int publicLevel;
+
+  /// Utilisateur responsable côté Dolibarr.
+  final int? fkUserResp;
+  final DateTime? dateStart;
+  final DateTime? dateEnd;
+
+  /// Budget alloué (HT). Stocké en string pour préserver la précision.
+  final String? budgetAmount;
+
+  /// Statut d'opportunité (lead/proposition/won/lost). Cf table
+  /// llx_c_lead_status côté Dolibarr.
+  final int? oppStatus;
+  final String? oppAmount;
+  final double? oppPercent;
+  final String extrafields;
+  final String? rawJson;
+  final DateTime? tms;
+  final DateTime localUpdatedAt;
+  final SyncStatus syncStatus;
+  const ProjectRow({
+    required this.id,
+    this.remoteId,
+    this.socidRemote,
+    this.socidLocal,
+    this.ref,
+    required this.title,
+    this.description,
+    required this.status,
+    required this.publicLevel,
+    this.fkUserResp,
+    this.dateStart,
+    this.dateEnd,
+    this.budgetAmount,
+    this.oppStatus,
+    this.oppAmount,
+    this.oppPercent,
+    required this.extrafields,
+    this.rawJson,
+    this.tms,
+    required this.localUpdatedAt,
+    required this.syncStatus,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<int>(remoteId);
+    }
+    if (!nullToAbsent || socidRemote != null) {
+      map['socid_remote'] = Variable<int>(socidRemote);
+    }
+    if (!nullToAbsent || socidLocal != null) {
+      map['socid_local'] = Variable<int>(socidLocal);
+    }
+    if (!nullToAbsent || ref != null) {
+      map['ref'] = Variable<String>(ref);
+    }
+    map['title'] = Variable<String>(title);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    map['status'] = Variable<int>(status);
+    map['public_level'] = Variable<int>(publicLevel);
+    if (!nullToAbsent || fkUserResp != null) {
+      map['fk_user_resp'] = Variable<int>(fkUserResp);
+    }
+    if (!nullToAbsent || dateStart != null) {
+      map['date_start'] = Variable<DateTime>(dateStart);
+    }
+    if (!nullToAbsent || dateEnd != null) {
+      map['date_end'] = Variable<DateTime>(dateEnd);
+    }
+    if (!nullToAbsent || budgetAmount != null) {
+      map['budget_amount'] = Variable<String>(budgetAmount);
+    }
+    if (!nullToAbsent || oppStatus != null) {
+      map['opp_status'] = Variable<int>(oppStatus);
+    }
+    if (!nullToAbsent || oppAmount != null) {
+      map['opp_amount'] = Variable<String>(oppAmount);
+    }
+    if (!nullToAbsent || oppPercent != null) {
+      map['opp_percent'] = Variable<double>(oppPercent);
+    }
+    map['extrafields'] = Variable<String>(extrafields);
+    if (!nullToAbsent || rawJson != null) {
+      map['raw_json'] = Variable<String>(rawJson);
+    }
+    if (!nullToAbsent || tms != null) {
+      map['tms'] = Variable<DateTime>(tms);
+    }
+    map['local_updated_at'] = Variable<DateTime>(localUpdatedAt);
+    {
+      map['sync_status'] = Variable<int>(
+        $ProjectsTable.$convertersyncStatus.toSql(syncStatus),
+      );
+    }
+    return map;
+  }
+
+  ProjectsCompanion toCompanion(bool nullToAbsent) {
+    return ProjectsCompanion(
+      id: Value(id),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      socidRemote: socidRemote == null && nullToAbsent
+          ? const Value.absent()
+          : Value(socidRemote),
+      socidLocal: socidLocal == null && nullToAbsent
+          ? const Value.absent()
+          : Value(socidLocal),
+      ref: ref == null && nullToAbsent ? const Value.absent() : Value(ref),
+      title: Value(title),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      status: Value(status),
+      publicLevel: Value(publicLevel),
+      fkUserResp: fkUserResp == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fkUserResp),
+      dateStart: dateStart == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateStart),
+      dateEnd: dateEnd == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateEnd),
+      budgetAmount: budgetAmount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(budgetAmount),
+      oppStatus: oppStatus == null && nullToAbsent
+          ? const Value.absent()
+          : Value(oppStatus),
+      oppAmount: oppAmount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(oppAmount),
+      oppPercent: oppPercent == null && nullToAbsent
+          ? const Value.absent()
+          : Value(oppPercent),
+      extrafields: Value(extrafields),
+      rawJson: rawJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rawJson),
+      tms: tms == null && nullToAbsent ? const Value.absent() : Value(tms),
+      localUpdatedAt: Value(localUpdatedAt),
+      syncStatus: Value(syncStatus),
+    );
+  }
+
+  factory ProjectRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ProjectRow(
+      id: serializer.fromJson<int>(json['id']),
+      remoteId: serializer.fromJson<int?>(json['remoteId']),
+      socidRemote: serializer.fromJson<int?>(json['socidRemote']),
+      socidLocal: serializer.fromJson<int?>(json['socidLocal']),
+      ref: serializer.fromJson<String?>(json['ref']),
+      title: serializer.fromJson<String>(json['title']),
+      description: serializer.fromJson<String?>(json['description']),
+      status: serializer.fromJson<int>(json['status']),
+      publicLevel: serializer.fromJson<int>(json['publicLevel']),
+      fkUserResp: serializer.fromJson<int?>(json['fkUserResp']),
+      dateStart: serializer.fromJson<DateTime?>(json['dateStart']),
+      dateEnd: serializer.fromJson<DateTime?>(json['dateEnd']),
+      budgetAmount: serializer.fromJson<String?>(json['budgetAmount']),
+      oppStatus: serializer.fromJson<int?>(json['oppStatus']),
+      oppAmount: serializer.fromJson<String?>(json['oppAmount']),
+      oppPercent: serializer.fromJson<double?>(json['oppPercent']),
+      extrafields: serializer.fromJson<String>(json['extrafields']),
+      rawJson: serializer.fromJson<String?>(json['rawJson']),
+      tms: serializer.fromJson<DateTime?>(json['tms']),
+      localUpdatedAt: serializer.fromJson<DateTime>(json['localUpdatedAt']),
+      syncStatus: $ProjectsTable.$convertersyncStatus.fromJson(
+        serializer.fromJson<int>(json['syncStatus']),
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'remoteId': serializer.toJson<int?>(remoteId),
+      'socidRemote': serializer.toJson<int?>(socidRemote),
+      'socidLocal': serializer.toJson<int?>(socidLocal),
+      'ref': serializer.toJson<String?>(ref),
+      'title': serializer.toJson<String>(title),
+      'description': serializer.toJson<String?>(description),
+      'status': serializer.toJson<int>(status),
+      'publicLevel': serializer.toJson<int>(publicLevel),
+      'fkUserResp': serializer.toJson<int?>(fkUserResp),
+      'dateStart': serializer.toJson<DateTime?>(dateStart),
+      'dateEnd': serializer.toJson<DateTime?>(dateEnd),
+      'budgetAmount': serializer.toJson<String?>(budgetAmount),
+      'oppStatus': serializer.toJson<int?>(oppStatus),
+      'oppAmount': serializer.toJson<String?>(oppAmount),
+      'oppPercent': serializer.toJson<double?>(oppPercent),
+      'extrafields': serializer.toJson<String>(extrafields),
+      'rawJson': serializer.toJson<String?>(rawJson),
+      'tms': serializer.toJson<DateTime?>(tms),
+      'localUpdatedAt': serializer.toJson<DateTime>(localUpdatedAt),
+      'syncStatus': serializer.toJson<int>(
+        $ProjectsTable.$convertersyncStatus.toJson(syncStatus),
+      ),
+    };
+  }
+
+  ProjectRow copyWith({
+    int? id,
+    Value<int?> remoteId = const Value.absent(),
+    Value<int?> socidRemote = const Value.absent(),
+    Value<int?> socidLocal = const Value.absent(),
+    Value<String?> ref = const Value.absent(),
+    String? title,
+    Value<String?> description = const Value.absent(),
+    int? status,
+    int? publicLevel,
+    Value<int?> fkUserResp = const Value.absent(),
+    Value<DateTime?> dateStart = const Value.absent(),
+    Value<DateTime?> dateEnd = const Value.absent(),
+    Value<String?> budgetAmount = const Value.absent(),
+    Value<int?> oppStatus = const Value.absent(),
+    Value<String?> oppAmount = const Value.absent(),
+    Value<double?> oppPercent = const Value.absent(),
+    String? extrafields,
+    Value<String?> rawJson = const Value.absent(),
+    Value<DateTime?> tms = const Value.absent(),
+    DateTime? localUpdatedAt,
+    SyncStatus? syncStatus,
+  }) => ProjectRow(
+    id: id ?? this.id,
+    remoteId: remoteId.present ? remoteId.value : this.remoteId,
+    socidRemote: socidRemote.present ? socidRemote.value : this.socidRemote,
+    socidLocal: socidLocal.present ? socidLocal.value : this.socidLocal,
+    ref: ref.present ? ref.value : this.ref,
+    title: title ?? this.title,
+    description: description.present ? description.value : this.description,
+    status: status ?? this.status,
+    publicLevel: publicLevel ?? this.publicLevel,
+    fkUserResp: fkUserResp.present ? fkUserResp.value : this.fkUserResp,
+    dateStart: dateStart.present ? dateStart.value : this.dateStart,
+    dateEnd: dateEnd.present ? dateEnd.value : this.dateEnd,
+    budgetAmount: budgetAmount.present ? budgetAmount.value : this.budgetAmount,
+    oppStatus: oppStatus.present ? oppStatus.value : this.oppStatus,
+    oppAmount: oppAmount.present ? oppAmount.value : this.oppAmount,
+    oppPercent: oppPercent.present ? oppPercent.value : this.oppPercent,
+    extrafields: extrafields ?? this.extrafields,
+    rawJson: rawJson.present ? rawJson.value : this.rawJson,
+    tms: tms.present ? tms.value : this.tms,
+    localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+  );
+  ProjectRow copyWithCompanion(ProjectsCompanion data) {
+    return ProjectRow(
+      id: data.id.present ? data.id.value : this.id,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      socidRemote: data.socidRemote.present
+          ? data.socidRemote.value
+          : this.socidRemote,
+      socidLocal: data.socidLocal.present
+          ? data.socidLocal.value
+          : this.socidLocal,
+      ref: data.ref.present ? data.ref.value : this.ref,
+      title: data.title.present ? data.title.value : this.title,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      status: data.status.present ? data.status.value : this.status,
+      publicLevel: data.publicLevel.present
+          ? data.publicLevel.value
+          : this.publicLevel,
+      fkUserResp: data.fkUserResp.present
+          ? data.fkUserResp.value
+          : this.fkUserResp,
+      dateStart: data.dateStart.present ? data.dateStart.value : this.dateStart,
+      dateEnd: data.dateEnd.present ? data.dateEnd.value : this.dateEnd,
+      budgetAmount: data.budgetAmount.present
+          ? data.budgetAmount.value
+          : this.budgetAmount,
+      oppStatus: data.oppStatus.present ? data.oppStatus.value : this.oppStatus,
+      oppAmount: data.oppAmount.present ? data.oppAmount.value : this.oppAmount,
+      oppPercent: data.oppPercent.present
+          ? data.oppPercent.value
+          : this.oppPercent,
+      extrafields: data.extrafields.present
+          ? data.extrafields.value
+          : this.extrafields,
+      rawJson: data.rawJson.present ? data.rawJson.value : this.rawJson,
+      tms: data.tms.present ? data.tms.value : this.tms,
+      localUpdatedAt: data.localUpdatedAt.present
+          ? data.localUpdatedAt.value
+          : this.localUpdatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProjectRow(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('socidRemote: $socidRemote, ')
+          ..write('socidLocal: $socidLocal, ')
+          ..write('ref: $ref, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('status: $status, ')
+          ..write('publicLevel: $publicLevel, ')
+          ..write('fkUserResp: $fkUserResp, ')
+          ..write('dateStart: $dateStart, ')
+          ..write('dateEnd: $dateEnd, ')
+          ..write('budgetAmount: $budgetAmount, ')
+          ..write('oppStatus: $oppStatus, ')
+          ..write('oppAmount: $oppAmount, ')
+          ..write('oppPercent: $oppPercent, ')
+          ..write('extrafields: $extrafields, ')
+          ..write('rawJson: $rawJson, ')
+          ..write('tms: $tms, ')
+          ..write('localUpdatedAt: $localUpdatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    remoteId,
+    socidRemote,
+    socidLocal,
+    ref,
+    title,
+    description,
+    status,
+    publicLevel,
+    fkUserResp,
+    dateStart,
+    dateEnd,
+    budgetAmount,
+    oppStatus,
+    oppAmount,
+    oppPercent,
+    extrafields,
+    rawJson,
+    tms,
+    localUpdatedAt,
+    syncStatus,
+  ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ProjectRow &&
+          other.id == this.id &&
+          other.remoteId == this.remoteId &&
+          other.socidRemote == this.socidRemote &&
+          other.socidLocal == this.socidLocal &&
+          other.ref == this.ref &&
+          other.title == this.title &&
+          other.description == this.description &&
+          other.status == this.status &&
+          other.publicLevel == this.publicLevel &&
+          other.fkUserResp == this.fkUserResp &&
+          other.dateStart == this.dateStart &&
+          other.dateEnd == this.dateEnd &&
+          other.budgetAmount == this.budgetAmount &&
+          other.oppStatus == this.oppStatus &&
+          other.oppAmount == this.oppAmount &&
+          other.oppPercent == this.oppPercent &&
+          other.extrafields == this.extrafields &&
+          other.rawJson == this.rawJson &&
+          other.tms == this.tms &&
+          other.localUpdatedAt == this.localUpdatedAt &&
+          other.syncStatus == this.syncStatus);
+}
+
+class ProjectsCompanion extends UpdateCompanion<ProjectRow> {
+  final Value<int> id;
+  final Value<int?> remoteId;
+  final Value<int?> socidRemote;
+  final Value<int?> socidLocal;
+  final Value<String?> ref;
+  final Value<String> title;
+  final Value<String?> description;
+  final Value<int> status;
+  final Value<int> publicLevel;
+  final Value<int?> fkUserResp;
+  final Value<DateTime?> dateStart;
+  final Value<DateTime?> dateEnd;
+  final Value<String?> budgetAmount;
+  final Value<int?> oppStatus;
+  final Value<String?> oppAmount;
+  final Value<double?> oppPercent;
+  final Value<String> extrafields;
+  final Value<String?> rawJson;
+  final Value<DateTime?> tms;
+  final Value<DateTime> localUpdatedAt;
+  final Value<SyncStatus> syncStatus;
+  const ProjectsCompanion({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.socidRemote = const Value.absent(),
+    this.socidLocal = const Value.absent(),
+    this.ref = const Value.absent(),
+    this.title = const Value.absent(),
+    this.description = const Value.absent(),
+    this.status = const Value.absent(),
+    this.publicLevel = const Value.absent(),
+    this.fkUserResp = const Value.absent(),
+    this.dateStart = const Value.absent(),
+    this.dateEnd = const Value.absent(),
+    this.budgetAmount = const Value.absent(),
+    this.oppStatus = const Value.absent(),
+    this.oppAmount = const Value.absent(),
+    this.oppPercent = const Value.absent(),
+    this.extrafields = const Value.absent(),
+    this.rawJson = const Value.absent(),
+    this.tms = const Value.absent(),
+    this.localUpdatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+  });
+  ProjectsCompanion.insert({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.socidRemote = const Value.absent(),
+    this.socidLocal = const Value.absent(),
+    this.ref = const Value.absent(),
+    this.title = const Value.absent(),
+    this.description = const Value.absent(),
+    this.status = const Value.absent(),
+    this.publicLevel = const Value.absent(),
+    this.fkUserResp = const Value.absent(),
+    this.dateStart = const Value.absent(),
+    this.dateEnd = const Value.absent(),
+    this.budgetAmount = const Value.absent(),
+    this.oppStatus = const Value.absent(),
+    this.oppAmount = const Value.absent(),
+    this.oppPercent = const Value.absent(),
+    this.extrafields = const Value.absent(),
+    this.rawJson = const Value.absent(),
+    this.tms = const Value.absent(),
+    required DateTime localUpdatedAt,
+    this.syncStatus = const Value.absent(),
+  }) : localUpdatedAt = Value(localUpdatedAt);
+  static Insertable<ProjectRow> custom({
+    Expression<int>? id,
+    Expression<int>? remoteId,
+    Expression<int>? socidRemote,
+    Expression<int>? socidLocal,
+    Expression<String>? ref,
+    Expression<String>? title,
+    Expression<String>? description,
+    Expression<int>? status,
+    Expression<int>? publicLevel,
+    Expression<int>? fkUserResp,
+    Expression<DateTime>? dateStart,
+    Expression<DateTime>? dateEnd,
+    Expression<String>? budgetAmount,
+    Expression<int>? oppStatus,
+    Expression<String>? oppAmount,
+    Expression<double>? oppPercent,
+    Expression<String>? extrafields,
+    Expression<String>? rawJson,
+    Expression<DateTime>? tms,
+    Expression<DateTime>? localUpdatedAt,
+    Expression<int>? syncStatus,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (socidRemote != null) 'socid_remote': socidRemote,
+      if (socidLocal != null) 'socid_local': socidLocal,
+      if (ref != null) 'ref': ref,
+      if (title != null) 'title': title,
+      if (description != null) 'description': description,
+      if (status != null) 'status': status,
+      if (publicLevel != null) 'public_level': publicLevel,
+      if (fkUserResp != null) 'fk_user_resp': fkUserResp,
+      if (dateStart != null) 'date_start': dateStart,
+      if (dateEnd != null) 'date_end': dateEnd,
+      if (budgetAmount != null) 'budget_amount': budgetAmount,
+      if (oppStatus != null) 'opp_status': oppStatus,
+      if (oppAmount != null) 'opp_amount': oppAmount,
+      if (oppPercent != null) 'opp_percent': oppPercent,
+      if (extrafields != null) 'extrafields': extrafields,
+      if (rawJson != null) 'raw_json': rawJson,
+      if (tms != null) 'tms': tms,
+      if (localUpdatedAt != null) 'local_updated_at': localUpdatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+    });
+  }
+
+  ProjectsCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? remoteId,
+    Value<int?>? socidRemote,
+    Value<int?>? socidLocal,
+    Value<String?>? ref,
+    Value<String>? title,
+    Value<String?>? description,
+    Value<int>? status,
+    Value<int>? publicLevel,
+    Value<int?>? fkUserResp,
+    Value<DateTime?>? dateStart,
+    Value<DateTime?>? dateEnd,
+    Value<String?>? budgetAmount,
+    Value<int?>? oppStatus,
+    Value<String?>? oppAmount,
+    Value<double?>? oppPercent,
+    Value<String>? extrafields,
+    Value<String?>? rawJson,
+    Value<DateTime?>? tms,
+    Value<DateTime>? localUpdatedAt,
+    Value<SyncStatus>? syncStatus,
+  }) {
+    return ProjectsCompanion(
+      id: id ?? this.id,
+      remoteId: remoteId ?? this.remoteId,
+      socidRemote: socidRemote ?? this.socidRemote,
+      socidLocal: socidLocal ?? this.socidLocal,
+      ref: ref ?? this.ref,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      status: status ?? this.status,
+      publicLevel: publicLevel ?? this.publicLevel,
+      fkUserResp: fkUserResp ?? this.fkUserResp,
+      dateStart: dateStart ?? this.dateStart,
+      dateEnd: dateEnd ?? this.dateEnd,
+      budgetAmount: budgetAmount ?? this.budgetAmount,
+      oppStatus: oppStatus ?? this.oppStatus,
+      oppAmount: oppAmount ?? this.oppAmount,
+      oppPercent: oppPercent ?? this.oppPercent,
+      extrafields: extrafields ?? this.extrafields,
+      rawJson: rawJson ?? this.rawJson,
+      tms: tms ?? this.tms,
+      localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<int>(remoteId.value);
+    }
+    if (socidRemote.present) {
+      map['socid_remote'] = Variable<int>(socidRemote.value);
+    }
+    if (socidLocal.present) {
+      map['socid_local'] = Variable<int>(socidLocal.value);
+    }
+    if (ref.present) {
+      map['ref'] = Variable<String>(ref.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<int>(status.value);
+    }
+    if (publicLevel.present) {
+      map['public_level'] = Variable<int>(publicLevel.value);
+    }
+    if (fkUserResp.present) {
+      map['fk_user_resp'] = Variable<int>(fkUserResp.value);
+    }
+    if (dateStart.present) {
+      map['date_start'] = Variable<DateTime>(dateStart.value);
+    }
+    if (dateEnd.present) {
+      map['date_end'] = Variable<DateTime>(dateEnd.value);
+    }
+    if (budgetAmount.present) {
+      map['budget_amount'] = Variable<String>(budgetAmount.value);
+    }
+    if (oppStatus.present) {
+      map['opp_status'] = Variable<int>(oppStatus.value);
+    }
+    if (oppAmount.present) {
+      map['opp_amount'] = Variable<String>(oppAmount.value);
+    }
+    if (oppPercent.present) {
+      map['opp_percent'] = Variable<double>(oppPercent.value);
+    }
+    if (extrafields.present) {
+      map['extrafields'] = Variable<String>(extrafields.value);
+    }
+    if (rawJson.present) {
+      map['raw_json'] = Variable<String>(rawJson.value);
+    }
+    if (tms.present) {
+      map['tms'] = Variable<DateTime>(tms.value);
+    }
+    if (localUpdatedAt.present) {
+      map['local_updated_at'] = Variable<DateTime>(localUpdatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<int>(
+        $ProjectsTable.$convertersyncStatus.toSql(syncStatus.value),
+      );
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProjectsCompanion(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('socidRemote: $socidRemote, ')
+          ..write('socidLocal: $socidLocal, ')
+          ..write('ref: $ref, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('status: $status, ')
+          ..write('publicLevel: $publicLevel, ')
+          ..write('fkUserResp: $fkUserResp, ')
+          ..write('dateStart: $dateStart, ')
+          ..write('dateEnd: $dateEnd, ')
+          ..write('budgetAmount: $budgetAmount, ')
+          ..write('oppStatus: $oppStatus, ')
+          ..write('oppAmount: $oppAmount, ')
+          ..write('oppPercent: $oppPercent, ')
+          ..write('extrafields: $extrafields, ')
+          ..write('rawJson: $rawJson, ')
+          ..write('tms: $tms, ')
+          ..write('localUpdatedAt: $localUpdatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $SyncMetadataTable extends SyncMetadata
     with TableInfo<$SyncMetadataTable, SyncMetadataRow> {
   @override
@@ -5049,6 +6236,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $ExtrafieldDefinitionsTable(this);
   late final $PendingOperationsTable pendingOperations =
       $PendingOperationsTable(this);
+  late final $ProjectsTable projects = $ProjectsTable(this);
   late final $SyncMetadataTable syncMetadata = $SyncMetadataTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -5061,6 +6249,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     drafts,
     extrafieldDefinitions,
     pendingOperations,
+    projects,
     syncMetadata,
   ];
 }
@@ -7249,6 +8438,523 @@ typedef $$PendingOperationsTableProcessedTableManager =
       PendingOperationRow,
       PrefetchHooks Function()
     >;
+typedef $$ProjectsTableCreateCompanionBuilder =
+    ProjectsCompanion Function({
+      Value<int> id,
+      Value<int?> remoteId,
+      Value<int?> socidRemote,
+      Value<int?> socidLocal,
+      Value<String?> ref,
+      Value<String> title,
+      Value<String?> description,
+      Value<int> status,
+      Value<int> publicLevel,
+      Value<int?> fkUserResp,
+      Value<DateTime?> dateStart,
+      Value<DateTime?> dateEnd,
+      Value<String?> budgetAmount,
+      Value<int?> oppStatus,
+      Value<String?> oppAmount,
+      Value<double?> oppPercent,
+      Value<String> extrafields,
+      Value<String?> rawJson,
+      Value<DateTime?> tms,
+      required DateTime localUpdatedAt,
+      Value<SyncStatus> syncStatus,
+    });
+typedef $$ProjectsTableUpdateCompanionBuilder =
+    ProjectsCompanion Function({
+      Value<int> id,
+      Value<int?> remoteId,
+      Value<int?> socidRemote,
+      Value<int?> socidLocal,
+      Value<String?> ref,
+      Value<String> title,
+      Value<String?> description,
+      Value<int> status,
+      Value<int> publicLevel,
+      Value<int?> fkUserResp,
+      Value<DateTime?> dateStart,
+      Value<DateTime?> dateEnd,
+      Value<String?> budgetAmount,
+      Value<int?> oppStatus,
+      Value<String?> oppAmount,
+      Value<double?> oppPercent,
+      Value<String> extrafields,
+      Value<String?> rawJson,
+      Value<DateTime?> tms,
+      Value<DateTime> localUpdatedAt,
+      Value<SyncStatus> syncStatus,
+    });
+
+class $$ProjectsTableFilterComposer
+    extends Composer<_$AppDatabase, $ProjectsTable> {
+  $$ProjectsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get socidRemote => $composableBuilder(
+    column: $table.socidRemote,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get socidLocal => $composableBuilder(
+    column: $table.socidLocal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ref => $composableBuilder(
+    column: $table.ref,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get publicLevel => $composableBuilder(
+    column: $table.publicLevel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get fkUserResp => $composableBuilder(
+    column: $table.fkUserResp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateStart => $composableBuilder(
+    column: $table.dateStart,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateEnd => $composableBuilder(
+    column: $table.dateEnd,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get budgetAmount => $composableBuilder(
+    column: $table.budgetAmount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get oppStatus => $composableBuilder(
+    column: $table.oppStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get oppAmount => $composableBuilder(
+    column: $table.oppAmount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get oppPercent => $composableBuilder(
+    column: $table.oppPercent,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rawJson => $composableBuilder(
+    column: $table.rawJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get tms => $composableBuilder(
+    column: $table.tms,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<SyncStatus, SyncStatus, int> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+}
+
+class $$ProjectsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProjectsTable> {
+  $$ProjectsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get socidRemote => $composableBuilder(
+    column: $table.socidRemote,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get socidLocal => $composableBuilder(
+    column: $table.socidLocal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ref => $composableBuilder(
+    column: $table.ref,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get publicLevel => $composableBuilder(
+    column: $table.publicLevel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get fkUserResp => $composableBuilder(
+    column: $table.fkUserResp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateStart => $composableBuilder(
+    column: $table.dateStart,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateEnd => $composableBuilder(
+    column: $table.dateEnd,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get budgetAmount => $composableBuilder(
+    column: $table.budgetAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get oppStatus => $composableBuilder(
+    column: $table.oppStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get oppAmount => $composableBuilder(
+    column: $table.oppAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get oppPercent => $composableBuilder(
+    column: $table.oppPercent,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rawJson => $composableBuilder(
+    column: $table.rawJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get tms => $composableBuilder(
+    column: $table.tms,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ProjectsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProjectsTable> {
+  $$ProjectsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<int> get socidRemote => $composableBuilder(
+    column: $table.socidRemote,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get socidLocal => $composableBuilder(
+    column: $table.socidLocal,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get ref =>
+      $composableBuilder(column: $table.ref, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<int> get publicLevel => $composableBuilder(
+    column: $table.publicLevel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get fkUserResp => $composableBuilder(
+    column: $table.fkUserResp,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dateStart =>
+      $composableBuilder(column: $table.dateStart, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateEnd =>
+      $composableBuilder(column: $table.dateEnd, builder: (column) => column);
+
+  GeneratedColumn<String> get budgetAmount => $composableBuilder(
+    column: $table.budgetAmount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get oppStatus =>
+      $composableBuilder(column: $table.oppStatus, builder: (column) => column);
+
+  GeneratedColumn<String> get oppAmount =>
+      $composableBuilder(column: $table.oppAmount, builder: (column) => column);
+
+  GeneratedColumn<double> get oppPercent => $composableBuilder(
+    column: $table.oppPercent,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get rawJson =>
+      $composableBuilder(column: $table.rawJson, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get tms =>
+      $composableBuilder(column: $table.tms, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<SyncStatus, int> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => column,
+      );
+}
+
+class $$ProjectsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProjectsTable,
+          ProjectRow,
+          $$ProjectsTableFilterComposer,
+          $$ProjectsTableOrderingComposer,
+          $$ProjectsTableAnnotationComposer,
+          $$ProjectsTableCreateCompanionBuilder,
+          $$ProjectsTableUpdateCompanionBuilder,
+          (
+            ProjectRow,
+            BaseReferences<_$AppDatabase, $ProjectsTable, ProjectRow>,
+          ),
+          ProjectRow,
+          PrefetchHooks Function()
+        > {
+  $$ProjectsTableTableManager(_$AppDatabase db, $ProjectsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProjectsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProjectsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ProjectsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> remoteId = const Value.absent(),
+                Value<int?> socidRemote = const Value.absent(),
+                Value<int?> socidLocal = const Value.absent(),
+                Value<String?> ref = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<int> status = const Value.absent(),
+                Value<int> publicLevel = const Value.absent(),
+                Value<int?> fkUserResp = const Value.absent(),
+                Value<DateTime?> dateStart = const Value.absent(),
+                Value<DateTime?> dateEnd = const Value.absent(),
+                Value<String?> budgetAmount = const Value.absent(),
+                Value<int?> oppStatus = const Value.absent(),
+                Value<String?> oppAmount = const Value.absent(),
+                Value<double?> oppPercent = const Value.absent(),
+                Value<String> extrafields = const Value.absent(),
+                Value<String?> rawJson = const Value.absent(),
+                Value<DateTime?> tms = const Value.absent(),
+                Value<DateTime> localUpdatedAt = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
+              }) => ProjectsCompanion(
+                id: id,
+                remoteId: remoteId,
+                socidRemote: socidRemote,
+                socidLocal: socidLocal,
+                ref: ref,
+                title: title,
+                description: description,
+                status: status,
+                publicLevel: publicLevel,
+                fkUserResp: fkUserResp,
+                dateStart: dateStart,
+                dateEnd: dateEnd,
+                budgetAmount: budgetAmount,
+                oppStatus: oppStatus,
+                oppAmount: oppAmount,
+                oppPercent: oppPercent,
+                extrafields: extrafields,
+                rawJson: rawJson,
+                tms: tms,
+                localUpdatedAt: localUpdatedAt,
+                syncStatus: syncStatus,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> remoteId = const Value.absent(),
+                Value<int?> socidRemote = const Value.absent(),
+                Value<int?> socidLocal = const Value.absent(),
+                Value<String?> ref = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<int> status = const Value.absent(),
+                Value<int> publicLevel = const Value.absent(),
+                Value<int?> fkUserResp = const Value.absent(),
+                Value<DateTime?> dateStart = const Value.absent(),
+                Value<DateTime?> dateEnd = const Value.absent(),
+                Value<String?> budgetAmount = const Value.absent(),
+                Value<int?> oppStatus = const Value.absent(),
+                Value<String?> oppAmount = const Value.absent(),
+                Value<double?> oppPercent = const Value.absent(),
+                Value<String> extrafields = const Value.absent(),
+                Value<String?> rawJson = const Value.absent(),
+                Value<DateTime?> tms = const Value.absent(),
+                required DateTime localUpdatedAt,
+                Value<SyncStatus> syncStatus = const Value.absent(),
+              }) => ProjectsCompanion.insert(
+                id: id,
+                remoteId: remoteId,
+                socidRemote: socidRemote,
+                socidLocal: socidLocal,
+                ref: ref,
+                title: title,
+                description: description,
+                status: status,
+                publicLevel: publicLevel,
+                fkUserResp: fkUserResp,
+                dateStart: dateStart,
+                dateEnd: dateEnd,
+                budgetAmount: budgetAmount,
+                oppStatus: oppStatus,
+                oppAmount: oppAmount,
+                oppPercent: oppPercent,
+                extrafields: extrafields,
+                rawJson: rawJson,
+                tms: tms,
+                localUpdatedAt: localUpdatedAt,
+                syncStatus: syncStatus,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ProjectsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProjectsTable,
+      ProjectRow,
+      $$ProjectsTableFilterComposer,
+      $$ProjectsTableOrderingComposer,
+      $$ProjectsTableAnnotationComposer,
+      $$ProjectsTableCreateCompanionBuilder,
+      $$ProjectsTableUpdateCompanionBuilder,
+      (ProjectRow, BaseReferences<_$AppDatabase, $ProjectsTable, ProjectRow>),
+      ProjectRow,
+      PrefetchHooks Function()
+    >;
 typedef $$SyncMetadataTableCreateCompanionBuilder =
     SyncMetadataCompanion Function({
       Value<int> id,
@@ -7467,6 +9173,8 @@ class $AppDatabaseManager {
       $$ExtrafieldDefinitionsTableTableManager(_db, _db.extrafieldDefinitions);
   $$PendingOperationsTableTableManager get pendingOperations =>
       $$PendingOperationsTableTableManager(_db, _db.pendingOperations);
+  $$ProjectsTableTableManager get projects =>
+      $$ProjectsTableTableManager(_db, _db.projects);
   $$SyncMetadataTableTableManager get syncMetadata =>
       $$SyncMetadataTableTableManager(_db, _db.syncMetadata);
 }

@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-/// Shell principal après connexion : 3 onglets (Tiers / Contacts / Paramètres).
-///
-/// Pour l'Étape 3 les pages internes sont des placeholders. Elles seront
-/// remplacées par les features réelles aux Étapes 6 / 8.
+/// Shell principal après connexion : 4 onglets (Tiers / Contacts / Projets /
+/// Paramètres).
 class ShellPage extends StatelessWidget {
   const ShellPage({required this.child, super.key});
   final Widget child;
@@ -21,6 +19,11 @@ class ShellPage extends StatelessWidget {
       path: RoutePaths.contacts,
       label: 'Contacts',
       icon: LucideIcons.users,
+    ),
+    _TabRoute(
+      path: RoutePaths.projects,
+      label: 'Projets',
+      icon: LucideIcons.folderOpen,
     ),
     _TabRoute(
       path: RoutePaths.settings,

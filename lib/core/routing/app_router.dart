@@ -8,6 +8,8 @@ import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_provid
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contact_detail_page.dart';
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contact_form_page.dart';
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contacts_list_page.dart';
+import 'package:dolibarr_mobile/features/projects/presentation/pages/project_detail_page.dart';
+import 'package:dolibarr_mobile/features/projects/presentation/pages/projects_list_page.dart';
 import 'package:dolibarr_mobile/features/sync/presentation/pages/pending_operations_page.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/third_party_detail_page.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/third_party_form_page.dart';
@@ -112,6 +114,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     ),
                   ),
                 ],
+              ),
+            ],
+          ),
+          GoRoute(
+            path: RoutePaths.projects,
+            builder: (_, __) => const ProjectsListPage(),
+            routes: [
+              GoRoute(
+                path: ':id',
+                builder: (_, state) => ProjectDetailPage(
+                  localId: int.parse(state.pathParameters['id']!),
+                ),
               ),
             ],
           ),

@@ -3,6 +3,7 @@ import 'package:dolibarr_mobile/core/storage/collections/contacts.dart';
 import 'package:dolibarr_mobile/core/storage/collections/drafts.dart';
 import 'package:dolibarr_mobile/core/storage/collections/extrafield_definitions.dart';
 import 'package:dolibarr_mobile/core/storage/collections/pending_operations.dart';
+import 'package:dolibarr_mobile/core/storage/collections/projects.dart';
 import 'package:dolibarr_mobile/core/storage/collections/sync_metadata.dart';
 import 'package:dolibarr_mobile/core/storage/collections/third_parties.dart';
 import 'package:dolibarr_mobile/core/storage/sync_status.dart';
@@ -23,6 +24,7 @@ part 'app_database.g.dart';
     Drafts,
     ExtrafieldDefinitions,
     PendingOperations,
+    Projects,
     SyncMetadata,
   ],
 )
@@ -33,7 +35,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -47,6 +49,9 @@ class AppDatabase extends _$AppDatabase {
         onUpgrade: (m, from, to) async {
           if (from < 2) {
             await m.createTable(drafts);
+          }
+          if (from < 3) {
+            await m.createTable(projects);
           }
         },
       );

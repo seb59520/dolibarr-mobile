@@ -15,6 +15,8 @@ abstract final class RoutePaths {
   static const String contactNew = '/app/contacts/new';
   static const String contactDetail = '/app/contacts/:id';
   static const String contactEdit = '/app/contacts/:id/edit';
+  static const String projects = '/app/projects';
+  static const String projectDetail = '/app/projects/:id';
   static const String settings = '/app/settings';
   static const String pendingOperations = '/app/sync';
 
@@ -32,4 +34,7 @@ abstract final class RoutePaths {
   /// parent par sa PK locale (passé en query string `?parent=`).
   static String contactNewForParent(int parentLocalId) =>
       '/app/contacts/new?parent=$parentLocalId';
+
+  static String projectDetailFor(int localId) =>
+      '/app/projects/$localId';
 }

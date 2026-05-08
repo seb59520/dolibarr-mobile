@@ -25,6 +25,11 @@ abstract final class ApiPaths {
 
   // Champs personnalisés (definitions)
   static const String setupExtrafields = '/setup/extrafields';
+
+  // Projets
+  static const String projects = '/projects';
+  static String projectById(int id) => '/projects/$id';
+  static String projectTasks(int id) => '/projects/$id/tasks';
 }
 
 /// Header HTTP obligatoire sur toutes les requêtes authentifiées.
