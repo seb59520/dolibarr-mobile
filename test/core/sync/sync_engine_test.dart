@@ -14,6 +14,9 @@ import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_local
 import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/projects/data/datasources/project_local_dao.dart';
 import 'package:dolibarr_mobile/features/projects/data/datasources/project_remote_datasource.dart';
+import 'package:dolibarr_mobile/features/proposals/data/datasources/proposal_local_dao.dart';
+import 'package:dolibarr_mobile/features/proposals/data/datasources/proposal_remote_datasource.dart';
+import 'package:dolibarr_mobile/features/proposals/domain/entities/proposal.dart';
 import 'package:dolibarr_mobile/features/tasks/data/datasources/task_local_dao.dart';
 import 'package:dolibarr_mobile/features/tasks/data/datasources/task_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/thirdparties/data/datasources/third_party_local_dao.dart';
@@ -42,6 +45,10 @@ class _MockTskDao extends Mock implements TaskLocalDao {}
 class _MockInvRemote extends Mock implements InvoiceRemoteDataSource {}
 
 class _MockInvDao extends Mock implements InvoiceLocalDao {}
+
+class _MockPrRemote extends Mock implements ProposalRemoteDataSource {}
+
+class _MockPrDao extends Mock implements ProposalLocalDao {}
 
 class _StubNetwork implements NetworkInfo {
   _StubNetwork({bool online = true}) : _online = online;
@@ -106,6 +113,8 @@ void main() {
   late _MockTskDao tskDao;
   late _MockInvRemote invRemote;
   late _MockInvDao invDao;
+  late _MockPrRemote prRemote;
+  late _MockPrDao prDao;
   late _StubNetwork network;
   late SyncEngine engine;
 
@@ -123,6 +132,8 @@ void main() {
     tskDao = _MockTskDao();
     invRemote = _MockInvRemote();
     invDao = _MockInvDao();
+    prRemote = _MockPrRemote();
+    prDao = _MockPrDao();
     network = _StubNetwork();
     now = DateTime(2026, 5, 9, 12);
 
@@ -138,6 +149,8 @@ void main() {
       taskDao: tskDao,
       invoiceRemote: invRemote,
       invoiceDao: invDao,
+      proposalRemote: prRemote,
+      proposalDao: prDao,
       network: network,
       now: () => now,
     );
@@ -216,6 +229,14 @@ void main() {
         parentRemoteId: any(named: 'parentRemoteId'),
       ),
     ).thenAnswer((_) async => 0);
+
+    // Cascade thirdparty → proposals.
+    when(
+      () => prDao.patchSocidRemoteByParent(
+        parentLocalId: any(named: 'parentLocalId'),
+        parentRemoteId: any(named: 'parentRemoteId'),
+      ),
+    ).thenAnswer((_) async => 0);
   });
 
   group('runOnce — thirdparty create', () {
@@ -248,6 +269,13 @@ void main() {
       ).called(1);
       verify(
         () => ctDao.patchSocidRemoteByParent(
+          parentLocalId: 10,
+          parentRemoteId: 555,
+        ),
+      ).called(1);
+      // Cascade tiers→devis : doit aussi être déclenchée.
+      verify(
+        () => prDao.patchSocidRemoteByParent(
           parentLocalId: 10,
           parentRemoteId: 555,
         ),
@@ -441,6 +469,70 @@ void main() {
       ).called(1);
       verifyNever(() => ctRemote.create(any()));
     });
+  });
+
+  group('runOnce — proposal create cascade', () {
+    test(
+      'create proposal succès → markSynced + cascade patch lines + '
+      'completeAndUnblockChildren',
+      () async {
+        final op = _row(
+          entityType: PendingOpEntity.proposal,
+          targetLocalId: 50,
+        );
+        var calls = 0;
+        when(() => outbox.dispatchable(now: any(named: 'now')))
+            .thenAnswer((_) async => calls++ == 0 ? [op] : []);
+
+        final proposal = Proposal(
+          localId: 50,
+          socidLocal: 10,
+          socidRemote: 555,
+          localUpdatedAt: DateTime(2026, 5, 9),
+        );
+        when(() => prDao.watchById(50))
+            .thenAnswer((_) => Stream.value(proposal));
+        when(() => prRemote.create(any())).thenAnswer((_) async => 700);
+        when(() => prRemote.fetchById(700)).thenAnswer(
+          (_) async => {'id': 700, 'tms': 1746663000},
+        );
+        when(
+          () => prDao.markSyncedWithRemote(
+            localId: any(named: 'localId'),
+            remoteId: any(named: 'remoteId'),
+            tms: any(named: 'tms'),
+          ),
+        ).thenAnswer((_) async {});
+        when(
+          () => prDao.patchProposalRemoteByParent(
+            parentLocalId: any(named: 'parentLocalId'),
+            parentRemoteId: any(named: 'parentRemoteId'),
+          ),
+        ).thenAnswer((_) async => 0);
+
+        final report = await engine.runOnce();
+
+        expect(report.succeeded, 1);
+        final payloadCaptured = verify(
+          () => prRemote.create(captureAny()),
+        ).captured.first as Map<String, Object?>;
+        expect(payloadCaptured['socid'], 555);
+        verify(
+          () => prDao.markSyncedWithRemote(
+            localId: 50,
+            remoteId: 700,
+            tms: any(named: 'tms'),
+          ),
+        ).called(1);
+        // Cascade devis→ligne.
+        verify(
+          () => prDao.patchProposalRemoteByParent(
+            parentLocalId: 50,
+            parentRemoteId: 700,
+          ),
+        ).called(1);
+      },
+    );
   });
 
   group('runOnce — delete', () {

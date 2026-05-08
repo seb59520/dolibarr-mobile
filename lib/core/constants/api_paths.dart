@@ -45,6 +45,16 @@ abstract final class ApiPaths {
   static String invoicePayments(int id) => '/invoices/$id/payments';
   static String invoiceMarkPaid(int id) => '/invoices/$id/markaspaid';
 
+  // Devis (propositions commerciales)
+  static const String proposals = '/proposals';
+  static String proposalById(int id) => '/proposals/$id';
+  static String proposalLines(int id) => '/proposals/$id/lines';
+  static String proposalLineById(int proposalId, int lineId) =>
+      '/proposals/$proposalId/lines/$lineId';
+  static String proposalValidate(int id) => '/proposals/$id/validate';
+  static String proposalClose(int id) => '/proposals/$id/close';
+  static String proposalSetInvoiced(int id) => '/proposals/$id/setinvoiced';
+
   // Documents (PDF). Le module appelant + le nom du fichier serveur
   // sont passés en query string : ?modulepart=facture&original_file=...
   static const String documentDownload = '/documents/download';

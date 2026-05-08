@@ -4,6 +4,7 @@ import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_provid
 import 'package:dolibarr_mobile/features/contacts/presentation/providers/contact_providers.dart';
 import 'package:dolibarr_mobile/features/invoices/presentation/providers/invoice_providers.dart';
 import 'package:dolibarr_mobile/features/projects/presentation/providers/project_providers.dart';
+import 'package:dolibarr_mobile/features/proposals/presentation/providers/proposal_providers.dart';
 import 'package:dolibarr_mobile/features/tasks/presentation/providers/task_providers.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/providers/third_party_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,6 +24,8 @@ final syncEngineProvider = Provider<SyncEngine>((ref) {
     taskDao: ref.watch(taskLocalDaoProvider),
     invoiceRemote: ref.watch(invoiceRemoteDataSourceProvider),
     invoiceDao: ref.watch(invoiceLocalDaoProvider),
+    proposalRemote: ref.watch(proposalRemoteDataSourceProvider),
+    proposalDao: ref.watch(proposalLocalDaoProvider),
     network: ref.watch(networkInfoProvider),
   );
   ref.onDispose(engine.stop);

@@ -48,4 +48,6 @@ enum PendingOpEntity {
   task,
   invoice,
   invoiceLine,
+  proposal,
+  proposalLine,
 }

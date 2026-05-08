@@ -12,6 +12,8 @@ import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_local
 import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/projects/data/datasources/project_local_dao.dart';
 import 'package:dolibarr_mobile/features/projects/data/datasources/project_remote_datasource.dart';
+import 'package:dolibarr_mobile/features/proposals/data/datasources/proposal_local_dao.dart';
+import 'package:dolibarr_mobile/features/proposals/data/datasources/proposal_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/tasks/data/datasources/task_local_dao.dart';
 import 'package:dolibarr_mobile/features/tasks/data/datasources/task_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/thirdparties/data/datasources/third_party_local_dao.dart';
@@ -74,6 +76,8 @@ class SyncEngine {
     required TaskLocalDao taskDao,
     required InvoiceRemoteDataSource invoiceRemote,
     required InvoiceLocalDao invoiceDao,
+    required ProposalRemoteDataSource proposalRemote,
+    required ProposalLocalDao proposalDao,
     required NetworkInfo network,
     Logger? logger,
     DateTime Function() now = DateTime.now,
@@ -88,6 +92,8 @@ class SyncEngine {
         _taskDao = taskDao,
         _invoiceRemote = invoiceRemote,
         _invoiceDao = invoiceDao,
+        _proposalRemote = proposalRemote,
+        _proposalDao = proposalDao,
         _network = network,
         _logger = logger ?? Logger(printer: SimplePrinter()),
         _now = now;
@@ -103,6 +109,8 @@ class SyncEngine {
   final TaskLocalDao _taskDao;
   final InvoiceRemoteDataSource _invoiceRemote;
   final InvoiceLocalDao _invoiceDao;
+  final ProposalRemoteDataSource _proposalRemote;
+  final ProposalLocalDao _proposalDao;
   final NetworkInfo _network;
   final Logger _logger;
   final DateTime Function() _now;
@@ -202,6 +210,10 @@ class SyncEngine {
           await _invoiceDao.hardDelete(row.targetLocalId);
         case PendingOpEntity.invoiceLine:
           await _invoiceDao.hardDeleteLine(row.targetLocalId);
+        case PendingOpEntity.proposal:
+          await _proposalDao.hardDelete(row.targetLocalId);
+        case PendingOpEntity.proposalLine:
+          await _proposalDao.hardDeleteLine(row.targetLocalId);
       }
     }
     await _outbox.deleteById(opId);
@@ -225,6 +237,10 @@ class SyncEngine {
           await _dispatchInvoice(op);
         case PendingOpEntity.invoiceLine:
           await _dispatchInvoiceLine(op);
+        case PendingOpEntity.proposal:
+          await _dispatchProposal(op);
+        case PendingOpEntity.proposalLine:
+          await _dispatchProposalLine(op);
       }
       await _outbox.completeAndUnblockChildren(op.id);
       return _Outcome.success;
@@ -286,6 +302,10 @@ class SyncEngine {
         await _invoiceDao.markConflict(op.targetLocalId);
       case PendingOpEntity.invoiceLine:
         await _invoiceDao.markLineConflict(op.targetLocalId);
+      case PendingOpEntity.proposal:
+        await _proposalDao.markConflict(op.targetLocalId);
+      case PendingOpEntity.proposalLine:
+        await _proposalDao.markLineConflict(op.targetLocalId);
     }
   }
 
@@ -340,6 +360,10 @@ class SyncEngine {
           parentRemoteId: remoteId,
         );
         await _invoiceDao.patchSocidRemoteByParent(
+          parentLocalId: op.targetLocalId,
+          parentRemoteId: remoteId,
+        );
+        await _proposalDao.patchSocidRemoteByParent(
           parentLocalId: op.targetLocalId,
           parentRemoteId: remoteId,
         );
@@ -682,6 +706,126 @@ class SyncEngine {
     }
   }
 
+  // -------------------------- Proposal ---------------------------------
+
+  Future<void> _dispatchProposal(PendingOperationRow op) async {
+    final payload = _decodePayload(op.payload);
+    switch (op.opType) {
+      case PendingOpType.create:
+        final fresh = await _proposalDao.watchById(op.targetLocalId).first;
+        if (fresh != null && fresh.socidRemote != null) {
+          payload['socid'] = fresh.socidRemote;
+        }
+        if (payload['socid'] == null) {
+          throw const ValidationException(
+            message: 'Tiers parent non synchronisé — '
+                'impossible de créer le devis.',
+          );
+        }
+        final remoteId = await _proposalRemote.create(payload);
+        DateTime? serverTms;
+        try {
+          final got = await _proposalRemote.fetchById(remoteId);
+          serverTms = _parseTms(got['tms']);
+        } catch (_) {
+          // pas critique
+        }
+        await _proposalDao.markSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: remoteId,
+          tms: serverTms,
+        );
+        await _proposalDao.patchProposalRemoteByParent(
+          parentLocalId: op.targetLocalId,
+          parentRemoteId: remoteId,
+        );
+
+      case PendingOpType.update:
+        if (op.expectedTms != null) {
+          final freshFromServer =
+              await _proposalRemote.fetchById(op.targetRemoteId!);
+          final serverTms = _parseTms(freshFromServer['tms']);
+          if (serverTms != null && serverTms.isAfter(op.expectedTms!)) {
+            throw _ConflictDetected(
+              'Modifié sur le serveur (tms=$serverTms vs ${op.expectedTms})',
+            );
+          }
+        }
+        final body = await _proposalRemote.update(
+          op.targetRemoteId!,
+          payload,
+        );
+        await _proposalDao.markSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: op.targetRemoteId!,
+          tms: _parseTms(body['tms']),
+        );
+
+      case PendingOpType.delete:
+        await _proposalRemote.delete(op.targetRemoteId!);
+        await _proposalDao.clearAfterServerDelete(op.targetLocalId);
+    }
+  }
+
+  // -------------------------- Proposal line ----------------------------
+
+  Future<void> _dispatchProposalLine(PendingOperationRow op) async {
+    final payload = _decodePayload(op.payload);
+    switch (op.opType) {
+      case PendingOpType.create:
+        final fresh = await _proposalDao.watchLineById(op.targetLocalId).first;
+        final proposalRemote = fresh?.proposalRemote;
+        if (proposalRemote == null) {
+          throw const ValidationException(
+            message: 'Devis parent non synchronisé — '
+                'impossible de créer la ligne.',
+          );
+        }
+        final remoteId = await _proposalRemote.createLine(
+          proposalRemote,
+          payload,
+        );
+        await _proposalDao.markLineSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: remoteId,
+        );
+
+      case PendingOpType.update:
+        final fresh =
+            await _proposalDao.findLineByLocalId(op.targetLocalId);
+        final proposalRemote = fresh?.proposalRemote;
+        if (proposalRemote == null) {
+          throw const ValidationException(
+            message: 'Devis parent non synchronisé — '
+                'impossible de modifier la ligne.',
+          );
+        }
+        await _proposalRemote.updateLine(
+          proposalRemote,
+          op.targetRemoteId!,
+          payload,
+        );
+        await _proposalDao.markLineSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: op.targetRemoteId!,
+        );
+
+      case PendingOpType.delete:
+        final fresh =
+            await _proposalDao.findLineByLocalId(op.targetLocalId);
+        final proposalRemote = fresh?.proposalRemote;
+        if (proposalRemote == null) {
+          await _proposalDao.clearLineAfterServerDelete(op.targetLocalId);
+          return;
+        }
+        await _proposalRemote.deleteLine(
+          proposalRemote,
+          op.targetRemoteId!,
+        );
+        await _proposalDao.clearLineAfterServerDelete(op.targetLocalId);
+    }
+  }
+
   // -------------------------- Helpers ----------------------------------
 
   Future<void> _applyAfterDelete(PendingOperationRow op) async {
@@ -698,6 +842,10 @@ class SyncEngine {
         await _invoiceDao.clearAfterServerDelete(op.targetLocalId);
       case PendingOpEntity.invoiceLine:
         await _invoiceDao.clearLineAfterServerDelete(op.targetLocalId);
+      case PendingOpEntity.proposal:
+        await _proposalDao.clearAfterServerDelete(op.targetLocalId);
+      case PendingOpEntity.proposalLine:
+        await _proposalDao.clearLineAfterServerDelete(op.targetLocalId);
     }
   }
 

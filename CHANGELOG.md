@@ -3,6 +3,29 @@
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Les versions suivent [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0-dev] — Étape 18 (en cours)
+
+### Étape 18 — Devis (CRUD + workflow online)
+
+- Domain `Proposal`, `ProposalLine`, `ProposalFilters` avec statut
+  `draft / validated / signed / refused` et calcul `isExpired`.
+- Drift v6, tables `proposals` + `proposal_lines` + migration.
+- `ProposalRemoteDataSource` (CRUD header + lignes, validate,
+  close, setInvoiced, downloadPdf) + sqlfilters builder.
+- `ProposalLocalDao` avec upsert transactionnel des lignes via
+  `json['lines']` et nettoyage des lignes serveur disparues.
+- `PendingOpEntity.proposal` + `proposalLine` + dispatch SyncEngine
+  avec cascade tiers→devis et devis→ligne.
+- `ProposalsListPage`, `ProposalDetailPage` (sections Dates / Lignes /
+  Totaux / Notes + workflow actions Valider / Signé / Refusé /
+  Facturé / PDF), `ProposalFormPage` (header + brouillon
+  autosauvegardé), `ProposalLineEditDialog` (lignes éditables avec
+  totaux live HT/TVA/TTC), `ThirdPartyProposalsSection`.
+- 6ᵉ tab "Devis" dans le shell (icon fileText) entre Projets et
+  Factures (suit le workflow commercial).
+- ADR 0011 formalise le modèle, le workflow online-only et l'UI.
+- 20 nouveaux tests (workflow, sqlfilters, cascade sync_engine).
+
 ## [1.1.0] — 2026-05-09
 
 Extension du périmètre : ajout des **projets** (avec tâches) et des

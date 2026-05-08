@@ -26,6 +26,11 @@ class ShellPage extends StatelessWidget {
       icon: LucideIcons.folderOpen,
     ),
     _TabRoute(
+      path: RoutePaths.proposals,
+      label: 'Devis',
+      icon: LucideIcons.fileText,
+    ),
+    _TabRoute(
       path: RoutePaths.invoices,
       label: 'Factures',
       icon: LucideIcons.receipt,

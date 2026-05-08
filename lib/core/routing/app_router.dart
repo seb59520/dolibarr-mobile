@@ -14,6 +14,9 @@ import 'package:dolibarr_mobile/features/invoices/presentation/pages/invoices_li
 import 'package:dolibarr_mobile/features/projects/presentation/pages/project_detail_page.dart';
 import 'package:dolibarr_mobile/features/projects/presentation/pages/project_form_page.dart';
 import 'package:dolibarr_mobile/features/projects/presentation/pages/projects_list_page.dart';
+import 'package:dolibarr_mobile/features/proposals/presentation/pages/proposal_detail_page.dart';
+import 'package:dolibarr_mobile/features/proposals/presentation/pages/proposal_form_page.dart';
+import 'package:dolibarr_mobile/features/proposals/presentation/pages/proposals_list_page.dart';
 import 'package:dolibarr_mobile/features/sync/presentation/pages/pending_operations_page.dart';
 import 'package:dolibarr_mobile/features/tasks/presentation/pages/task_detail_page.dart';
 import 'package:dolibarr_mobile/features/tasks/presentation/pages/task_form_page.dart';
@@ -177,6 +180,37 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'edit',
                     builder: (_, state) => InvoiceFormPage(
+                      existingLocalId:
+                          int.parse(state.pathParameters['id']!),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          GoRoute(
+            path: RoutePaths.proposals,
+            builder: (_, __) => const ProposalsListPage(),
+            routes: [
+              GoRoute(
+                path: 'new',
+                builder: (_, state) {
+                  final parent = state.uri.queryParameters['parent'];
+                  return ProposalFormPage(
+                    parentLocalId:
+                        parent == null ? null : int.tryParse(parent),
+                  );
+                },
+              ),
+              GoRoute(
+                path: ':id',
+                builder: (_, state) => ProposalDetailPage(
+                  localId: int.parse(state.pathParameters['id']!),
+                ),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    builder: (_, state) => ProposalFormPage(
                       existingLocalId:
                           int.parse(state.pathParameters['id']!),
                     ),

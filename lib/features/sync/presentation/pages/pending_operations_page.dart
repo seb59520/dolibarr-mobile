@@ -73,6 +73,8 @@ class _OpCard extends ConsumerWidget {
       PendingOpEntity.task => 'Tâche',
       PendingOpEntity.invoice => 'Facture',
       PendingOpEntity.invoiceLine => 'Ligne facture',
+      PendingOpEntity.proposal => 'Devis',
+      PendingOpEntity.proposalLine => 'Ligne devis',
     };
     final type = switch (op.opType) {
       PendingOpType.create => 'Création',

@@ -16,3 +16,4 @@ ADR `Statut: superseded by NNNN`.
 | 0008 | [Web online-only en v1.0](0008-web-online-only.md)                   | accepté  |
 | 0009 | [Cascade Outbox multi-niveaux](0009-cascade-multi-level.md)          | accepté  |
 | 0010 | [Workflow facture online-only](0010-invoice-workflow-online.md)      | accepté  |
+| 0011 | [Devis : modèle, workflow et UI](0011-proposal-feature.md)           | accepté  |

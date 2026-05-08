@@ -26,6 +26,10 @@ abstract final class RoutePaths {
   static const String invoiceNew = '/app/invoices/new';
   static const String invoiceDetail = '/app/invoices/:id';
   static const String invoiceEdit = '/app/invoices/:id/edit';
+  static const String proposals = '/app/proposals';
+  static const String proposalNew = '/app/proposals/new';
+  static const String proposalDetail = '/app/proposals/:id';
+  static const String proposalEdit = '/app/proposals/:id/edit';
   static const String settings = '/app/settings';
   static const String pendingOperations = '/app/sync';
 
@@ -74,4 +78,15 @@ abstract final class RoutePaths {
   /// parent (client) par sa PK locale.
   static String invoiceNewForParent(int parentLocalId) =>
       '/app/invoices/new?parent=$parentLocalId';
+
+  static String proposalDetailFor(int localId) =>
+      '/app/proposals/$localId';
+
+  static String proposalEditFor(int localId) =>
+      '/app/proposals/$localId/edit';
+
+  /// Crée la route "nouveau devis" en pré-sélectionnant un tiers
+  /// parent (client) par sa PK locale.
+  static String proposalNewForParent(int parentLocalId) =>
+      '/app/proposals/new?parent=$parentLocalId';
 }
