@@ -1,0 +1,15 @@
+{
+  "@@locale": "fr",
+  "appTitle": "Dolibarr Mobile",
+  "@appTitle": {
+    "description": "Nom de l'application affiché en titre"
+  },
+  "helloWorld": "Bonjour Dolibarr Mobile",
+  "@helloWorld": {
+    "description": "Message d'accueil temporaire (Étape 1)"
+  },
+  "loading": "Chargement…",
+  "@loading": {
+    "description": "Indicateur de chargement générique"
+  }
+}
