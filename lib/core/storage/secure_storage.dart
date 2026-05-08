@@ -17,6 +17,12 @@ abstract interface class SecureStorage {
   Future<void> writeBaseUrl(String url);
   Future<String?> readBaseUrl();
 
+  /// Drapeau "onboarding terminé" (non sensible mais pratique à
+  /// loger ici — évite d'introduire shared_preferences uniquement
+  /// pour ce besoin).
+  Future<void> writeOnboardingCompleted();
+  Future<bool> readOnboardingCompleted();
+
   Future<void> clear();
 }
 
@@ -34,6 +40,7 @@ final class SecureStorageImpl implements SecureStorage {
 
   static const _kApiKey = 'dolibarr.apiKey';
   static const _kBaseUrl = 'dolibarr.baseUrl';
+  static const _kOnboarding = 'dolibarr.onboardingCompleted';
 
   final FlutterSecureStorage _storage;
 
@@ -53,6 +60,16 @@ final class SecureStorageImpl implements SecureStorage {
   @override
   Future<void> writeBaseUrl(String url) =>
       _storage.write(key: _kBaseUrl, value: url);
+
+  @override
+  Future<void> writeOnboardingCompleted() =>
+      _storage.write(key: _kOnboarding, value: 'true');
+
+  @override
+  Future<bool> readOnboardingCompleted() async {
+    final v = await _storage.read(key: _kOnboarding);
+    return v == 'true';
+  }
 
   @override
   Future<void> clear() => _storage.deleteAll();

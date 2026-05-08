@@ -4,6 +4,7 @@ import 'package:dolibarr_mobile/core/storage/collections/extrafield_definitions.
 import 'package:dolibarr_mobile/core/storage/collections/pending_operations.dart';
 import 'package:dolibarr_mobile/core/storage/collections/sync_metadata.dart';
 import 'package:dolibarr_mobile/core/storage/collections/third_parties.dart';
+import 'package:dolibarr_mobile/core/storage/sync_status.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
