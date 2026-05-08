@@ -1,7 +1,7 @@
 import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/pages/login_page.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/pages/onboarding_page.dart';
-import 'package:dolibarr_mobile/features/auth/presentation/pages/placeholder_pages.dart';
+import 'package:dolibarr_mobile/features/auth/presentation/pages/settings_page.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/pages/shell_page.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/pages/splash_page.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_providers.dart';
@@ -117,7 +117,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: RoutePaths.settings,
-            builder: (_, __) => const SettingsPlaceholderPage(),
+            builder: (_, __) => const SettingsPage(),
           ),
           GoRoute(
             path: RoutePaths.pendingOperations,

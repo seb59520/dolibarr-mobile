@@ -8,20 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-/// Placeholders pour les onglets non encore implémentés.
-class ThirdPartiesPlaceholderPage extends StatelessWidget {
-  const ThirdPartiesPlaceholderPage({super.key});
-
-  @override
-  Widget build(BuildContext context) => const _ComingSoon(
-        title: 'Tiers',
-        description: 'Liste, recherche et fiche tiers — Étape 6.',
-        icon: LucideIcons.briefcase,
-      );
-}
-
-class SettingsPlaceholderPage extends ConsumerWidget {
-  const SettingsPlaceholderPage({super.key});
+class SettingsPage extends ConsumerWidget {
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -77,43 +65,6 @@ class SettingsPlaceholderPage extends ConsumerWidget {
   }
 }
 
-class _ComingSoon extends StatelessWidget {
-  const _ComingSoon({
-    required this.title,
-    required this.description,
-    required this.icon,
-  });
-  final String title;
-  final String description;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(AppTokens.spaceLg),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 96, color: theme.colorScheme.primary),
-              const SizedBox(height: AppTokens.spaceLg),
-              Text(title, style: theme.textTheme.headlineSmall),
-              const SizedBox(height: AppTokens.spaceSm),
-              Text(
-                description,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyMedium,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class _PendingOperationsTile extends ConsumerWidget {
   const _PendingOperationsTile();
