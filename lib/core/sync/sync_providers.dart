@@ -2,6 +2,7 @@ import 'package:dolibarr_mobile/core/di/providers.dart';
 import 'package:dolibarr_mobile/core/sync/sync_engine.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_providers.dart';
 import 'package:dolibarr_mobile/features/contacts/presentation/providers/contact_providers.dart';
+import 'package:dolibarr_mobile/features/invoices/presentation/providers/invoice_providers.dart';
 import 'package:dolibarr_mobile/features/projects/presentation/providers/project_providers.dart';
 import 'package:dolibarr_mobile/features/tasks/presentation/providers/task_providers.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/providers/third_party_providers.dart';
@@ -20,6 +21,8 @@ final syncEngineProvider = Provider<SyncEngine>((ref) {
     projectDao: ref.watch(projectLocalDaoProvider),
     taskRemote: ref.watch(taskRemoteDataSourceProvider),
     taskDao: ref.watch(taskLocalDaoProvider),
+    invoiceRemote: ref.watch(invoiceRemoteDataSourceProvider),
+    invoiceDao: ref.watch(invoiceLocalDaoProvider),
     network: ref.watch(networkInfoProvider),
   );
   ref.onDispose(engine.stop);

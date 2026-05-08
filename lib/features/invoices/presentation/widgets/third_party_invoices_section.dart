@@ -34,6 +34,13 @@ class ThirdPartyInvoicesSection extends ConsumerWidget {
                   child: Text('Factures',
                       style: theme.textTheme.titleMedium),
                 ),
+                TextButton.icon(
+                  onPressed: () => context.go(
+                    RoutePaths.invoiceNewForParent(thirdPartyLocalId),
+                  ),
+                  icon: const Icon(LucideIcons.plus, size: 16),
+                  label: const Text('Ajouter'),
+                ),
               ],
             ),
             const SizedBox(height: AppTokens.spaceXs),

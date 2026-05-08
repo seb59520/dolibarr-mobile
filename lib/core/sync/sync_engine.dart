@@ -8,6 +8,8 @@ import 'package:dolibarr_mobile/core/storage/pending_operation_dao.dart';
 import 'package:dolibarr_mobile/core/storage/sync_status.dart';
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_local_dao.dart';
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_remote_datasource.dart';
+import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_local_dao.dart';
+import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/projects/data/datasources/project_local_dao.dart';
 import 'package:dolibarr_mobile/features/projects/data/datasources/project_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/tasks/data/datasources/task_local_dao.dart';
@@ -70,6 +72,8 @@ class SyncEngine {
     required ProjectLocalDao projectDao,
     required TaskRemoteDataSource taskRemote,
     required TaskLocalDao taskDao,
+    required InvoiceRemoteDataSource invoiceRemote,
+    required InvoiceLocalDao invoiceDao,
     required NetworkInfo network,
     Logger? logger,
     DateTime Function() now = DateTime.now,
@@ -82,6 +86,8 @@ class SyncEngine {
         _projectDao = projectDao,
         _taskRemote = taskRemote,
         _taskDao = taskDao,
+        _invoiceRemote = invoiceRemote,
+        _invoiceDao = invoiceDao,
         _network = network,
         _logger = logger ?? Logger(printer: SimplePrinter()),
         _now = now;
@@ -95,6 +101,8 @@ class SyncEngine {
   final ProjectLocalDao _projectDao;
   final TaskRemoteDataSource _taskRemote;
   final TaskLocalDao _taskDao;
+  final InvoiceRemoteDataSource _invoiceRemote;
+  final InvoiceLocalDao _invoiceDao;
   final NetworkInfo _network;
   final Logger _logger;
   final DateTime Function() _now;
@@ -190,6 +198,10 @@ class SyncEngine {
           await _projectDao.hardDelete(row.targetLocalId);
         case PendingOpEntity.task:
           await _taskDao.hardDelete(row.targetLocalId);
+        case PendingOpEntity.invoice:
+          await _invoiceDao.hardDelete(row.targetLocalId);
+        case PendingOpEntity.invoiceLine:
+          await _invoiceDao.hardDeleteLine(row.targetLocalId);
       }
     }
     await _outbox.deleteById(opId);
@@ -209,6 +221,10 @@ class SyncEngine {
           await _dispatchProject(op);
         case PendingOpEntity.task:
           await _dispatchTask(op);
+        case PendingOpEntity.invoice:
+          await _dispatchInvoice(op);
+        case PendingOpEntity.invoiceLine:
+          await _dispatchInvoiceLine(op);
       }
       await _outbox.completeAndUnblockChildren(op.id);
       return _Outcome.success;
@@ -266,6 +282,10 @@ class SyncEngine {
         await _projectDao.markConflict(op.targetLocalId);
       case PendingOpEntity.task:
         await _taskDao.markConflict(op.targetLocalId);
+      case PendingOpEntity.invoice:
+        await _invoiceDao.markConflict(op.targetLocalId);
+      case PendingOpEntity.invoiceLine:
+        await _invoiceDao.markLineConflict(op.targetLocalId);
     }
   }
 
@@ -309,13 +329,17 @@ class SyncEngine {
           remoteId: remoteId,
           tms: serverTms,
         );
-        // Cascade : patche les enfants directs (contacts + projets)
-        // en attente avec le nouveau socidRemote.
+        // Cascade : patche les enfants directs (contacts + projets +
+        // factures) en attente avec le nouveau socidRemote.
         await _contactDao.patchSocidRemoteByParent(
           parentLocalId: op.targetLocalId,
           parentRemoteId: remoteId,
         );
         await _projectDao.patchSocidRemoteByParent(
+          parentLocalId: op.targetLocalId,
+          parentRemoteId: remoteId,
+        );
+        await _invoiceDao.patchSocidRemoteByParent(
           parentLocalId: op.targetLocalId,
           parentRemoteId: remoteId,
         );
@@ -530,6 +554,134 @@ class SyncEngine {
     }
   }
 
+  // -------------------------- Invoice ----------------------------------
+
+  Future<void> _dispatchInvoice(PendingOperationRow op) async {
+    final payload = _decodePayload(op.payload);
+    switch (op.opType) {
+      case PendingOpType.create:
+        // Ré-injecte socid depuis l'entité fraîche (cas où le tiers
+        // parent vient juste d'être créé en cascade).
+        final fresh = await _invoiceDao.watchById(op.targetLocalId).first;
+        if (fresh != null && fresh.socidRemote != null) {
+          payload['socid'] = fresh.socidRemote;
+        }
+        if (payload['socid'] == null) {
+          throw const ValidationException(
+            message: 'Tiers parent non synchronisé — '
+                'impossible de créer la facture.',
+          );
+        }
+        final remoteId = await _invoiceRemote.create(payload);
+        DateTime? serverTms;
+        try {
+          final got = await _invoiceRemote.fetchById(remoteId);
+          serverTms = _parseTms(got['tms']);
+        } catch (_) {
+          // pas critique
+        }
+        await _invoiceDao.markSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: remoteId,
+          tms: serverTms,
+        );
+        // Cascade 2ᵉ niveau : patche les lignes orphelines (en
+        // attente que la facture parent soit créée).
+        await _invoiceDao.patchInvoiceRemoteByParent(
+          parentLocalId: op.targetLocalId,
+          parentRemoteId: remoteId,
+        );
+
+      case PendingOpType.update:
+        if (op.expectedTms != null) {
+          final freshFromServer =
+              await _invoiceRemote.fetchById(op.targetRemoteId!);
+          final serverTms = _parseTms(freshFromServer['tms']);
+          if (serverTms != null && serverTms.isAfter(op.expectedTms!)) {
+            throw _ConflictDetected(
+              'Modifié sur le serveur (tms=$serverTms vs ${op.expectedTms})',
+            );
+          }
+        }
+        final body = await _invoiceRemote.update(
+          op.targetRemoteId!,
+          payload,
+        );
+        await _invoiceDao.markSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: op.targetRemoteId!,
+          tms: _parseTms(body['tms']),
+        );
+
+      case PendingOpType.delete:
+        await _invoiceRemote.delete(op.targetRemoteId!);
+        await _invoiceDao.clearAfterServerDelete(op.targetLocalId);
+    }
+  }
+
+  // -------------------------- Invoice line -----------------------------
+
+  Future<void> _dispatchInvoiceLine(PendingOperationRow op) async {
+    final payload = _decodePayload(op.payload);
+    switch (op.opType) {
+      case PendingOpType.create:
+        // Ré-injecte fk_facture depuis l'entité ligne fraîche (la
+        // facture parente vient peut-être d'être créée en cascade).
+        final fresh = await _invoiceDao.watchLineById(op.targetLocalId).first;
+        final invoiceRemote = fresh?.invoiceRemote;
+        if (invoiceRemote == null) {
+          throw const ValidationException(
+            message: 'Facture parente non synchronisée — '
+                'impossible de créer la ligne.',
+          );
+        }
+        final remoteId = await _invoiceRemote.createLine(
+          invoiceRemote,
+          payload,
+        );
+        await _invoiceDao.markLineSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: remoteId,
+        );
+
+      case PendingOpType.update:
+        // L'API ligne n'expose pas un endpoint séparé pour le tms,
+        // donc pas de pré-check conflit ici. Le serveur fait foi.
+        final fresh = await _invoiceDao.findLineByLocalId(op.targetLocalId);
+        final invoiceRemote = fresh?.invoiceRemote;
+        if (invoiceRemote == null) {
+          throw const ValidationException(
+            message: 'Facture parente non synchronisée — '
+                'impossible de modifier la ligne.',
+          );
+        }
+        await _invoiceRemote.updateLine(
+          invoiceRemote,
+          op.targetRemoteId!,
+          payload,
+        );
+        await _invoiceDao.markLineSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: op.targetRemoteId!,
+        );
+
+      case PendingOpType.delete:
+        final fresh = await _invoiceDao.findLineByLocalId(op.targetLocalId);
+        final invoiceRemote = fresh?.invoiceRemote;
+        if (invoiceRemote == null) {
+          // La facture parent a disparu : on supprime la ligne en
+          // local sans appel serveur (idempotent).
+          await _invoiceDao.clearLineAfterServerDelete(op.targetLocalId);
+          return;
+        }
+        await _invoiceRemote.deleteLine(
+          invoiceRemote,
+          op.targetRemoteId!,
+        );
+        await _invoiceDao.clearLineAfterServerDelete(op.targetLocalId);
+    }
+  }
+
   // -------------------------- Helpers ----------------------------------
 
   Future<void> _applyAfterDelete(PendingOperationRow op) async {
@@ -542,6 +694,10 @@ class SyncEngine {
         await _projectDao.clearAfterServerDelete(op.targetLocalId);
       case PendingOpEntity.task:
         await _taskDao.clearAfterServerDelete(op.targetLocalId);
+      case PendingOpEntity.invoice:
+        await _invoiceDao.clearAfterServerDelete(op.targetLocalId);
+      case PendingOpEntity.invoiceLine:
+        await _invoiceDao.clearLineAfterServerDelete(op.targetLocalId);
     }
   }
 

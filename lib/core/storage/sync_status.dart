@@ -41,4 +41,11 @@ enum PendingOpStatus {
 enum PendingOpType { create, update, delete }
 
 /// Type d'entité ciblée par une opération Outbox.
-enum PendingOpEntity { thirdparty, contact, project, task }
+enum PendingOpEntity {
+  thirdparty,
+  contact,
+  project,
+  task,
+  invoice,
+  invoiceLine,
+}

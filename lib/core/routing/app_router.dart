@@ -9,6 +9,7 @@ import 'package:dolibarr_mobile/features/contacts/presentation/pages/contact_det
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contact_form_page.dart';
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contacts_list_page.dart';
 import 'package:dolibarr_mobile/features/invoices/presentation/pages/invoice_detail_page.dart';
+import 'package:dolibarr_mobile/features/invoices/presentation/pages/invoice_form_page.dart';
 import 'package:dolibarr_mobile/features/invoices/presentation/pages/invoices_list_page.dart';
 import 'package:dolibarr_mobile/features/projects/presentation/pages/project_detail_page.dart';
 import 'package:dolibarr_mobile/features/projects/presentation/pages/project_form_page.dart';
@@ -158,10 +159,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (_, __) => const InvoicesListPage(),
             routes: [
               GoRoute(
+                path: 'new',
+                builder: (_, state) {
+                  final parent = state.uri.queryParameters['parent'];
+                  return InvoiceFormPage(
+                    parentLocalId:
+                        parent == null ? null : int.tryParse(parent),
+                  );
+                },
+              ),
+              GoRoute(
                 path: ':id',
                 builder: (_, state) => InvoiceDetailPage(
                   localId: int.parse(state.pathParameters['id']!),
                 ),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    builder: (_, state) => InvoiceFormPage(
+                      existingLocalId:
+                          int.parse(state.pathParameters['id']!),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

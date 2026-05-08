@@ -3,7 +3,9 @@ import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice_line.dart';
 import 'package:dolibarr_mobile/features/invoices/presentation/providers/invoice_providers.dart';
+import 'package:dolibarr_mobile/features/invoices/presentation/widgets/invoice_line_edit_dialog.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/providers/third_party_providers.dart';
+import 'package:dolibarr_mobile/shared/widgets/confirm_dialog.dart';
 import 'package:dolibarr_mobile/shared/widgets/error_state.dart';
 import 'package:dolibarr_mobile/shared/widgets/loading_skeleton.dart';
 import 'package:dolibarr_mobile/shared/widgets/sync_status_badge.dart';
@@ -21,7 +23,22 @@ class InvoiceDetailPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(invoiceByIdProvider(localId));
     return Scaffold(
-      appBar: AppBar(title: const Text('Facture')),
+      appBar: AppBar(
+        title: const Text('Facture'),
+        actions: [
+          IconButton(
+            icon: const Icon(LucideIcons.edit),
+            tooltip: 'Modifier',
+            onPressed: () =>
+                context.go(RoutePaths.invoiceEditFor(localId)),
+          ),
+          IconButton(
+            icon: const Icon(LucideIcons.trash2),
+            tooltip: 'Supprimer',
+            onPressed: () => _confirmDelete(context, ref),
+          ),
+        ],
+      ),
       body: async.when(
         data: (i) => i == null
             ? const ErrorState(
@@ -34,6 +51,30 @@ class InvoiceDetailPage extends ConsumerWidget {
           title: 'Impossible de charger la facture',
           description: '$e',
         ),
+      ),
+    );
+  }
+
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    final ok = await ConfirmDialog.showDestructive(
+      context,
+      title: 'Supprimer cette facture ?',
+      message:
+          'La suppression sera synchronisée au prochain passage en ligne.',
+    );
+    if (ok != true || !context.mounted) return;
+    final result =
+        await ref.read(invoiceRepositoryProvider).deleteLocal(localId);
+    if (!context.mounted) return;
+    result.fold(
+      onSuccess: (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Suppression enregistrée.')),
+        );
+        context.go(RoutePaths.invoices);
+      },
+      onFailure: (f) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Échec : $f')),
       ),
     );
   }
@@ -74,7 +115,7 @@ class _Body extends ConsumerWidget {
           const SizedBox(height: AppTokens.spaceMd),
           _ParentLink(invoice: i),
           _DatesSection(invoice: i),
-          _LinesSection(linesAsync: linesAsync),
+          _LinesSection(invoice: i, linesAsync: linesAsync),
           _TotalsSection(invoice: i),
           if (i.notePublic != null || i.notePrivate != null)
             _NotesSection(invoice: i),
@@ -224,46 +265,163 @@ class _DatesSection extends StatelessWidget {
   }
 }
 
-class _LinesSection extends StatelessWidget {
-  const _LinesSection({required this.linesAsync});
+class _LinesSection extends ConsumerWidget {
+  const _LinesSection({required this.invoice, required this.linesAsync});
+  final Invoice invoice;
   final AsyncValue<List<InvoiceLine>> linesAsync;
 
   @override
-  Widget build(BuildContext context) {
-    return _Section(
-      title: 'Lignes',
-      child: linesAsync.when(
-        data: (lines) {
-          if (lines.isEmpty) {
-            return const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: Text('Aucune ligne.'),
-            );
-          }
-          return Column(
-            children: [
-              for (final l in lines) _LineTile(line: l),
-            ],
-          );
-        },
-        loading: () => const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
-          child: LinearProgressIndicator(),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final editable = invoice.isDraft;
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: AppTokens.spaceXs),
+      child: Padding(
+        padding: const EdgeInsets.all(AppTokens.spaceMd),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text('Lignes', style: theme.textTheme.titleMedium),
+                ),
+                if (editable)
+                  TextButton.icon(
+                    onPressed: () => _addLine(context, ref),
+                    icon: const Icon(LucideIcons.plus, size: 16),
+                    label: const Text('Ajouter'),
+                  ),
+              ],
+            ),
+            if (!editable)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  'Facture validée — édition des lignes désactivée.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            const SizedBox(height: AppTokens.spaceXs),
+            linesAsync.when(
+              data: (lines) {
+                if (lines.isEmpty) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child: Text('Aucune ligne.'),
+                  );
+                }
+                return Column(
+                  children: [
+                    for (final l in lines)
+                      _LineTile(
+                        line: l,
+                        editable: editable,
+                        onEdit: () => _editLine(context, ref, l),
+                        onDelete: () => _deleteLine(context, ref, l),
+                      ),
+                  ],
+                );
+              },
+              loading: () => const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: LinearProgressIndicator(),
+              ),
+              error: (_, __) => const Text('Lignes indisponibles.'),
+            ),
+          ],
         ),
-        error: (_, __) => const Text('Lignes indisponibles.'),
+      ),
+    );
+  }
+
+  Future<void> _addLine(BuildContext context, WidgetRef ref) async {
+    final line = await InvoiceLineEditDialog.show(
+      context,
+      invoiceLocalId: invoice.localId,
+      invoiceRemoteId: invoice.remoteId,
+    );
+    if (line == null || !context.mounted) return;
+    final result =
+        await ref.read(invoiceRepositoryProvider).createLocalLine(line);
+    if (!context.mounted) return;
+    result.fold(
+      onSuccess: (_) => ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ligne ajoutée.')),
+      ),
+      onFailure: (f) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Échec : $f')),
+      ),
+    );
+  }
+
+  Future<void> _editLine(
+    BuildContext context,
+    WidgetRef ref,
+    InvoiceLine line,
+  ) async {
+    final updated = await InvoiceLineEditDialog.show(
+      context,
+      invoiceLocalId: invoice.localId,
+      invoiceRemoteId: invoice.remoteId,
+      existing: line,
+    );
+    if (updated == null || !context.mounted) return;
+    final result =
+        await ref.read(invoiceRepositoryProvider).updateLocalLine(updated);
+    if (!context.mounted) return;
+    result.fold(
+      onSuccess: (_) => ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ligne modifiée.')),
+      ),
+      onFailure: (f) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Échec : $f')),
+      ),
+    );
+  }
+
+  Future<void> _deleteLine(
+    BuildContext context,
+    WidgetRef ref,
+    InvoiceLine line,
+  ) async {
+    final ok = await ConfirmDialog.showDestructive(
+      context,
+      title: 'Supprimer cette ligne ?',
+      message: line.displayLabel,
+    );
+    if (ok != true || !context.mounted) return;
+    final result = await ref
+        .read(invoiceRepositoryProvider)
+        .deleteLocalLine(line.localId);
+    if (!context.mounted) return;
+    result.fold(
+      onSuccess: (_) {},
+      onFailure: (f) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Échec : $f')),
       ),
     );
   }
 }
 
 class _LineTile extends StatelessWidget {
-  const _LineTile({required this.line});
+  const _LineTile({
+    required this.line,
+    required this.editable,
+    required this.onEdit,
+    required this.onDelete,
+  });
   final InvoiceLine line;
+  final bool editable;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
+    final body = Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,6 +440,12 @@ class _LineTile extends StatelessWidget {
                 Text(
                   '${line.totalHt} €',
                   style: theme.textTheme.bodyMedium,
+                ),
+              if (editable)
+                IconButton(
+                  visualDensity: VisualDensity.compact,
+                  icon: const Icon(LucideIcons.trash2, size: 16),
+                  onPressed: onDelete,
                 ),
             ],
           ),
@@ -303,6 +467,8 @@ class _LineTile extends StatelessWidget {
         ],
       ),
     );
+    if (!editable) return body;
+    return InkWell(onTap: onEdit, child: body);
   }
 }
 

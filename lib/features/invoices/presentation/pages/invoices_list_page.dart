@@ -108,6 +108,11 @@ class _InvoicesListPageState extends ConsumerState<InvoicesListPage> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.go(RoutePaths.invoiceNew),
+        icon: const Icon(LucideIcons.plus),
+        label: const Text('Nouvelle'),
+      ),
       body: Column(
         children: [
           const NetworkBanner(),

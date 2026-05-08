@@ -6,6 +6,7 @@ import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice_filters.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice_line.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/repositories/invoice_repository.dart';
+import 'package:dolibarr_mobile/features/thirdparties/presentation/providers/third_party_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final invoiceRemoteDataSourceProvider =
@@ -22,6 +23,8 @@ final invoiceRepositoryProvider = Provider<InvoiceRepository>((ref) {
     remote: ref.watch(invoiceRemoteDataSourceProvider),
     dao: ref.watch(invoiceLocalDaoProvider),
     network: ref.watch(networkInfoProvider),
+    draftDao: ref.watch(draftLocalDaoProvider),
+    outbox: ref.watch(pendingOperationDaoProvider),
   );
 });
 

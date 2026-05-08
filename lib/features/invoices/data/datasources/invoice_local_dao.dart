@@ -115,6 +115,255 @@ class InvoiceLocalDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
+  // -------------------------- Header writes --------------------------
+
+  Future<int> insertLocal(Invoice i) async {
+    return into(invoices).insert(
+      _invoiceCompanionFromEntity(
+        i.copyWithSync(SyncStatus.pendingCreate),
+        forInsert: true,
+      ),
+    );
+  }
+
+  Future<void> updateLocal(Invoice i) async {
+    final existing = await (select(invoices)
+          ..where((row) => row.id.equals(i.localId)))
+        .getSingleOrNull();
+    if (existing == null) return;
+    final nextStatus = existing.syncStatus == SyncStatus.pendingCreate
+        ? SyncStatus.pendingCreate
+        : SyncStatus.pendingUpdate;
+    await (update(invoices)..where((r) => r.id.equals(i.localId))).write(
+      _invoiceCompanionFromEntity(
+        i.copyWithSync(nextStatus),
+        forInsert: false,
+      ),
+    );
+  }
+
+  Future<void> markPendingDelete(int localId) async {
+    await (update(invoices)..where((r) => r.id.equals(localId))).write(
+      InvoicesCompanion(
+        syncStatus: const Value(SyncStatus.pendingDelete),
+        localUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  Future<int> hardDelete(int localId) {
+    return (delete(invoices)..where((r) => r.id.equals(localId))).go();
+  }
+
+  Future<void> markSyncedWithRemote({
+    required int localId,
+    required int remoteId,
+    DateTime? tms,
+  }) async {
+    await (update(invoices)..where((r) => r.id.equals(localId))).write(
+      InvoicesCompanion(
+        remoteId: Value(remoteId),
+        tms: Value(tms ?? DateTime.now()),
+        syncStatus: const Value(SyncStatus.synced),
+        localUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  Future<void> markConflict(int localId) async {
+    await (update(invoices)..where((r) => r.id.equals(localId))).write(
+      InvoicesCompanion(
+        syncStatus: const Value(SyncStatus.conflict),
+        localUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  Future<int> clearAfterServerDelete(int localId) {
+    return (delete(invoices)..where((r) => r.id.equals(localId))).go();
+  }
+
+  /// Patche `socidRemote` pour les factures dont le tiers parent
+  /// vient d'être créé côté serveur. Cascade Outbox 1ᵉʳ niveau
+  /// (tiers → facture).
+  Future<int> patchSocidRemoteByParent({
+    required int parentLocalId,
+    required int parentRemoteId,
+  }) async {
+    return (update(invoices)
+          ..where(
+            (i) =>
+                i.socidLocal.equals(parentLocalId) &
+                i.socidRemote.isNull(),
+          ))
+        .write(InvoicesCompanion(socidRemote: Value(parentRemoteId)));
+  }
+
+  // -------------------------- Line writes ----------------------------
+
+  Future<InvoiceLine?> findLineByLocalId(int lineLocalId) async {
+    final row = await (select(invoiceLines)
+          ..where((l) => l.id.equals(lineLocalId)))
+        .getSingleOrNull();
+    return row == null ? null : _lineFromRow(row);
+  }
+
+  Stream<InvoiceLine?> watchLineById(int lineLocalId) {
+    return (select(invoiceLines)..where((l) => l.id.equals(lineLocalId)))
+        .watchSingleOrNull()
+        .map((row) => row == null ? null : _lineFromRow(row));
+  }
+
+  Future<int> insertLocalLine(InvoiceLine line) async {
+    return into(invoiceLines).insert(
+      _lineCompanionFromEntity(
+        line.copyWithSync(SyncStatus.pendingCreate),
+        forInsert: true,
+      ),
+    );
+  }
+
+  Future<void> updateLocalLine(InvoiceLine line) async {
+    final existing = await (select(invoiceLines)
+          ..where((row) => row.id.equals(line.localId)))
+        .getSingleOrNull();
+    if (existing == null) return;
+    final nextStatus = existing.syncStatus == SyncStatus.pendingCreate
+        ? SyncStatus.pendingCreate
+        : SyncStatus.pendingUpdate;
+    await (update(invoiceLines)
+          ..where((r) => r.id.equals(line.localId)))
+        .write(
+      _lineCompanionFromEntity(
+        line.copyWithSync(nextStatus),
+        forInsert: false,
+      ),
+    );
+  }
+
+  Future<void> markLinePendingDelete(int lineLocalId) async {
+    await (update(invoiceLines)..where((r) => r.id.equals(lineLocalId)))
+        .write(
+      InvoiceLinesCompanion(
+        syncStatus: const Value(SyncStatus.pendingDelete),
+        localUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  Future<int> hardDeleteLine(int lineLocalId) {
+    return (delete(invoiceLines)..where((r) => r.id.equals(lineLocalId)))
+        .go();
+  }
+
+  Future<void> markLineSyncedWithRemote({
+    required int localId,
+    required int remoteId,
+    DateTime? tms,
+  }) async {
+    await (update(invoiceLines)..where((r) => r.id.equals(localId)))
+        .write(
+      InvoiceLinesCompanion(
+        remoteId: Value(remoteId),
+        tms: Value(tms ?? DateTime.now()),
+        syncStatus: const Value(SyncStatus.synced),
+        localUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  Future<void> markLineConflict(int localId) async {
+    await (update(invoiceLines)..where((r) => r.id.equals(localId)))
+        .write(
+      InvoiceLinesCompanion(
+        syncStatus: const Value(SyncStatus.conflict),
+        localUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  Future<int> clearLineAfterServerDelete(int localId) {
+    return (delete(invoiceLines)..where((r) => r.id.equals(localId))).go();
+  }
+
+  /// Patche `invoiceRemote` pour les lignes dont la facture parente
+  /// vient d'être créée côté serveur. Cascade Outbox 2ᵉ niveau
+  /// (facture → ligne).
+  Future<int> patchInvoiceRemoteByParent({
+    required int parentLocalId,
+    required int parentRemoteId,
+  }) async {
+    return (update(invoiceLines)
+          ..where(
+            (l) =>
+                l.invoiceLocal.equals(parentLocalId) &
+                l.invoiceRemote.isNull(),
+          ))
+        .write(
+      InvoiceLinesCompanion(invoiceRemote: Value(parentRemoteId)),
+    );
+  }
+
+  // -------------------------- Mappers --------------------------------
+
+  InvoicesCompanion _invoiceCompanionFromEntity(
+    Invoice i, {
+    required bool forInsert,
+  }) {
+    return InvoicesCompanion(
+      id: forInsert ? const Value.absent() : Value(i.localId),
+      remoteId: Value(i.remoteId),
+      socidRemote: Value(i.socidRemote),
+      socidLocal: Value(i.socidLocal),
+      ref: Value(i.ref),
+      refClient: Value(i.refClient),
+      type: Value(i.type.apiValue),
+      status: Value(i.status.apiValue),
+      paye: Value(i.paye),
+      dateInvoice: Value(i.dateInvoice),
+      dateDue: Value(i.dateDue),
+      totalHt: Value(i.totalHt),
+      totalTva: Value(i.totalTva),
+      totalTtc: Value(i.totalTtc),
+      fkModeReglement: Value(i.fkModeReglement),
+      fkCondReglement: Value(i.fkCondReglement),
+      notePublic: Value(i.notePublic),
+      notePrivate: Value(i.notePrivate),
+      extrafields: Value(jsonEncode(i.extrafields)),
+      tms: Value(i.tms),
+      localUpdatedAt: Value(DateTime.now()),
+      syncStatus: Value(i.syncStatus),
+    );
+  }
+
+  InvoiceLinesCompanion _lineCompanionFromEntity(
+    InvoiceLine l, {
+    required bool forInsert,
+  }) {
+    return InvoiceLinesCompanion(
+      id: forInsert ? const Value.absent() : Value(l.localId),
+      remoteId: Value(l.remoteId),
+      invoiceRemote: Value(l.invoiceRemote),
+      invoiceLocal: Value(l.invoiceLocal),
+      fkProduct: Value(l.fkProduct),
+      label: Value(l.label),
+      description: Value(l.description),
+      productType: Value(l.productType.apiValue),
+      qty: Value(l.qty),
+      subprice: Value(l.subprice),
+      tvaTx: Value(l.tvaTx),
+      remisePercent: Value(l.remisePercent),
+      totalHt: Value(l.totalHt),
+      totalTva: Value(l.totalTva),
+      totalTtc: Value(l.totalTtc),
+      rang: Value(l.rang),
+      extrafields: Value(jsonEncode(l.extrafields)),
+      tms: Value(l.tms),
+      localUpdatedAt: Value(DateTime.now()),
+      syncStatus: Value(l.syncStatus),
+    );
+  }
+
   Future<void> _upsertLines({
     required int invoiceLocalId,
     required int invoiceRemoteId,

@@ -10,6 +10,8 @@ import 'package:dolibarr_mobile/core/sync/sync_engine.dart';
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_local_dao.dart';
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/contacts/domain/entities/contact.dart';
+import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_local_dao.dart';
+import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/projects/data/datasources/project_local_dao.dart';
 import 'package:dolibarr_mobile/features/projects/data/datasources/project_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/tasks/data/datasources/task_local_dao.dart';
@@ -36,6 +38,10 @@ class _MockPjDao extends Mock implements ProjectLocalDao {}
 class _MockTskRemote extends Mock implements TaskRemoteDataSource {}
 
 class _MockTskDao extends Mock implements TaskLocalDao {}
+
+class _MockInvRemote extends Mock implements InvoiceRemoteDataSource {}
+
+class _MockInvDao extends Mock implements InvoiceLocalDao {}
 
 class _StubNetwork implements NetworkInfo {
   _StubNetwork({bool online = true}) : _online = online;
@@ -98,6 +104,8 @@ void main() {
   late _MockPjDao pjDao;
   late _MockTskRemote tskRemote;
   late _MockTskDao tskDao;
+  late _MockInvRemote invRemote;
+  late _MockInvDao invDao;
   late _StubNetwork network;
   late SyncEngine engine;
 
@@ -113,6 +121,8 @@ void main() {
     pjDao = _MockPjDao();
     tskRemote = _MockTskRemote();
     tskDao = _MockTskDao();
+    invRemote = _MockInvRemote();
+    invDao = _MockInvDao();
     network = _StubNetwork();
     now = DateTime(2026, 5, 9, 12);
 
@@ -126,6 +136,8 @@ void main() {
       projectDao: pjDao,
       taskRemote: tskRemote,
       taskDao: tskDao,
+      invoiceRemote: invRemote,
+      invoiceDao: invDao,
       network: network,
       now: () => now,
     );
@@ -192,6 +204,14 @@ void main() {
     // Cascade project → tasks.
     when(
       () => tskDao.patchProjectRemoteByParent(
+        parentLocalId: any(named: 'parentLocalId'),
+        parentRemoteId: any(named: 'parentRemoteId'),
+      ),
+    ).thenAnswer((_) async => 0);
+
+    // Cascade thirdparty → invoices.
+    when(
+      () => invDao.patchSocidRemoteByParent(
         parentLocalId: any(named: 'parentLocalId'),
         parentRemoteId: any(named: 'parentRemoteId'),
       ),

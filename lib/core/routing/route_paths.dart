@@ -23,7 +23,9 @@ abstract final class RoutePaths {
   static const String taskDetail = '/app/tasks/:id';
   static const String taskEdit = '/app/tasks/:id/edit';
   static const String invoices = '/app/invoices';
+  static const String invoiceNew = '/app/invoices/new';
   static const String invoiceDetail = '/app/invoices/:id';
+  static const String invoiceEdit = '/app/invoices/:id/edit';
   static const String settings = '/app/settings';
   static const String pendingOperations = '/app/sync';
 
@@ -64,4 +66,12 @@ abstract final class RoutePaths {
 
   static String invoiceDetailFor(int localId) =>
       '/app/invoices/$localId';
+
+  static String invoiceEditFor(int localId) =>
+      '/app/invoices/$localId/edit';
+
+  /// Crée la route "nouvelle facture" en pré-sélectionnant un tiers
+  /// parent (client) par sa PK locale.
+  static String invoiceNewForParent(int parentLocalId) =>
+      '/app/invoices/new?parent=$parentLocalId';
 }
