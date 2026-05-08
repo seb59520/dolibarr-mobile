@@ -17,17 +17,6 @@ class ThirdPartiesPlaceholderPage extends StatelessWidget {
       );
 }
 
-class ContactsPlaceholderPage extends StatelessWidget {
-  const ContactsPlaceholderPage({super.key});
-
-  @override
-  Widget build(BuildContext context) => const _ComingSoon(
-        title: 'Contacts',
-        description: 'CRUD contacts rattachés aux tiers — Étape 8.',
-        icon: LucideIcons.users,
-      );
-}
-
 class SettingsPlaceholderPage extends ConsumerWidget {
   const SettingsPlaceholderPage({super.key});
 

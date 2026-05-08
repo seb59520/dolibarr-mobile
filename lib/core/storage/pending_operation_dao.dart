@@ -78,4 +78,28 @@ class PendingOperationDao extends DatabaseAccessor<AppDatabase>
           ))
         .go();
   }
+
+  /// Cherche l'op `create` la plus récente queued/inProgress pour une
+  /// entité locale donnée — utile pour câbler `dependsOnLocalId` lors
+  /// de la création d'un enfant dont le parent n'est pas encore poussé.
+  /// Retourne `null` si aucun create en attente n'est trouvé.
+  Future<int?> findLatestPendingCreate({
+    required PendingOpEntity entityType,
+    required int targetLocalId,
+  }) async {
+    final row = await (select(pendingOperations)
+          ..where(
+            (p) =>
+                p.entityType.equalsValue(entityType) &
+                p.targetLocalId.equals(targetLocalId) &
+                p.opType.equalsValue(PendingOpType.create) &
+                (p.status.equalsValue(PendingOpStatus.queued) |
+                    p.status.equalsValue(PendingOpStatus.inProgress) |
+                    p.status.equalsValue(PendingOpStatus.failed)),
+          )
+          ..orderBy([(p) => OrderingTerm.desc(p.createdAt)])
+          ..limit(1))
+        .getSingleOrNull();
+    return row?.id;
+  }
 }

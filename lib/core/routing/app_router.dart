@@ -5,6 +5,9 @@ import 'package:dolibarr_mobile/features/auth/presentation/pages/placeholder_pag
 import 'package:dolibarr_mobile/features/auth/presentation/pages/shell_page.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/pages/splash_page.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_providers.dart';
+import 'package:dolibarr_mobile/features/contacts/presentation/pages/contact_detail_page.dart';
+import 'package:dolibarr_mobile/features/contacts/presentation/pages/contact_form_page.dart';
+import 'package:dolibarr_mobile/features/contacts/presentation/pages/contacts_list_page.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/third_party_detail_page.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/third_party_form_page.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/thirdparties_list_page.dart';
@@ -83,7 +86,33 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: RoutePaths.contacts,
-            builder: (_, __) => const ContactsPlaceholderPage(),
+            builder: (_, __) => const ContactsListPage(),
+            routes: [
+              GoRoute(
+                path: 'new',
+                builder: (_, state) {
+                  final parent = state.uri.queryParameters['parent'];
+                  return ContactFormPage(
+                    parentLocalId: parent == null ? null : int.tryParse(parent),
+                  );
+                },
+              ),
+              GoRoute(
+                path: ':id',
+                builder: (_, state) => ContactDetailPage(
+                  localId: int.parse(state.pathParameters['id']!),
+                ),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    builder: (_, state) => ContactFormPage(
+                      existingLocalId:
+                          int.parse(state.pathParameters['id']!),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
           GoRoute(
             path: RoutePaths.settings,

@@ -12,6 +12,9 @@ abstract final class RoutePaths {
   static const String thirdpartyDetail = '/app/thirdparties/:id';
   static const String thirdpartyEdit = '/app/thirdparties/:id/edit';
   static const String contacts = '/app/contacts';
+  static const String contactNew = '/app/contacts/new';
+  static const String contactDetail = '/app/contacts/:id';
+  static const String contactEdit = '/app/contacts/:id/edit';
   static const String settings = '/app/settings';
 
   static String thirdpartyDetailFor(int localId) =>
@@ -19,4 +22,13 @@ abstract final class RoutePaths {
 
   static String thirdpartyEditFor(int localId) =>
       '/app/thirdparties/$localId/edit';
+
+  static String contactDetailFor(int localId) => '/app/contacts/$localId';
+
+  static String contactEditFor(int localId) => '/app/contacts/$localId/edit';
+
+  /// Crée la route "nouveau contact" en pré-sélectionnant un tiers
+  /// parent par sa PK locale (passé en query string `?parent=`).
+  static String contactNewForParent(int parentLocalId) =>
+      '/app/contacts/new?parent=$parentLocalId';
 }
