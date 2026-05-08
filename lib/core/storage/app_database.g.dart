@@ -3798,6 +3798,2418 @@ class ExtrafieldDefinitionsCompanion
   }
 }
 
+class $InvoiceLinesTable extends InvoiceLines
+    with TableInfo<$InvoiceLinesTable, InvoiceLineRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InvoiceLinesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<int> remoteId = GeneratedColumn<int>(
+    'remote_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _invoiceRemoteMeta = const VerificationMeta(
+    'invoiceRemote',
+  );
+  @override
+  late final GeneratedColumn<int> invoiceRemote = GeneratedColumn<int>(
+    'invoice_remote',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _invoiceLocalMeta = const VerificationMeta(
+    'invoiceLocal',
+  );
+  @override
+  late final GeneratedColumn<int> invoiceLocal = GeneratedColumn<int>(
+    'invoice_local',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fkProductMeta = const VerificationMeta(
+    'fkProduct',
+  );
+  @override
+  late final GeneratedColumn<int> fkProduct = GeneratedColumn<int>(
+    'fk_product',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _labelMeta = const VerificationMeta('label');
+  @override
+  late final GeneratedColumn<String> label = GeneratedColumn<String>(
+    'label',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _productTypeMeta = const VerificationMeta(
+    'productType',
+  );
+  @override
+  late final GeneratedColumn<int> productType = GeneratedColumn<int>(
+    'product_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _qtyMeta = const VerificationMeta('qty');
+  @override
+  late final GeneratedColumn<String> qty = GeneratedColumn<String>(
+    'qty',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('1'),
+  );
+  static const VerificationMeta _subpriceMeta = const VerificationMeta(
+    'subprice',
+  );
+  @override
+  late final GeneratedColumn<String> subprice = GeneratedColumn<String>(
+    'subprice',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tvaTxMeta = const VerificationMeta('tvaTx');
+  @override
+  late final GeneratedColumn<String> tvaTx = GeneratedColumn<String>(
+    'tva_tx',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _remisePercentMeta = const VerificationMeta(
+    'remisePercent',
+  );
+  @override
+  late final GeneratedColumn<String> remisePercent = GeneratedColumn<String>(
+    'remise_percent',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _totalHtMeta = const VerificationMeta(
+    'totalHt',
+  );
+  @override
+  late final GeneratedColumn<String> totalHt = GeneratedColumn<String>(
+    'total_ht',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _totalTvaMeta = const VerificationMeta(
+    'totalTva',
+  );
+  @override
+  late final GeneratedColumn<String> totalTva = GeneratedColumn<String>(
+    'total_tva',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _totalTtcMeta = const VerificationMeta(
+    'totalTtc',
+  );
+  @override
+  late final GeneratedColumn<String> totalTtc = GeneratedColumn<String>(
+    'total_ttc',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _rangMeta = const VerificationMeta('rang');
+  @override
+  late final GeneratedColumn<int> rang = GeneratedColumn<int>(
+    'rang',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _extrafieldsMeta = const VerificationMeta(
+    'extrafields',
+  );
+  @override
+  late final GeneratedColumn<String> extrafields = GeneratedColumn<String>(
+    'extrafields',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
+  static const VerificationMeta _tmsMeta = const VerificationMeta('tms');
+  @override
+  late final GeneratedColumn<DateTime> tms = GeneratedColumn<DateTime>(
+    'tms',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _localUpdatedAtMeta = const VerificationMeta(
+    'localUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> localUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'local_updated_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  @override
+  late final GeneratedColumnWithTypeConverter<SyncStatus, int> syncStatus =
+      GeneratedColumn<int>(
+        'sync_status',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: Constant(SyncStatus.synced.index),
+      ).withConverter<SyncStatus>($InvoiceLinesTable.$convertersyncStatus);
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    remoteId,
+    invoiceRemote,
+    invoiceLocal,
+    fkProduct,
+    label,
+    description,
+    productType,
+    qty,
+    subprice,
+    tvaTx,
+    remisePercent,
+    totalHt,
+    totalTva,
+    totalTtc,
+    rang,
+    extrafields,
+    tms,
+    localUpdatedAt,
+    syncStatus,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'invoice_lines';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InvoiceLineRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    }
+    if (data.containsKey('invoice_remote')) {
+      context.handle(
+        _invoiceRemoteMeta,
+        invoiceRemote.isAcceptableOrUnknown(
+          data['invoice_remote']!,
+          _invoiceRemoteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('invoice_local')) {
+      context.handle(
+        _invoiceLocalMeta,
+        invoiceLocal.isAcceptableOrUnknown(
+          data['invoice_local']!,
+          _invoiceLocalMeta,
+        ),
+      );
+    }
+    if (data.containsKey('fk_product')) {
+      context.handle(
+        _fkProductMeta,
+        fkProduct.isAcceptableOrUnknown(data['fk_product']!, _fkProductMeta),
+      );
+    }
+    if (data.containsKey('label')) {
+      context.handle(
+        _labelMeta,
+        label.isAcceptableOrUnknown(data['label']!, _labelMeta),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('product_type')) {
+      context.handle(
+        _productTypeMeta,
+        productType.isAcceptableOrUnknown(
+          data['product_type']!,
+          _productTypeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('qty')) {
+      context.handle(
+        _qtyMeta,
+        qty.isAcceptableOrUnknown(data['qty']!, _qtyMeta),
+      );
+    }
+    if (data.containsKey('subprice')) {
+      context.handle(
+        _subpriceMeta,
+        subprice.isAcceptableOrUnknown(data['subprice']!, _subpriceMeta),
+      );
+    }
+    if (data.containsKey('tva_tx')) {
+      context.handle(
+        _tvaTxMeta,
+        tvaTx.isAcceptableOrUnknown(data['tva_tx']!, _tvaTxMeta),
+      );
+    }
+    if (data.containsKey('remise_percent')) {
+      context.handle(
+        _remisePercentMeta,
+        remisePercent.isAcceptableOrUnknown(
+          data['remise_percent']!,
+          _remisePercentMeta,
+        ),
+      );
+    }
+    if (data.containsKey('total_ht')) {
+      context.handle(
+        _totalHtMeta,
+        totalHt.isAcceptableOrUnknown(data['total_ht']!, _totalHtMeta),
+      );
+    }
+    if (data.containsKey('total_tva')) {
+      context.handle(
+        _totalTvaMeta,
+        totalTva.isAcceptableOrUnknown(data['total_tva']!, _totalTvaMeta),
+      );
+    }
+    if (data.containsKey('total_ttc')) {
+      context.handle(
+        _totalTtcMeta,
+        totalTtc.isAcceptableOrUnknown(data['total_ttc']!, _totalTtcMeta),
+      );
+    }
+    if (data.containsKey('rang')) {
+      context.handle(
+        _rangMeta,
+        rang.isAcceptableOrUnknown(data['rang']!, _rangMeta),
+      );
+    }
+    if (data.containsKey('extrafields')) {
+      context.handle(
+        _extrafieldsMeta,
+        extrafields.isAcceptableOrUnknown(
+          data['extrafields']!,
+          _extrafieldsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('tms')) {
+      context.handle(
+        _tmsMeta,
+        tms.isAcceptableOrUnknown(data['tms']!, _tmsMeta),
+      );
+    }
+    if (data.containsKey('local_updated_at')) {
+      context.handle(
+        _localUpdatedAtMeta,
+        localUpdatedAt.isAcceptableOrUnknown(
+          data['local_updated_at']!,
+          _localUpdatedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_localUpdatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  InvoiceLineRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InvoiceLineRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}remote_id'],
+      ),
+      invoiceRemote: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}invoice_remote'],
+      ),
+      invoiceLocal: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}invoice_local'],
+      ),
+      fkProduct: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fk_product'],
+      ),
+      label: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}label'],
+      ),
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      productType: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}product_type'],
+      )!,
+      qty: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}qty'],
+      )!,
+      subprice: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}subprice'],
+      ),
+      tvaTx: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tva_tx'],
+      ),
+      remisePercent: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}remise_percent'],
+      ),
+      totalHt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}total_ht'],
+      ),
+      totalTva: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}total_tva'],
+      ),
+      totalTtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}total_ttc'],
+      ),
+      rang: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}rang'],
+      )!,
+      extrafields: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}extrafields'],
+      )!,
+      tms: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}tms'],
+      ),
+      localUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}local_updated_at'],
+      )!,
+      syncStatus: $InvoiceLinesTable.$convertersyncStatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}sync_status'],
+        )!,
+      ),
+    );
+  }
+
+  @override
+  $InvoiceLinesTable createAlias(String alias) {
+    return $InvoiceLinesTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<SyncStatus, int, int> $convertersyncStatus =
+      const EnumIndexConverter<SyncStatus>(SyncStatus.values);
+}
+
+class InvoiceLineRow extends DataClass implements Insertable<InvoiceLineRow> {
+  final int id;
+
+  /// `rowid` Dolibarr de la ligne (`llx_facturedet.rowid`).
+  final int? remoteId;
+
+  /// `fk_facture` côté Dolibarr (rowid de la facture parente).
+  final int? invoiceRemote;
+
+  /// FK locale vers Invoices.id quand la facture parente est encore
+  /// en pendingCreate (cascade Outbox 2ᵉ niveau pour les factures).
+  final int? invoiceLocal;
+  final int? fkProduct;
+  final String? label;
+  final String? description;
+
+  /// 0=produit, 1=service.
+  final int productType;
+  final String qty;
+  final String? subprice;
+  final String? tvaTx;
+  final String? remisePercent;
+  final String? totalHt;
+  final String? totalTva;
+  final String? totalTtc;
+  final int rang;
+  final String extrafields;
+  final DateTime? tms;
+  final DateTime localUpdatedAt;
+  final SyncStatus syncStatus;
+  const InvoiceLineRow({
+    required this.id,
+    this.remoteId,
+    this.invoiceRemote,
+    this.invoiceLocal,
+    this.fkProduct,
+    this.label,
+    this.description,
+    required this.productType,
+    required this.qty,
+    this.subprice,
+    this.tvaTx,
+    this.remisePercent,
+    this.totalHt,
+    this.totalTva,
+    this.totalTtc,
+    required this.rang,
+    required this.extrafields,
+    this.tms,
+    required this.localUpdatedAt,
+    required this.syncStatus,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<int>(remoteId);
+    }
+    if (!nullToAbsent || invoiceRemote != null) {
+      map['invoice_remote'] = Variable<int>(invoiceRemote);
+    }
+    if (!nullToAbsent || invoiceLocal != null) {
+      map['invoice_local'] = Variable<int>(invoiceLocal);
+    }
+    if (!nullToAbsent || fkProduct != null) {
+      map['fk_product'] = Variable<int>(fkProduct);
+    }
+    if (!nullToAbsent || label != null) {
+      map['label'] = Variable<String>(label);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    map['product_type'] = Variable<int>(productType);
+    map['qty'] = Variable<String>(qty);
+    if (!nullToAbsent || subprice != null) {
+      map['subprice'] = Variable<String>(subprice);
+    }
+    if (!nullToAbsent || tvaTx != null) {
+      map['tva_tx'] = Variable<String>(tvaTx);
+    }
+    if (!nullToAbsent || remisePercent != null) {
+      map['remise_percent'] = Variable<String>(remisePercent);
+    }
+    if (!nullToAbsent || totalHt != null) {
+      map['total_ht'] = Variable<String>(totalHt);
+    }
+    if (!nullToAbsent || totalTva != null) {
+      map['total_tva'] = Variable<String>(totalTva);
+    }
+    if (!nullToAbsent || totalTtc != null) {
+      map['total_ttc'] = Variable<String>(totalTtc);
+    }
+    map['rang'] = Variable<int>(rang);
+    map['extrafields'] = Variable<String>(extrafields);
+    if (!nullToAbsent || tms != null) {
+      map['tms'] = Variable<DateTime>(tms);
+    }
+    map['local_updated_at'] = Variable<DateTime>(localUpdatedAt);
+    {
+      map['sync_status'] = Variable<int>(
+        $InvoiceLinesTable.$convertersyncStatus.toSql(syncStatus),
+      );
+    }
+    return map;
+  }
+
+  InvoiceLinesCompanion toCompanion(bool nullToAbsent) {
+    return InvoiceLinesCompanion(
+      id: Value(id),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      invoiceRemote: invoiceRemote == null && nullToAbsent
+          ? const Value.absent()
+          : Value(invoiceRemote),
+      invoiceLocal: invoiceLocal == null && nullToAbsent
+          ? const Value.absent()
+          : Value(invoiceLocal),
+      fkProduct: fkProduct == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fkProduct),
+      label: label == null && nullToAbsent
+          ? const Value.absent()
+          : Value(label),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      productType: Value(productType),
+      qty: Value(qty),
+      subprice: subprice == null && nullToAbsent
+          ? const Value.absent()
+          : Value(subprice),
+      tvaTx: tvaTx == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tvaTx),
+      remisePercent: remisePercent == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remisePercent),
+      totalHt: totalHt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(totalHt),
+      totalTva: totalTva == null && nullToAbsent
+          ? const Value.absent()
+          : Value(totalTva),
+      totalTtc: totalTtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(totalTtc),
+      rang: Value(rang),
+      extrafields: Value(extrafields),
+      tms: tms == null && nullToAbsent ? const Value.absent() : Value(tms),
+      localUpdatedAt: Value(localUpdatedAt),
+      syncStatus: Value(syncStatus),
+    );
+  }
+
+  factory InvoiceLineRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InvoiceLineRow(
+      id: serializer.fromJson<int>(json['id']),
+      remoteId: serializer.fromJson<int?>(json['remoteId']),
+      invoiceRemote: serializer.fromJson<int?>(json['invoiceRemote']),
+      invoiceLocal: serializer.fromJson<int?>(json['invoiceLocal']),
+      fkProduct: serializer.fromJson<int?>(json['fkProduct']),
+      label: serializer.fromJson<String?>(json['label']),
+      description: serializer.fromJson<String?>(json['description']),
+      productType: serializer.fromJson<int>(json['productType']),
+      qty: serializer.fromJson<String>(json['qty']),
+      subprice: serializer.fromJson<String?>(json['subprice']),
+      tvaTx: serializer.fromJson<String?>(json['tvaTx']),
+      remisePercent: serializer.fromJson<String?>(json['remisePercent']),
+      totalHt: serializer.fromJson<String?>(json['totalHt']),
+      totalTva: serializer.fromJson<String?>(json['totalTva']),
+      totalTtc: serializer.fromJson<String?>(json['totalTtc']),
+      rang: serializer.fromJson<int>(json['rang']),
+      extrafields: serializer.fromJson<String>(json['extrafields']),
+      tms: serializer.fromJson<DateTime?>(json['tms']),
+      localUpdatedAt: serializer.fromJson<DateTime>(json['localUpdatedAt']),
+      syncStatus: $InvoiceLinesTable.$convertersyncStatus.fromJson(
+        serializer.fromJson<int>(json['syncStatus']),
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'remoteId': serializer.toJson<int?>(remoteId),
+      'invoiceRemote': serializer.toJson<int?>(invoiceRemote),
+      'invoiceLocal': serializer.toJson<int?>(invoiceLocal),
+      'fkProduct': serializer.toJson<int?>(fkProduct),
+      'label': serializer.toJson<String?>(label),
+      'description': serializer.toJson<String?>(description),
+      'productType': serializer.toJson<int>(productType),
+      'qty': serializer.toJson<String>(qty),
+      'subprice': serializer.toJson<String?>(subprice),
+      'tvaTx': serializer.toJson<String?>(tvaTx),
+      'remisePercent': serializer.toJson<String?>(remisePercent),
+      'totalHt': serializer.toJson<String?>(totalHt),
+      'totalTva': serializer.toJson<String?>(totalTva),
+      'totalTtc': serializer.toJson<String?>(totalTtc),
+      'rang': serializer.toJson<int>(rang),
+      'extrafields': serializer.toJson<String>(extrafields),
+      'tms': serializer.toJson<DateTime?>(tms),
+      'localUpdatedAt': serializer.toJson<DateTime>(localUpdatedAt),
+      'syncStatus': serializer.toJson<int>(
+        $InvoiceLinesTable.$convertersyncStatus.toJson(syncStatus),
+      ),
+    };
+  }
+
+  InvoiceLineRow copyWith({
+    int? id,
+    Value<int?> remoteId = const Value.absent(),
+    Value<int?> invoiceRemote = const Value.absent(),
+    Value<int?> invoiceLocal = const Value.absent(),
+    Value<int?> fkProduct = const Value.absent(),
+    Value<String?> label = const Value.absent(),
+    Value<String?> description = const Value.absent(),
+    int? productType,
+    String? qty,
+    Value<String?> subprice = const Value.absent(),
+    Value<String?> tvaTx = const Value.absent(),
+    Value<String?> remisePercent = const Value.absent(),
+    Value<String?> totalHt = const Value.absent(),
+    Value<String?> totalTva = const Value.absent(),
+    Value<String?> totalTtc = const Value.absent(),
+    int? rang,
+    String? extrafields,
+    Value<DateTime?> tms = const Value.absent(),
+    DateTime? localUpdatedAt,
+    SyncStatus? syncStatus,
+  }) => InvoiceLineRow(
+    id: id ?? this.id,
+    remoteId: remoteId.present ? remoteId.value : this.remoteId,
+    invoiceRemote: invoiceRemote.present
+        ? invoiceRemote.value
+        : this.invoiceRemote,
+    invoiceLocal: invoiceLocal.present ? invoiceLocal.value : this.invoiceLocal,
+    fkProduct: fkProduct.present ? fkProduct.value : this.fkProduct,
+    label: label.present ? label.value : this.label,
+    description: description.present ? description.value : this.description,
+    productType: productType ?? this.productType,
+    qty: qty ?? this.qty,
+    subprice: subprice.present ? subprice.value : this.subprice,
+    tvaTx: tvaTx.present ? tvaTx.value : this.tvaTx,
+    remisePercent: remisePercent.present
+        ? remisePercent.value
+        : this.remisePercent,
+    totalHt: totalHt.present ? totalHt.value : this.totalHt,
+    totalTva: totalTva.present ? totalTva.value : this.totalTva,
+    totalTtc: totalTtc.present ? totalTtc.value : this.totalTtc,
+    rang: rang ?? this.rang,
+    extrafields: extrafields ?? this.extrafields,
+    tms: tms.present ? tms.value : this.tms,
+    localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+  );
+  InvoiceLineRow copyWithCompanion(InvoiceLinesCompanion data) {
+    return InvoiceLineRow(
+      id: data.id.present ? data.id.value : this.id,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      invoiceRemote: data.invoiceRemote.present
+          ? data.invoiceRemote.value
+          : this.invoiceRemote,
+      invoiceLocal: data.invoiceLocal.present
+          ? data.invoiceLocal.value
+          : this.invoiceLocal,
+      fkProduct: data.fkProduct.present ? data.fkProduct.value : this.fkProduct,
+      label: data.label.present ? data.label.value : this.label,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      productType: data.productType.present
+          ? data.productType.value
+          : this.productType,
+      qty: data.qty.present ? data.qty.value : this.qty,
+      subprice: data.subprice.present ? data.subprice.value : this.subprice,
+      tvaTx: data.tvaTx.present ? data.tvaTx.value : this.tvaTx,
+      remisePercent: data.remisePercent.present
+          ? data.remisePercent.value
+          : this.remisePercent,
+      totalHt: data.totalHt.present ? data.totalHt.value : this.totalHt,
+      totalTva: data.totalTva.present ? data.totalTva.value : this.totalTva,
+      totalTtc: data.totalTtc.present ? data.totalTtc.value : this.totalTtc,
+      rang: data.rang.present ? data.rang.value : this.rang,
+      extrafields: data.extrafields.present
+          ? data.extrafields.value
+          : this.extrafields,
+      tms: data.tms.present ? data.tms.value : this.tms,
+      localUpdatedAt: data.localUpdatedAt.present
+          ? data.localUpdatedAt.value
+          : this.localUpdatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvoiceLineRow(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('invoiceRemote: $invoiceRemote, ')
+          ..write('invoiceLocal: $invoiceLocal, ')
+          ..write('fkProduct: $fkProduct, ')
+          ..write('label: $label, ')
+          ..write('description: $description, ')
+          ..write('productType: $productType, ')
+          ..write('qty: $qty, ')
+          ..write('subprice: $subprice, ')
+          ..write('tvaTx: $tvaTx, ')
+          ..write('remisePercent: $remisePercent, ')
+          ..write('totalHt: $totalHt, ')
+          ..write('totalTva: $totalTva, ')
+          ..write('totalTtc: $totalTtc, ')
+          ..write('rang: $rang, ')
+          ..write('extrafields: $extrafields, ')
+          ..write('tms: $tms, ')
+          ..write('localUpdatedAt: $localUpdatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    remoteId,
+    invoiceRemote,
+    invoiceLocal,
+    fkProduct,
+    label,
+    description,
+    productType,
+    qty,
+    subprice,
+    tvaTx,
+    remisePercent,
+    totalHt,
+    totalTva,
+    totalTtc,
+    rang,
+    extrafields,
+    tms,
+    localUpdatedAt,
+    syncStatus,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InvoiceLineRow &&
+          other.id == this.id &&
+          other.remoteId == this.remoteId &&
+          other.invoiceRemote == this.invoiceRemote &&
+          other.invoiceLocal == this.invoiceLocal &&
+          other.fkProduct == this.fkProduct &&
+          other.label == this.label &&
+          other.description == this.description &&
+          other.productType == this.productType &&
+          other.qty == this.qty &&
+          other.subprice == this.subprice &&
+          other.tvaTx == this.tvaTx &&
+          other.remisePercent == this.remisePercent &&
+          other.totalHt == this.totalHt &&
+          other.totalTva == this.totalTva &&
+          other.totalTtc == this.totalTtc &&
+          other.rang == this.rang &&
+          other.extrafields == this.extrafields &&
+          other.tms == this.tms &&
+          other.localUpdatedAt == this.localUpdatedAt &&
+          other.syncStatus == this.syncStatus);
+}
+
+class InvoiceLinesCompanion extends UpdateCompanion<InvoiceLineRow> {
+  final Value<int> id;
+  final Value<int?> remoteId;
+  final Value<int?> invoiceRemote;
+  final Value<int?> invoiceLocal;
+  final Value<int?> fkProduct;
+  final Value<String?> label;
+  final Value<String?> description;
+  final Value<int> productType;
+  final Value<String> qty;
+  final Value<String?> subprice;
+  final Value<String?> tvaTx;
+  final Value<String?> remisePercent;
+  final Value<String?> totalHt;
+  final Value<String?> totalTva;
+  final Value<String?> totalTtc;
+  final Value<int> rang;
+  final Value<String> extrafields;
+  final Value<DateTime?> tms;
+  final Value<DateTime> localUpdatedAt;
+  final Value<SyncStatus> syncStatus;
+  const InvoiceLinesCompanion({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.invoiceRemote = const Value.absent(),
+    this.invoiceLocal = const Value.absent(),
+    this.fkProduct = const Value.absent(),
+    this.label = const Value.absent(),
+    this.description = const Value.absent(),
+    this.productType = const Value.absent(),
+    this.qty = const Value.absent(),
+    this.subprice = const Value.absent(),
+    this.tvaTx = const Value.absent(),
+    this.remisePercent = const Value.absent(),
+    this.totalHt = const Value.absent(),
+    this.totalTva = const Value.absent(),
+    this.totalTtc = const Value.absent(),
+    this.rang = const Value.absent(),
+    this.extrafields = const Value.absent(),
+    this.tms = const Value.absent(),
+    this.localUpdatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+  });
+  InvoiceLinesCompanion.insert({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.invoiceRemote = const Value.absent(),
+    this.invoiceLocal = const Value.absent(),
+    this.fkProduct = const Value.absent(),
+    this.label = const Value.absent(),
+    this.description = const Value.absent(),
+    this.productType = const Value.absent(),
+    this.qty = const Value.absent(),
+    this.subprice = const Value.absent(),
+    this.tvaTx = const Value.absent(),
+    this.remisePercent = const Value.absent(),
+    this.totalHt = const Value.absent(),
+    this.totalTva = const Value.absent(),
+    this.totalTtc = const Value.absent(),
+    this.rang = const Value.absent(),
+    this.extrafields = const Value.absent(),
+    this.tms = const Value.absent(),
+    required DateTime localUpdatedAt,
+    this.syncStatus = const Value.absent(),
+  }) : localUpdatedAt = Value(localUpdatedAt);
+  static Insertable<InvoiceLineRow> custom({
+    Expression<int>? id,
+    Expression<int>? remoteId,
+    Expression<int>? invoiceRemote,
+    Expression<int>? invoiceLocal,
+    Expression<int>? fkProduct,
+    Expression<String>? label,
+    Expression<String>? description,
+    Expression<int>? productType,
+    Expression<String>? qty,
+    Expression<String>? subprice,
+    Expression<String>? tvaTx,
+    Expression<String>? remisePercent,
+    Expression<String>? totalHt,
+    Expression<String>? totalTva,
+    Expression<String>? totalTtc,
+    Expression<int>? rang,
+    Expression<String>? extrafields,
+    Expression<DateTime>? tms,
+    Expression<DateTime>? localUpdatedAt,
+    Expression<int>? syncStatus,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (invoiceRemote != null) 'invoice_remote': invoiceRemote,
+      if (invoiceLocal != null) 'invoice_local': invoiceLocal,
+      if (fkProduct != null) 'fk_product': fkProduct,
+      if (label != null) 'label': label,
+      if (description != null) 'description': description,
+      if (productType != null) 'product_type': productType,
+      if (qty != null) 'qty': qty,
+      if (subprice != null) 'subprice': subprice,
+      if (tvaTx != null) 'tva_tx': tvaTx,
+      if (remisePercent != null) 'remise_percent': remisePercent,
+      if (totalHt != null) 'total_ht': totalHt,
+      if (totalTva != null) 'total_tva': totalTva,
+      if (totalTtc != null) 'total_ttc': totalTtc,
+      if (rang != null) 'rang': rang,
+      if (extrafields != null) 'extrafields': extrafields,
+      if (tms != null) 'tms': tms,
+      if (localUpdatedAt != null) 'local_updated_at': localUpdatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+    });
+  }
+
+  InvoiceLinesCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? remoteId,
+    Value<int?>? invoiceRemote,
+    Value<int?>? invoiceLocal,
+    Value<int?>? fkProduct,
+    Value<String?>? label,
+    Value<String?>? description,
+    Value<int>? productType,
+    Value<String>? qty,
+    Value<String?>? subprice,
+    Value<String?>? tvaTx,
+    Value<String?>? remisePercent,
+    Value<String?>? totalHt,
+    Value<String?>? totalTva,
+    Value<String?>? totalTtc,
+    Value<int>? rang,
+    Value<String>? extrafields,
+    Value<DateTime?>? tms,
+    Value<DateTime>? localUpdatedAt,
+    Value<SyncStatus>? syncStatus,
+  }) {
+    return InvoiceLinesCompanion(
+      id: id ?? this.id,
+      remoteId: remoteId ?? this.remoteId,
+      invoiceRemote: invoiceRemote ?? this.invoiceRemote,
+      invoiceLocal: invoiceLocal ?? this.invoiceLocal,
+      fkProduct: fkProduct ?? this.fkProduct,
+      label: label ?? this.label,
+      description: description ?? this.description,
+      productType: productType ?? this.productType,
+      qty: qty ?? this.qty,
+      subprice: subprice ?? this.subprice,
+      tvaTx: tvaTx ?? this.tvaTx,
+      remisePercent: remisePercent ?? this.remisePercent,
+      totalHt: totalHt ?? this.totalHt,
+      totalTva: totalTva ?? this.totalTva,
+      totalTtc: totalTtc ?? this.totalTtc,
+      rang: rang ?? this.rang,
+      extrafields: extrafields ?? this.extrafields,
+      tms: tms ?? this.tms,
+      localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<int>(remoteId.value);
+    }
+    if (invoiceRemote.present) {
+      map['invoice_remote'] = Variable<int>(invoiceRemote.value);
+    }
+    if (invoiceLocal.present) {
+      map['invoice_local'] = Variable<int>(invoiceLocal.value);
+    }
+    if (fkProduct.present) {
+      map['fk_product'] = Variable<int>(fkProduct.value);
+    }
+    if (label.present) {
+      map['label'] = Variable<String>(label.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (productType.present) {
+      map['product_type'] = Variable<int>(productType.value);
+    }
+    if (qty.present) {
+      map['qty'] = Variable<String>(qty.value);
+    }
+    if (subprice.present) {
+      map['subprice'] = Variable<String>(subprice.value);
+    }
+    if (tvaTx.present) {
+      map['tva_tx'] = Variable<String>(tvaTx.value);
+    }
+    if (remisePercent.present) {
+      map['remise_percent'] = Variable<String>(remisePercent.value);
+    }
+    if (totalHt.present) {
+      map['total_ht'] = Variable<String>(totalHt.value);
+    }
+    if (totalTva.present) {
+      map['total_tva'] = Variable<String>(totalTva.value);
+    }
+    if (totalTtc.present) {
+      map['total_ttc'] = Variable<String>(totalTtc.value);
+    }
+    if (rang.present) {
+      map['rang'] = Variable<int>(rang.value);
+    }
+    if (extrafields.present) {
+      map['extrafields'] = Variable<String>(extrafields.value);
+    }
+    if (tms.present) {
+      map['tms'] = Variable<DateTime>(tms.value);
+    }
+    if (localUpdatedAt.present) {
+      map['local_updated_at'] = Variable<DateTime>(localUpdatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<int>(
+        $InvoiceLinesTable.$convertersyncStatus.toSql(syncStatus.value),
+      );
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvoiceLinesCompanion(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('invoiceRemote: $invoiceRemote, ')
+          ..write('invoiceLocal: $invoiceLocal, ')
+          ..write('fkProduct: $fkProduct, ')
+          ..write('label: $label, ')
+          ..write('description: $description, ')
+          ..write('productType: $productType, ')
+          ..write('qty: $qty, ')
+          ..write('subprice: $subprice, ')
+          ..write('tvaTx: $tvaTx, ')
+          ..write('remisePercent: $remisePercent, ')
+          ..write('totalHt: $totalHt, ')
+          ..write('totalTva: $totalTva, ')
+          ..write('totalTtc: $totalTtc, ')
+          ..write('rang: $rang, ')
+          ..write('extrafields: $extrafields, ')
+          ..write('tms: $tms, ')
+          ..write('localUpdatedAt: $localUpdatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $InvoicesTable extends Invoices
+    with TableInfo<$InvoicesTable, InvoiceRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InvoicesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<int> remoteId = GeneratedColumn<int>(
+    'remote_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _socidRemoteMeta = const VerificationMeta(
+    'socidRemote',
+  );
+  @override
+  late final GeneratedColumn<int> socidRemote = GeneratedColumn<int>(
+    'socid_remote',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _socidLocalMeta = const VerificationMeta(
+    'socidLocal',
+  );
+  @override
+  late final GeneratedColumn<int> socidLocal = GeneratedColumn<int>(
+    'socid_local',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _refMeta = const VerificationMeta('ref');
+  @override
+  late final GeneratedColumn<String> ref = GeneratedColumn<String>(
+    'ref',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _refClientMeta = const VerificationMeta(
+    'refClient',
+  );
+  @override
+  late final GeneratedColumn<String> refClient = GeneratedColumn<String>(
+    'ref_client',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<int> type = GeneratedColumn<int>(
+    'type',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<int> status = GeneratedColumn<int>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _payeMeta = const VerificationMeta('paye');
+  @override
+  late final GeneratedColumn<int> paye = GeneratedColumn<int>(
+    'paye',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _dateInvoiceMeta = const VerificationMeta(
+    'dateInvoice',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateInvoice = GeneratedColumn<DateTime>(
+    'date_invoice',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateDueMeta = const VerificationMeta(
+    'dateDue',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateDue = GeneratedColumn<DateTime>(
+    'date_due',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _totalHtMeta = const VerificationMeta(
+    'totalHt',
+  );
+  @override
+  late final GeneratedColumn<String> totalHt = GeneratedColumn<String>(
+    'total_ht',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _totalTvaMeta = const VerificationMeta(
+    'totalTva',
+  );
+  @override
+  late final GeneratedColumn<String> totalTva = GeneratedColumn<String>(
+    'total_tva',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _totalTtcMeta = const VerificationMeta(
+    'totalTtc',
+  );
+  @override
+  late final GeneratedColumn<String> totalTtc = GeneratedColumn<String>(
+    'total_ttc',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fkModeReglementMeta = const VerificationMeta(
+    'fkModeReglement',
+  );
+  @override
+  late final GeneratedColumn<int> fkModeReglement = GeneratedColumn<int>(
+    'fk_mode_reglement',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fkCondReglementMeta = const VerificationMeta(
+    'fkCondReglement',
+  );
+  @override
+  late final GeneratedColumn<int> fkCondReglement = GeneratedColumn<int>(
+    'fk_cond_reglement',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _notePublicMeta = const VerificationMeta(
+    'notePublic',
+  );
+  @override
+  late final GeneratedColumn<String> notePublic = GeneratedColumn<String>(
+    'note_public',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _notePrivateMeta = const VerificationMeta(
+    'notePrivate',
+  );
+  @override
+  late final GeneratedColumn<String> notePrivate = GeneratedColumn<String>(
+    'note_private',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _extrafieldsMeta = const VerificationMeta(
+    'extrafields',
+  );
+  @override
+  late final GeneratedColumn<String> extrafields = GeneratedColumn<String>(
+    'extrafields',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
+  static const VerificationMeta _rawJsonMeta = const VerificationMeta(
+    'rawJson',
+  );
+  @override
+  late final GeneratedColumn<String> rawJson = GeneratedColumn<String>(
+    'raw_json',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tmsMeta = const VerificationMeta('tms');
+  @override
+  late final GeneratedColumn<DateTime> tms = GeneratedColumn<DateTime>(
+    'tms',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _localUpdatedAtMeta = const VerificationMeta(
+    'localUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> localUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'local_updated_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  @override
+  late final GeneratedColumnWithTypeConverter<SyncStatus, int> syncStatus =
+      GeneratedColumn<int>(
+        'sync_status',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: Constant(SyncStatus.synced.index),
+      ).withConverter<SyncStatus>($InvoicesTable.$convertersyncStatus);
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    remoteId,
+    socidRemote,
+    socidLocal,
+    ref,
+    refClient,
+    type,
+    status,
+    paye,
+    dateInvoice,
+    dateDue,
+    totalHt,
+    totalTva,
+    totalTtc,
+    fkModeReglement,
+    fkCondReglement,
+    notePublic,
+    notePrivate,
+    extrafields,
+    rawJson,
+    tms,
+    localUpdatedAt,
+    syncStatus,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'invoices';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InvoiceRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    }
+    if (data.containsKey('socid_remote')) {
+      context.handle(
+        _socidRemoteMeta,
+        socidRemote.isAcceptableOrUnknown(
+          data['socid_remote']!,
+          _socidRemoteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('socid_local')) {
+      context.handle(
+        _socidLocalMeta,
+        socidLocal.isAcceptableOrUnknown(data['socid_local']!, _socidLocalMeta),
+      );
+    }
+    if (data.containsKey('ref')) {
+      context.handle(
+        _refMeta,
+        ref.isAcceptableOrUnknown(data['ref']!, _refMeta),
+      );
+    }
+    if (data.containsKey('ref_client')) {
+      context.handle(
+        _refClientMeta,
+        refClient.isAcceptableOrUnknown(data['ref_client']!, _refClientMeta),
+      );
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('paye')) {
+      context.handle(
+        _payeMeta,
+        paye.isAcceptableOrUnknown(data['paye']!, _payeMeta),
+      );
+    }
+    if (data.containsKey('date_invoice')) {
+      context.handle(
+        _dateInvoiceMeta,
+        dateInvoice.isAcceptableOrUnknown(
+          data['date_invoice']!,
+          _dateInvoiceMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date_due')) {
+      context.handle(
+        _dateDueMeta,
+        dateDue.isAcceptableOrUnknown(data['date_due']!, _dateDueMeta),
+      );
+    }
+    if (data.containsKey('total_ht')) {
+      context.handle(
+        _totalHtMeta,
+        totalHt.isAcceptableOrUnknown(data['total_ht']!, _totalHtMeta),
+      );
+    }
+    if (data.containsKey('total_tva')) {
+      context.handle(
+        _totalTvaMeta,
+        totalTva.isAcceptableOrUnknown(data['total_tva']!, _totalTvaMeta),
+      );
+    }
+    if (data.containsKey('total_ttc')) {
+      context.handle(
+        _totalTtcMeta,
+        totalTtc.isAcceptableOrUnknown(data['total_ttc']!, _totalTtcMeta),
+      );
+    }
+    if (data.containsKey('fk_mode_reglement')) {
+      context.handle(
+        _fkModeReglementMeta,
+        fkModeReglement.isAcceptableOrUnknown(
+          data['fk_mode_reglement']!,
+          _fkModeReglementMeta,
+        ),
+      );
+    }
+    if (data.containsKey('fk_cond_reglement')) {
+      context.handle(
+        _fkCondReglementMeta,
+        fkCondReglement.isAcceptableOrUnknown(
+          data['fk_cond_reglement']!,
+          _fkCondReglementMeta,
+        ),
+      );
+    }
+    if (data.containsKey('note_public')) {
+      context.handle(
+        _notePublicMeta,
+        notePublic.isAcceptableOrUnknown(data['note_public']!, _notePublicMeta),
+      );
+    }
+    if (data.containsKey('note_private')) {
+      context.handle(
+        _notePrivateMeta,
+        notePrivate.isAcceptableOrUnknown(
+          data['note_private']!,
+          _notePrivateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('extrafields')) {
+      context.handle(
+        _extrafieldsMeta,
+        extrafields.isAcceptableOrUnknown(
+          data['extrafields']!,
+          _extrafieldsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('raw_json')) {
+      context.handle(
+        _rawJsonMeta,
+        rawJson.isAcceptableOrUnknown(data['raw_json']!, _rawJsonMeta),
+      );
+    }
+    if (data.containsKey('tms')) {
+      context.handle(
+        _tmsMeta,
+        tms.isAcceptableOrUnknown(data['tms']!, _tmsMeta),
+      );
+    }
+    if (data.containsKey('local_updated_at')) {
+      context.handle(
+        _localUpdatedAtMeta,
+        localUpdatedAt.isAcceptableOrUnknown(
+          data['local_updated_at']!,
+          _localUpdatedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_localUpdatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  InvoiceRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InvoiceRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}remote_id'],
+      ),
+      socidRemote: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}socid_remote'],
+      ),
+      socidLocal: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}socid_local'],
+      ),
+      ref: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ref'],
+      ),
+      refClient: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ref_client'],
+      ),
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}type'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}status'],
+      )!,
+      paye: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}paye'],
+      )!,
+      dateInvoice: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_invoice'],
+      ),
+      dateDue: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_due'],
+      ),
+      totalHt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}total_ht'],
+      ),
+      totalTva: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}total_tva'],
+      ),
+      totalTtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}total_ttc'],
+      ),
+      fkModeReglement: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fk_mode_reglement'],
+      ),
+      fkCondReglement: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fk_cond_reglement'],
+      ),
+      notePublic: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}note_public'],
+      ),
+      notePrivate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}note_private'],
+      ),
+      extrafields: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}extrafields'],
+      )!,
+      rawJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}raw_json'],
+      ),
+      tms: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}tms'],
+      ),
+      localUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}local_updated_at'],
+      )!,
+      syncStatus: $InvoicesTable.$convertersyncStatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}sync_status'],
+        )!,
+      ),
+    );
+  }
+
+  @override
+  $InvoicesTable createAlias(String alias) {
+    return $InvoicesTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<SyncStatus, int, int> $convertersyncStatus =
+      const EnumIndexConverter<SyncStatus>(SyncStatus.values);
+}
+
+class InvoiceRow extends DataClass implements Insertable<InvoiceRow> {
+  final int id;
+  final int? remoteId;
+
+  /// `socid` côté Dolibarr — tiers (client) facturé.
+  final int? socidRemote;
+  final int? socidLocal;
+
+  /// Référence Dolibarr (ex : `FA2026-0042`). Générée au passage à
+  /// l'état validé.
+  final String? ref;
+
+  /// Référence interne client (saisie libre).
+  final String? refClient;
+
+  /// Type Dolibarr : 0=standard, 1=replacement, 2=credit_note,
+  /// 3=deposit, 4=proforma, 5=situation.
+  final int type;
+
+  /// Statut Dolibarr : 0=brouillon, 1=validée, 2=payée, 3=abandonnée.
+  final int status;
+
+  /// Flag payé : 0=impayée, 1=payée.
+  final int paye;
+
+  /// Date facture (création comptable).
+  final DateTime? dateInvoice;
+
+  /// Date d'échéance.
+  final DateTime? dateDue;
+  final String? totalHt;
+  final String? totalTva;
+  final String? totalTtc;
+  final int? fkModeReglement;
+  final int? fkCondReglement;
+  final String? notePublic;
+  final String? notePrivate;
+  final String extrafields;
+  final String? rawJson;
+  final DateTime? tms;
+  final DateTime localUpdatedAt;
+  final SyncStatus syncStatus;
+  const InvoiceRow({
+    required this.id,
+    this.remoteId,
+    this.socidRemote,
+    this.socidLocal,
+    this.ref,
+    this.refClient,
+    required this.type,
+    required this.status,
+    required this.paye,
+    this.dateInvoice,
+    this.dateDue,
+    this.totalHt,
+    this.totalTva,
+    this.totalTtc,
+    this.fkModeReglement,
+    this.fkCondReglement,
+    this.notePublic,
+    this.notePrivate,
+    required this.extrafields,
+    this.rawJson,
+    this.tms,
+    required this.localUpdatedAt,
+    required this.syncStatus,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<int>(remoteId);
+    }
+    if (!nullToAbsent || socidRemote != null) {
+      map['socid_remote'] = Variable<int>(socidRemote);
+    }
+    if (!nullToAbsent || socidLocal != null) {
+      map['socid_local'] = Variable<int>(socidLocal);
+    }
+    if (!nullToAbsent || ref != null) {
+      map['ref'] = Variable<String>(ref);
+    }
+    if (!nullToAbsent || refClient != null) {
+      map['ref_client'] = Variable<String>(refClient);
+    }
+    map['type'] = Variable<int>(type);
+    map['status'] = Variable<int>(status);
+    map['paye'] = Variable<int>(paye);
+    if (!nullToAbsent || dateInvoice != null) {
+      map['date_invoice'] = Variable<DateTime>(dateInvoice);
+    }
+    if (!nullToAbsent || dateDue != null) {
+      map['date_due'] = Variable<DateTime>(dateDue);
+    }
+    if (!nullToAbsent || totalHt != null) {
+      map['total_ht'] = Variable<String>(totalHt);
+    }
+    if (!nullToAbsent || totalTva != null) {
+      map['total_tva'] = Variable<String>(totalTva);
+    }
+    if (!nullToAbsent || totalTtc != null) {
+      map['total_ttc'] = Variable<String>(totalTtc);
+    }
+    if (!nullToAbsent || fkModeReglement != null) {
+      map['fk_mode_reglement'] = Variable<int>(fkModeReglement);
+    }
+    if (!nullToAbsent || fkCondReglement != null) {
+      map['fk_cond_reglement'] = Variable<int>(fkCondReglement);
+    }
+    if (!nullToAbsent || notePublic != null) {
+      map['note_public'] = Variable<String>(notePublic);
+    }
+    if (!nullToAbsent || notePrivate != null) {
+      map['note_private'] = Variable<String>(notePrivate);
+    }
+    map['extrafields'] = Variable<String>(extrafields);
+    if (!nullToAbsent || rawJson != null) {
+      map['raw_json'] = Variable<String>(rawJson);
+    }
+    if (!nullToAbsent || tms != null) {
+      map['tms'] = Variable<DateTime>(tms);
+    }
+    map['local_updated_at'] = Variable<DateTime>(localUpdatedAt);
+    {
+      map['sync_status'] = Variable<int>(
+        $InvoicesTable.$convertersyncStatus.toSql(syncStatus),
+      );
+    }
+    return map;
+  }
+
+  InvoicesCompanion toCompanion(bool nullToAbsent) {
+    return InvoicesCompanion(
+      id: Value(id),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      socidRemote: socidRemote == null && nullToAbsent
+          ? const Value.absent()
+          : Value(socidRemote),
+      socidLocal: socidLocal == null && nullToAbsent
+          ? const Value.absent()
+          : Value(socidLocal),
+      ref: ref == null && nullToAbsent ? const Value.absent() : Value(ref),
+      refClient: refClient == null && nullToAbsent
+          ? const Value.absent()
+          : Value(refClient),
+      type: Value(type),
+      status: Value(status),
+      paye: Value(paye),
+      dateInvoice: dateInvoice == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateInvoice),
+      dateDue: dateDue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateDue),
+      totalHt: totalHt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(totalHt),
+      totalTva: totalTva == null && nullToAbsent
+          ? const Value.absent()
+          : Value(totalTva),
+      totalTtc: totalTtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(totalTtc),
+      fkModeReglement: fkModeReglement == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fkModeReglement),
+      fkCondReglement: fkCondReglement == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fkCondReglement),
+      notePublic: notePublic == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notePublic),
+      notePrivate: notePrivate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notePrivate),
+      extrafields: Value(extrafields),
+      rawJson: rawJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rawJson),
+      tms: tms == null && nullToAbsent ? const Value.absent() : Value(tms),
+      localUpdatedAt: Value(localUpdatedAt),
+      syncStatus: Value(syncStatus),
+    );
+  }
+
+  factory InvoiceRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InvoiceRow(
+      id: serializer.fromJson<int>(json['id']),
+      remoteId: serializer.fromJson<int?>(json['remoteId']),
+      socidRemote: serializer.fromJson<int?>(json['socidRemote']),
+      socidLocal: serializer.fromJson<int?>(json['socidLocal']),
+      ref: serializer.fromJson<String?>(json['ref']),
+      refClient: serializer.fromJson<String?>(json['refClient']),
+      type: serializer.fromJson<int>(json['type']),
+      status: serializer.fromJson<int>(json['status']),
+      paye: serializer.fromJson<int>(json['paye']),
+      dateInvoice: serializer.fromJson<DateTime?>(json['dateInvoice']),
+      dateDue: serializer.fromJson<DateTime?>(json['dateDue']),
+      totalHt: serializer.fromJson<String?>(json['totalHt']),
+      totalTva: serializer.fromJson<String?>(json['totalTva']),
+      totalTtc: serializer.fromJson<String?>(json['totalTtc']),
+      fkModeReglement: serializer.fromJson<int?>(json['fkModeReglement']),
+      fkCondReglement: serializer.fromJson<int?>(json['fkCondReglement']),
+      notePublic: serializer.fromJson<String?>(json['notePublic']),
+      notePrivate: serializer.fromJson<String?>(json['notePrivate']),
+      extrafields: serializer.fromJson<String>(json['extrafields']),
+      rawJson: serializer.fromJson<String?>(json['rawJson']),
+      tms: serializer.fromJson<DateTime?>(json['tms']),
+      localUpdatedAt: serializer.fromJson<DateTime>(json['localUpdatedAt']),
+      syncStatus: $InvoicesTable.$convertersyncStatus.fromJson(
+        serializer.fromJson<int>(json['syncStatus']),
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'remoteId': serializer.toJson<int?>(remoteId),
+      'socidRemote': serializer.toJson<int?>(socidRemote),
+      'socidLocal': serializer.toJson<int?>(socidLocal),
+      'ref': serializer.toJson<String?>(ref),
+      'refClient': serializer.toJson<String?>(refClient),
+      'type': serializer.toJson<int>(type),
+      'status': serializer.toJson<int>(status),
+      'paye': serializer.toJson<int>(paye),
+      'dateInvoice': serializer.toJson<DateTime?>(dateInvoice),
+      'dateDue': serializer.toJson<DateTime?>(dateDue),
+      'totalHt': serializer.toJson<String?>(totalHt),
+      'totalTva': serializer.toJson<String?>(totalTva),
+      'totalTtc': serializer.toJson<String?>(totalTtc),
+      'fkModeReglement': serializer.toJson<int?>(fkModeReglement),
+      'fkCondReglement': serializer.toJson<int?>(fkCondReglement),
+      'notePublic': serializer.toJson<String?>(notePublic),
+      'notePrivate': serializer.toJson<String?>(notePrivate),
+      'extrafields': serializer.toJson<String>(extrafields),
+      'rawJson': serializer.toJson<String?>(rawJson),
+      'tms': serializer.toJson<DateTime?>(tms),
+      'localUpdatedAt': serializer.toJson<DateTime>(localUpdatedAt),
+      'syncStatus': serializer.toJson<int>(
+        $InvoicesTable.$convertersyncStatus.toJson(syncStatus),
+      ),
+    };
+  }
+
+  InvoiceRow copyWith({
+    int? id,
+    Value<int?> remoteId = const Value.absent(),
+    Value<int?> socidRemote = const Value.absent(),
+    Value<int?> socidLocal = const Value.absent(),
+    Value<String?> ref = const Value.absent(),
+    Value<String?> refClient = const Value.absent(),
+    int? type,
+    int? status,
+    int? paye,
+    Value<DateTime?> dateInvoice = const Value.absent(),
+    Value<DateTime?> dateDue = const Value.absent(),
+    Value<String?> totalHt = const Value.absent(),
+    Value<String?> totalTva = const Value.absent(),
+    Value<String?> totalTtc = const Value.absent(),
+    Value<int?> fkModeReglement = const Value.absent(),
+    Value<int?> fkCondReglement = const Value.absent(),
+    Value<String?> notePublic = const Value.absent(),
+    Value<String?> notePrivate = const Value.absent(),
+    String? extrafields,
+    Value<String?> rawJson = const Value.absent(),
+    Value<DateTime?> tms = const Value.absent(),
+    DateTime? localUpdatedAt,
+    SyncStatus? syncStatus,
+  }) => InvoiceRow(
+    id: id ?? this.id,
+    remoteId: remoteId.present ? remoteId.value : this.remoteId,
+    socidRemote: socidRemote.present ? socidRemote.value : this.socidRemote,
+    socidLocal: socidLocal.present ? socidLocal.value : this.socidLocal,
+    ref: ref.present ? ref.value : this.ref,
+    refClient: refClient.present ? refClient.value : this.refClient,
+    type: type ?? this.type,
+    status: status ?? this.status,
+    paye: paye ?? this.paye,
+    dateInvoice: dateInvoice.present ? dateInvoice.value : this.dateInvoice,
+    dateDue: dateDue.present ? dateDue.value : this.dateDue,
+    totalHt: totalHt.present ? totalHt.value : this.totalHt,
+    totalTva: totalTva.present ? totalTva.value : this.totalTva,
+    totalTtc: totalTtc.present ? totalTtc.value : this.totalTtc,
+    fkModeReglement: fkModeReglement.present
+        ? fkModeReglement.value
+        : this.fkModeReglement,
+    fkCondReglement: fkCondReglement.present
+        ? fkCondReglement.value
+        : this.fkCondReglement,
+    notePublic: notePublic.present ? notePublic.value : this.notePublic,
+    notePrivate: notePrivate.present ? notePrivate.value : this.notePrivate,
+    extrafields: extrafields ?? this.extrafields,
+    rawJson: rawJson.present ? rawJson.value : this.rawJson,
+    tms: tms.present ? tms.value : this.tms,
+    localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+  );
+  InvoiceRow copyWithCompanion(InvoicesCompanion data) {
+    return InvoiceRow(
+      id: data.id.present ? data.id.value : this.id,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      socidRemote: data.socidRemote.present
+          ? data.socidRemote.value
+          : this.socidRemote,
+      socidLocal: data.socidLocal.present
+          ? data.socidLocal.value
+          : this.socidLocal,
+      ref: data.ref.present ? data.ref.value : this.ref,
+      refClient: data.refClient.present ? data.refClient.value : this.refClient,
+      type: data.type.present ? data.type.value : this.type,
+      status: data.status.present ? data.status.value : this.status,
+      paye: data.paye.present ? data.paye.value : this.paye,
+      dateInvoice: data.dateInvoice.present
+          ? data.dateInvoice.value
+          : this.dateInvoice,
+      dateDue: data.dateDue.present ? data.dateDue.value : this.dateDue,
+      totalHt: data.totalHt.present ? data.totalHt.value : this.totalHt,
+      totalTva: data.totalTva.present ? data.totalTva.value : this.totalTva,
+      totalTtc: data.totalTtc.present ? data.totalTtc.value : this.totalTtc,
+      fkModeReglement: data.fkModeReglement.present
+          ? data.fkModeReglement.value
+          : this.fkModeReglement,
+      fkCondReglement: data.fkCondReglement.present
+          ? data.fkCondReglement.value
+          : this.fkCondReglement,
+      notePublic: data.notePublic.present
+          ? data.notePublic.value
+          : this.notePublic,
+      notePrivate: data.notePrivate.present
+          ? data.notePrivate.value
+          : this.notePrivate,
+      extrafields: data.extrafields.present
+          ? data.extrafields.value
+          : this.extrafields,
+      rawJson: data.rawJson.present ? data.rawJson.value : this.rawJson,
+      tms: data.tms.present ? data.tms.value : this.tms,
+      localUpdatedAt: data.localUpdatedAt.present
+          ? data.localUpdatedAt.value
+          : this.localUpdatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvoiceRow(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('socidRemote: $socidRemote, ')
+          ..write('socidLocal: $socidLocal, ')
+          ..write('ref: $ref, ')
+          ..write('refClient: $refClient, ')
+          ..write('type: $type, ')
+          ..write('status: $status, ')
+          ..write('paye: $paye, ')
+          ..write('dateInvoice: $dateInvoice, ')
+          ..write('dateDue: $dateDue, ')
+          ..write('totalHt: $totalHt, ')
+          ..write('totalTva: $totalTva, ')
+          ..write('totalTtc: $totalTtc, ')
+          ..write('fkModeReglement: $fkModeReglement, ')
+          ..write('fkCondReglement: $fkCondReglement, ')
+          ..write('notePublic: $notePublic, ')
+          ..write('notePrivate: $notePrivate, ')
+          ..write('extrafields: $extrafields, ')
+          ..write('rawJson: $rawJson, ')
+          ..write('tms: $tms, ')
+          ..write('localUpdatedAt: $localUpdatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    remoteId,
+    socidRemote,
+    socidLocal,
+    ref,
+    refClient,
+    type,
+    status,
+    paye,
+    dateInvoice,
+    dateDue,
+    totalHt,
+    totalTva,
+    totalTtc,
+    fkModeReglement,
+    fkCondReglement,
+    notePublic,
+    notePrivate,
+    extrafields,
+    rawJson,
+    tms,
+    localUpdatedAt,
+    syncStatus,
+  ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InvoiceRow &&
+          other.id == this.id &&
+          other.remoteId == this.remoteId &&
+          other.socidRemote == this.socidRemote &&
+          other.socidLocal == this.socidLocal &&
+          other.ref == this.ref &&
+          other.refClient == this.refClient &&
+          other.type == this.type &&
+          other.status == this.status &&
+          other.paye == this.paye &&
+          other.dateInvoice == this.dateInvoice &&
+          other.dateDue == this.dateDue &&
+          other.totalHt == this.totalHt &&
+          other.totalTva == this.totalTva &&
+          other.totalTtc == this.totalTtc &&
+          other.fkModeReglement == this.fkModeReglement &&
+          other.fkCondReglement == this.fkCondReglement &&
+          other.notePublic == this.notePublic &&
+          other.notePrivate == this.notePrivate &&
+          other.extrafields == this.extrafields &&
+          other.rawJson == this.rawJson &&
+          other.tms == this.tms &&
+          other.localUpdatedAt == this.localUpdatedAt &&
+          other.syncStatus == this.syncStatus);
+}
+
+class InvoicesCompanion extends UpdateCompanion<InvoiceRow> {
+  final Value<int> id;
+  final Value<int?> remoteId;
+  final Value<int?> socidRemote;
+  final Value<int?> socidLocal;
+  final Value<String?> ref;
+  final Value<String?> refClient;
+  final Value<int> type;
+  final Value<int> status;
+  final Value<int> paye;
+  final Value<DateTime?> dateInvoice;
+  final Value<DateTime?> dateDue;
+  final Value<String?> totalHt;
+  final Value<String?> totalTva;
+  final Value<String?> totalTtc;
+  final Value<int?> fkModeReglement;
+  final Value<int?> fkCondReglement;
+  final Value<String?> notePublic;
+  final Value<String?> notePrivate;
+  final Value<String> extrafields;
+  final Value<String?> rawJson;
+  final Value<DateTime?> tms;
+  final Value<DateTime> localUpdatedAt;
+  final Value<SyncStatus> syncStatus;
+  const InvoicesCompanion({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.socidRemote = const Value.absent(),
+    this.socidLocal = const Value.absent(),
+    this.ref = const Value.absent(),
+    this.refClient = const Value.absent(),
+    this.type = const Value.absent(),
+    this.status = const Value.absent(),
+    this.paye = const Value.absent(),
+    this.dateInvoice = const Value.absent(),
+    this.dateDue = const Value.absent(),
+    this.totalHt = const Value.absent(),
+    this.totalTva = const Value.absent(),
+    this.totalTtc = const Value.absent(),
+    this.fkModeReglement = const Value.absent(),
+    this.fkCondReglement = const Value.absent(),
+    this.notePublic = const Value.absent(),
+    this.notePrivate = const Value.absent(),
+    this.extrafields = const Value.absent(),
+    this.rawJson = const Value.absent(),
+    this.tms = const Value.absent(),
+    this.localUpdatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+  });
+  InvoicesCompanion.insert({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.socidRemote = const Value.absent(),
+    this.socidLocal = const Value.absent(),
+    this.ref = const Value.absent(),
+    this.refClient = const Value.absent(),
+    this.type = const Value.absent(),
+    this.status = const Value.absent(),
+    this.paye = const Value.absent(),
+    this.dateInvoice = const Value.absent(),
+    this.dateDue = const Value.absent(),
+    this.totalHt = const Value.absent(),
+    this.totalTva = const Value.absent(),
+    this.totalTtc = const Value.absent(),
+    this.fkModeReglement = const Value.absent(),
+    this.fkCondReglement = const Value.absent(),
+    this.notePublic = const Value.absent(),
+    this.notePrivate = const Value.absent(),
+    this.extrafields = const Value.absent(),
+    this.rawJson = const Value.absent(),
+    this.tms = const Value.absent(),
+    required DateTime localUpdatedAt,
+    this.syncStatus = const Value.absent(),
+  }) : localUpdatedAt = Value(localUpdatedAt);
+  static Insertable<InvoiceRow> custom({
+    Expression<int>? id,
+    Expression<int>? remoteId,
+    Expression<int>? socidRemote,
+    Expression<int>? socidLocal,
+    Expression<String>? ref,
+    Expression<String>? refClient,
+    Expression<int>? type,
+    Expression<int>? status,
+    Expression<int>? paye,
+    Expression<DateTime>? dateInvoice,
+    Expression<DateTime>? dateDue,
+    Expression<String>? totalHt,
+    Expression<String>? totalTva,
+    Expression<String>? totalTtc,
+    Expression<int>? fkModeReglement,
+    Expression<int>? fkCondReglement,
+    Expression<String>? notePublic,
+    Expression<String>? notePrivate,
+    Expression<String>? extrafields,
+    Expression<String>? rawJson,
+    Expression<DateTime>? tms,
+    Expression<DateTime>? localUpdatedAt,
+    Expression<int>? syncStatus,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (socidRemote != null) 'socid_remote': socidRemote,
+      if (socidLocal != null) 'socid_local': socidLocal,
+      if (ref != null) 'ref': ref,
+      if (refClient != null) 'ref_client': refClient,
+      if (type != null) 'type': type,
+      if (status != null) 'status': status,
+      if (paye != null) 'paye': paye,
+      if (dateInvoice != null) 'date_invoice': dateInvoice,
+      if (dateDue != null) 'date_due': dateDue,
+      if (totalHt != null) 'total_ht': totalHt,
+      if (totalTva != null) 'total_tva': totalTva,
+      if (totalTtc != null) 'total_ttc': totalTtc,
+      if (fkModeReglement != null) 'fk_mode_reglement': fkModeReglement,
+      if (fkCondReglement != null) 'fk_cond_reglement': fkCondReglement,
+      if (notePublic != null) 'note_public': notePublic,
+      if (notePrivate != null) 'note_private': notePrivate,
+      if (extrafields != null) 'extrafields': extrafields,
+      if (rawJson != null) 'raw_json': rawJson,
+      if (tms != null) 'tms': tms,
+      if (localUpdatedAt != null) 'local_updated_at': localUpdatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+    });
+  }
+
+  InvoicesCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? remoteId,
+    Value<int?>? socidRemote,
+    Value<int?>? socidLocal,
+    Value<String?>? ref,
+    Value<String?>? refClient,
+    Value<int>? type,
+    Value<int>? status,
+    Value<int>? paye,
+    Value<DateTime?>? dateInvoice,
+    Value<DateTime?>? dateDue,
+    Value<String?>? totalHt,
+    Value<String?>? totalTva,
+    Value<String?>? totalTtc,
+    Value<int?>? fkModeReglement,
+    Value<int?>? fkCondReglement,
+    Value<String?>? notePublic,
+    Value<String?>? notePrivate,
+    Value<String>? extrafields,
+    Value<String?>? rawJson,
+    Value<DateTime?>? tms,
+    Value<DateTime>? localUpdatedAt,
+    Value<SyncStatus>? syncStatus,
+  }) {
+    return InvoicesCompanion(
+      id: id ?? this.id,
+      remoteId: remoteId ?? this.remoteId,
+      socidRemote: socidRemote ?? this.socidRemote,
+      socidLocal: socidLocal ?? this.socidLocal,
+      ref: ref ?? this.ref,
+      refClient: refClient ?? this.refClient,
+      type: type ?? this.type,
+      status: status ?? this.status,
+      paye: paye ?? this.paye,
+      dateInvoice: dateInvoice ?? this.dateInvoice,
+      dateDue: dateDue ?? this.dateDue,
+      totalHt: totalHt ?? this.totalHt,
+      totalTva: totalTva ?? this.totalTva,
+      totalTtc: totalTtc ?? this.totalTtc,
+      fkModeReglement: fkModeReglement ?? this.fkModeReglement,
+      fkCondReglement: fkCondReglement ?? this.fkCondReglement,
+      notePublic: notePublic ?? this.notePublic,
+      notePrivate: notePrivate ?? this.notePrivate,
+      extrafields: extrafields ?? this.extrafields,
+      rawJson: rawJson ?? this.rawJson,
+      tms: tms ?? this.tms,
+      localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<int>(remoteId.value);
+    }
+    if (socidRemote.present) {
+      map['socid_remote'] = Variable<int>(socidRemote.value);
+    }
+    if (socidLocal.present) {
+      map['socid_local'] = Variable<int>(socidLocal.value);
+    }
+    if (ref.present) {
+      map['ref'] = Variable<String>(ref.value);
+    }
+    if (refClient.present) {
+      map['ref_client'] = Variable<String>(refClient.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<int>(type.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<int>(status.value);
+    }
+    if (paye.present) {
+      map['paye'] = Variable<int>(paye.value);
+    }
+    if (dateInvoice.present) {
+      map['date_invoice'] = Variable<DateTime>(dateInvoice.value);
+    }
+    if (dateDue.present) {
+      map['date_due'] = Variable<DateTime>(dateDue.value);
+    }
+    if (totalHt.present) {
+      map['total_ht'] = Variable<String>(totalHt.value);
+    }
+    if (totalTva.present) {
+      map['total_tva'] = Variable<String>(totalTva.value);
+    }
+    if (totalTtc.present) {
+      map['total_ttc'] = Variable<String>(totalTtc.value);
+    }
+    if (fkModeReglement.present) {
+      map['fk_mode_reglement'] = Variable<int>(fkModeReglement.value);
+    }
+    if (fkCondReglement.present) {
+      map['fk_cond_reglement'] = Variable<int>(fkCondReglement.value);
+    }
+    if (notePublic.present) {
+      map['note_public'] = Variable<String>(notePublic.value);
+    }
+    if (notePrivate.present) {
+      map['note_private'] = Variable<String>(notePrivate.value);
+    }
+    if (extrafields.present) {
+      map['extrafields'] = Variable<String>(extrafields.value);
+    }
+    if (rawJson.present) {
+      map['raw_json'] = Variable<String>(rawJson.value);
+    }
+    if (tms.present) {
+      map['tms'] = Variable<DateTime>(tms.value);
+    }
+    if (localUpdatedAt.present) {
+      map['local_updated_at'] = Variable<DateTime>(localUpdatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<int>(
+        $InvoicesTable.$convertersyncStatus.toSql(syncStatus.value),
+      );
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvoicesCompanion(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('socidRemote: $socidRemote, ')
+          ..write('socidLocal: $socidLocal, ')
+          ..write('ref: $ref, ')
+          ..write('refClient: $refClient, ')
+          ..write('type: $type, ')
+          ..write('status: $status, ')
+          ..write('paye: $paye, ')
+          ..write('dateInvoice: $dateInvoice, ')
+          ..write('dateDue: $dateDue, ')
+          ..write('totalHt: $totalHt, ')
+          ..write('totalTva: $totalTva, ')
+          ..write('totalTtc: $totalTtc, ')
+          ..write('fkModeReglement: $fkModeReglement, ')
+          ..write('fkCondReglement: $fkCondReglement, ')
+          ..write('notePublic: $notePublic, ')
+          ..write('notePrivate: $notePrivate, ')
+          ..write('extrafields: $extrafields, ')
+          ..write('rawJson: $rawJson, ')
+          ..write('tms: $tms, ')
+          ..write('localUpdatedAt: $localUpdatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $PendingOperationsTable extends PendingOperations
     with TableInfo<$PendingOperationsTable, PendingOperationRow> {
   @override
@@ -7259,6 +9671,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $DraftsTable drafts = $DraftsTable(this);
   late final $ExtrafieldDefinitionsTable extrafieldDefinitions =
       $ExtrafieldDefinitionsTable(this);
+  late final $InvoiceLinesTable invoiceLines = $InvoiceLinesTable(this);
+  late final $InvoicesTable invoices = $InvoicesTable(this);
   late final $PendingOperationsTable pendingOperations =
       $PendingOperationsTable(this);
   late final $ProjectsTable projects = $ProjectsTable(this);
@@ -7274,6 +9688,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     categories,
     drafts,
     extrafieldDefinitions,
+    invoiceLines,
+    invoices,
     pendingOperations,
     projects,
     syncMetadata,
@@ -9069,6 +11485,1058 @@ typedef $$ExtrafieldDefinitionsTableProcessedTableManager =
       ExtrafieldDefinitionRow,
       PrefetchHooks Function()
     >;
+typedef $$InvoiceLinesTableCreateCompanionBuilder =
+    InvoiceLinesCompanion Function({
+      Value<int> id,
+      Value<int?> remoteId,
+      Value<int?> invoiceRemote,
+      Value<int?> invoiceLocal,
+      Value<int?> fkProduct,
+      Value<String?> label,
+      Value<String?> description,
+      Value<int> productType,
+      Value<String> qty,
+      Value<String?> subprice,
+      Value<String?> tvaTx,
+      Value<String?> remisePercent,
+      Value<String?> totalHt,
+      Value<String?> totalTva,
+      Value<String?> totalTtc,
+      Value<int> rang,
+      Value<String> extrafields,
+      Value<DateTime?> tms,
+      required DateTime localUpdatedAt,
+      Value<SyncStatus> syncStatus,
+    });
+typedef $$InvoiceLinesTableUpdateCompanionBuilder =
+    InvoiceLinesCompanion Function({
+      Value<int> id,
+      Value<int?> remoteId,
+      Value<int?> invoiceRemote,
+      Value<int?> invoiceLocal,
+      Value<int?> fkProduct,
+      Value<String?> label,
+      Value<String?> description,
+      Value<int> productType,
+      Value<String> qty,
+      Value<String?> subprice,
+      Value<String?> tvaTx,
+      Value<String?> remisePercent,
+      Value<String?> totalHt,
+      Value<String?> totalTva,
+      Value<String?> totalTtc,
+      Value<int> rang,
+      Value<String> extrafields,
+      Value<DateTime?> tms,
+      Value<DateTime> localUpdatedAt,
+      Value<SyncStatus> syncStatus,
+    });
+
+class $$InvoiceLinesTableFilterComposer
+    extends Composer<_$AppDatabase, $InvoiceLinesTable> {
+  $$InvoiceLinesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get invoiceRemote => $composableBuilder(
+    column: $table.invoiceRemote,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get invoiceLocal => $composableBuilder(
+    column: $table.invoiceLocal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get fkProduct => $composableBuilder(
+    column: $table.fkProduct,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get label => $composableBuilder(
+    column: $table.label,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get productType => $composableBuilder(
+    column: $table.productType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get qty => $composableBuilder(
+    column: $table.qty,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get subprice => $composableBuilder(
+    column: $table.subprice,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tvaTx => $composableBuilder(
+    column: $table.tvaTx,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get remisePercent => $composableBuilder(
+    column: $table.remisePercent,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get totalHt => $composableBuilder(
+    column: $table.totalHt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get totalTva => $composableBuilder(
+    column: $table.totalTva,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get totalTtc => $composableBuilder(
+    column: $table.totalTtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get rang => $composableBuilder(
+    column: $table.rang,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get tms => $composableBuilder(
+    column: $table.tms,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<SyncStatus, SyncStatus, int> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+}
+
+class $$InvoiceLinesTableOrderingComposer
+    extends Composer<_$AppDatabase, $InvoiceLinesTable> {
+  $$InvoiceLinesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get invoiceRemote => $composableBuilder(
+    column: $table.invoiceRemote,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get invoiceLocal => $composableBuilder(
+    column: $table.invoiceLocal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get fkProduct => $composableBuilder(
+    column: $table.fkProduct,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get label => $composableBuilder(
+    column: $table.label,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get productType => $composableBuilder(
+    column: $table.productType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get qty => $composableBuilder(
+    column: $table.qty,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get subprice => $composableBuilder(
+    column: $table.subprice,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tvaTx => $composableBuilder(
+    column: $table.tvaTx,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get remisePercent => $composableBuilder(
+    column: $table.remisePercent,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get totalHt => $composableBuilder(
+    column: $table.totalHt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get totalTva => $composableBuilder(
+    column: $table.totalTva,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get totalTtc => $composableBuilder(
+    column: $table.totalTtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get rang => $composableBuilder(
+    column: $table.rang,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get tms => $composableBuilder(
+    column: $table.tms,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$InvoiceLinesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $InvoiceLinesTable> {
+  $$InvoiceLinesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<int> get invoiceRemote => $composableBuilder(
+    column: $table.invoiceRemote,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get invoiceLocal => $composableBuilder(
+    column: $table.invoiceLocal,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get fkProduct =>
+      $composableBuilder(column: $table.fkProduct, builder: (column) => column);
+
+  GeneratedColumn<String> get label =>
+      $composableBuilder(column: $table.label, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get productType => $composableBuilder(
+    column: $table.productType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get qty =>
+      $composableBuilder(column: $table.qty, builder: (column) => column);
+
+  GeneratedColumn<String> get subprice =>
+      $composableBuilder(column: $table.subprice, builder: (column) => column);
+
+  GeneratedColumn<String> get tvaTx =>
+      $composableBuilder(column: $table.tvaTx, builder: (column) => column);
+
+  GeneratedColumn<String> get remisePercent => $composableBuilder(
+    column: $table.remisePercent,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get totalHt =>
+      $composableBuilder(column: $table.totalHt, builder: (column) => column);
+
+  GeneratedColumn<String> get totalTva =>
+      $composableBuilder(column: $table.totalTva, builder: (column) => column);
+
+  GeneratedColumn<String> get totalTtc =>
+      $composableBuilder(column: $table.totalTtc, builder: (column) => column);
+
+  GeneratedColumn<int> get rang =>
+      $composableBuilder(column: $table.rang, builder: (column) => column);
+
+  GeneratedColumn<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get tms =>
+      $composableBuilder(column: $table.tms, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<SyncStatus, int> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => column,
+      );
+}
+
+class $$InvoiceLinesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $InvoiceLinesTable,
+          InvoiceLineRow,
+          $$InvoiceLinesTableFilterComposer,
+          $$InvoiceLinesTableOrderingComposer,
+          $$InvoiceLinesTableAnnotationComposer,
+          $$InvoiceLinesTableCreateCompanionBuilder,
+          $$InvoiceLinesTableUpdateCompanionBuilder,
+          (
+            InvoiceLineRow,
+            BaseReferences<_$AppDatabase, $InvoiceLinesTable, InvoiceLineRow>,
+          ),
+          InvoiceLineRow,
+          PrefetchHooks Function()
+        > {
+  $$InvoiceLinesTableTableManager(_$AppDatabase db, $InvoiceLinesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InvoiceLinesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$InvoiceLinesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$InvoiceLinesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> remoteId = const Value.absent(),
+                Value<int?> invoiceRemote = const Value.absent(),
+                Value<int?> invoiceLocal = const Value.absent(),
+                Value<int?> fkProduct = const Value.absent(),
+                Value<String?> label = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<int> productType = const Value.absent(),
+                Value<String> qty = const Value.absent(),
+                Value<String?> subprice = const Value.absent(),
+                Value<String?> tvaTx = const Value.absent(),
+                Value<String?> remisePercent = const Value.absent(),
+                Value<String?> totalHt = const Value.absent(),
+                Value<String?> totalTva = const Value.absent(),
+                Value<String?> totalTtc = const Value.absent(),
+                Value<int> rang = const Value.absent(),
+                Value<String> extrafields = const Value.absent(),
+                Value<DateTime?> tms = const Value.absent(),
+                Value<DateTime> localUpdatedAt = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
+              }) => InvoiceLinesCompanion(
+                id: id,
+                remoteId: remoteId,
+                invoiceRemote: invoiceRemote,
+                invoiceLocal: invoiceLocal,
+                fkProduct: fkProduct,
+                label: label,
+                description: description,
+                productType: productType,
+                qty: qty,
+                subprice: subprice,
+                tvaTx: tvaTx,
+                remisePercent: remisePercent,
+                totalHt: totalHt,
+                totalTva: totalTva,
+                totalTtc: totalTtc,
+                rang: rang,
+                extrafields: extrafields,
+                tms: tms,
+                localUpdatedAt: localUpdatedAt,
+                syncStatus: syncStatus,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> remoteId = const Value.absent(),
+                Value<int?> invoiceRemote = const Value.absent(),
+                Value<int?> invoiceLocal = const Value.absent(),
+                Value<int?> fkProduct = const Value.absent(),
+                Value<String?> label = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<int> productType = const Value.absent(),
+                Value<String> qty = const Value.absent(),
+                Value<String?> subprice = const Value.absent(),
+                Value<String?> tvaTx = const Value.absent(),
+                Value<String?> remisePercent = const Value.absent(),
+                Value<String?> totalHt = const Value.absent(),
+                Value<String?> totalTva = const Value.absent(),
+                Value<String?> totalTtc = const Value.absent(),
+                Value<int> rang = const Value.absent(),
+                Value<String> extrafields = const Value.absent(),
+                Value<DateTime?> tms = const Value.absent(),
+                required DateTime localUpdatedAt,
+                Value<SyncStatus> syncStatus = const Value.absent(),
+              }) => InvoiceLinesCompanion.insert(
+                id: id,
+                remoteId: remoteId,
+                invoiceRemote: invoiceRemote,
+                invoiceLocal: invoiceLocal,
+                fkProduct: fkProduct,
+                label: label,
+                description: description,
+                productType: productType,
+                qty: qty,
+                subprice: subprice,
+                tvaTx: tvaTx,
+                remisePercent: remisePercent,
+                totalHt: totalHt,
+                totalTva: totalTva,
+                totalTtc: totalTtc,
+                rang: rang,
+                extrafields: extrafields,
+                tms: tms,
+                localUpdatedAt: localUpdatedAt,
+                syncStatus: syncStatus,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$InvoiceLinesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $InvoiceLinesTable,
+      InvoiceLineRow,
+      $$InvoiceLinesTableFilterComposer,
+      $$InvoiceLinesTableOrderingComposer,
+      $$InvoiceLinesTableAnnotationComposer,
+      $$InvoiceLinesTableCreateCompanionBuilder,
+      $$InvoiceLinesTableUpdateCompanionBuilder,
+      (
+        InvoiceLineRow,
+        BaseReferences<_$AppDatabase, $InvoiceLinesTable, InvoiceLineRow>,
+      ),
+      InvoiceLineRow,
+      PrefetchHooks Function()
+    >;
+typedef $$InvoicesTableCreateCompanionBuilder =
+    InvoicesCompanion Function({
+      Value<int> id,
+      Value<int?> remoteId,
+      Value<int?> socidRemote,
+      Value<int?> socidLocal,
+      Value<String?> ref,
+      Value<String?> refClient,
+      Value<int> type,
+      Value<int> status,
+      Value<int> paye,
+      Value<DateTime?> dateInvoice,
+      Value<DateTime?> dateDue,
+      Value<String?> totalHt,
+      Value<String?> totalTva,
+      Value<String?> totalTtc,
+      Value<int?> fkModeReglement,
+      Value<int?> fkCondReglement,
+      Value<String?> notePublic,
+      Value<String?> notePrivate,
+      Value<String> extrafields,
+      Value<String?> rawJson,
+      Value<DateTime?> tms,
+      required DateTime localUpdatedAt,
+      Value<SyncStatus> syncStatus,
+    });
+typedef $$InvoicesTableUpdateCompanionBuilder =
+    InvoicesCompanion Function({
+      Value<int> id,
+      Value<int?> remoteId,
+      Value<int?> socidRemote,
+      Value<int?> socidLocal,
+      Value<String?> ref,
+      Value<String?> refClient,
+      Value<int> type,
+      Value<int> status,
+      Value<int> paye,
+      Value<DateTime?> dateInvoice,
+      Value<DateTime?> dateDue,
+      Value<String?> totalHt,
+      Value<String?> totalTva,
+      Value<String?> totalTtc,
+      Value<int?> fkModeReglement,
+      Value<int?> fkCondReglement,
+      Value<String?> notePublic,
+      Value<String?> notePrivate,
+      Value<String> extrafields,
+      Value<String?> rawJson,
+      Value<DateTime?> tms,
+      Value<DateTime> localUpdatedAt,
+      Value<SyncStatus> syncStatus,
+    });
+
+class $$InvoicesTableFilterComposer
+    extends Composer<_$AppDatabase, $InvoicesTable> {
+  $$InvoicesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get socidRemote => $composableBuilder(
+    column: $table.socidRemote,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get socidLocal => $composableBuilder(
+    column: $table.socidLocal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ref => $composableBuilder(
+    column: $table.ref,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get refClient => $composableBuilder(
+    column: $table.refClient,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get paye => $composableBuilder(
+    column: $table.paye,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateInvoice => $composableBuilder(
+    column: $table.dateInvoice,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateDue => $composableBuilder(
+    column: $table.dateDue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get totalHt => $composableBuilder(
+    column: $table.totalHt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get totalTva => $composableBuilder(
+    column: $table.totalTva,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get totalTtc => $composableBuilder(
+    column: $table.totalTtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get fkModeReglement => $composableBuilder(
+    column: $table.fkModeReglement,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get fkCondReglement => $composableBuilder(
+    column: $table.fkCondReglement,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notePublic => $composableBuilder(
+    column: $table.notePublic,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notePrivate => $composableBuilder(
+    column: $table.notePrivate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rawJson => $composableBuilder(
+    column: $table.rawJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get tms => $composableBuilder(
+    column: $table.tms,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<SyncStatus, SyncStatus, int> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+}
+
+class $$InvoicesTableOrderingComposer
+    extends Composer<_$AppDatabase, $InvoicesTable> {
+  $$InvoicesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get socidRemote => $composableBuilder(
+    column: $table.socidRemote,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get socidLocal => $composableBuilder(
+    column: $table.socidLocal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ref => $composableBuilder(
+    column: $table.ref,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get refClient => $composableBuilder(
+    column: $table.refClient,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get paye => $composableBuilder(
+    column: $table.paye,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateInvoice => $composableBuilder(
+    column: $table.dateInvoice,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateDue => $composableBuilder(
+    column: $table.dateDue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get totalHt => $composableBuilder(
+    column: $table.totalHt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get totalTva => $composableBuilder(
+    column: $table.totalTva,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get totalTtc => $composableBuilder(
+    column: $table.totalTtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get fkModeReglement => $composableBuilder(
+    column: $table.fkModeReglement,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get fkCondReglement => $composableBuilder(
+    column: $table.fkCondReglement,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notePublic => $composableBuilder(
+    column: $table.notePublic,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notePrivate => $composableBuilder(
+    column: $table.notePrivate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rawJson => $composableBuilder(
+    column: $table.rawJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get tms => $composableBuilder(
+    column: $table.tms,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$InvoicesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $InvoicesTable> {
+  $$InvoicesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<int> get socidRemote => $composableBuilder(
+    column: $table.socidRemote,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get socidLocal => $composableBuilder(
+    column: $table.socidLocal,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get ref =>
+      $composableBuilder(column: $table.ref, builder: (column) => column);
+
+  GeneratedColumn<String> get refClient =>
+      $composableBuilder(column: $table.refClient, builder: (column) => column);
+
+  GeneratedColumn<int> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<int> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<int> get paye =>
+      $composableBuilder(column: $table.paye, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateInvoice => $composableBuilder(
+    column: $table.dateInvoice,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dateDue =>
+      $composableBuilder(column: $table.dateDue, builder: (column) => column);
+
+  GeneratedColumn<String> get totalHt =>
+      $composableBuilder(column: $table.totalHt, builder: (column) => column);
+
+  GeneratedColumn<String> get totalTva =>
+      $composableBuilder(column: $table.totalTva, builder: (column) => column);
+
+  GeneratedColumn<String> get totalTtc =>
+      $composableBuilder(column: $table.totalTtc, builder: (column) => column);
+
+  GeneratedColumn<int> get fkModeReglement => $composableBuilder(
+    column: $table.fkModeReglement,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get fkCondReglement => $composableBuilder(
+    column: $table.fkCondReglement,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get notePublic => $composableBuilder(
+    column: $table.notePublic,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get notePrivate => $composableBuilder(
+    column: $table.notePrivate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get rawJson =>
+      $composableBuilder(column: $table.rawJson, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get tms =>
+      $composableBuilder(column: $table.tms, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<SyncStatus, int> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => column,
+      );
+}
+
+class $$InvoicesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $InvoicesTable,
+          InvoiceRow,
+          $$InvoicesTableFilterComposer,
+          $$InvoicesTableOrderingComposer,
+          $$InvoicesTableAnnotationComposer,
+          $$InvoicesTableCreateCompanionBuilder,
+          $$InvoicesTableUpdateCompanionBuilder,
+          (
+            InvoiceRow,
+            BaseReferences<_$AppDatabase, $InvoicesTable, InvoiceRow>,
+          ),
+          InvoiceRow,
+          PrefetchHooks Function()
+        > {
+  $$InvoicesTableTableManager(_$AppDatabase db, $InvoicesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InvoicesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$InvoicesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$InvoicesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> remoteId = const Value.absent(),
+                Value<int?> socidRemote = const Value.absent(),
+                Value<int?> socidLocal = const Value.absent(),
+                Value<String?> ref = const Value.absent(),
+                Value<String?> refClient = const Value.absent(),
+                Value<int> type = const Value.absent(),
+                Value<int> status = const Value.absent(),
+                Value<int> paye = const Value.absent(),
+                Value<DateTime?> dateInvoice = const Value.absent(),
+                Value<DateTime?> dateDue = const Value.absent(),
+                Value<String?> totalHt = const Value.absent(),
+                Value<String?> totalTva = const Value.absent(),
+                Value<String?> totalTtc = const Value.absent(),
+                Value<int?> fkModeReglement = const Value.absent(),
+                Value<int?> fkCondReglement = const Value.absent(),
+                Value<String?> notePublic = const Value.absent(),
+                Value<String?> notePrivate = const Value.absent(),
+                Value<String> extrafields = const Value.absent(),
+                Value<String?> rawJson = const Value.absent(),
+                Value<DateTime?> tms = const Value.absent(),
+                Value<DateTime> localUpdatedAt = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
+              }) => InvoicesCompanion(
+                id: id,
+                remoteId: remoteId,
+                socidRemote: socidRemote,
+                socidLocal: socidLocal,
+                ref: ref,
+                refClient: refClient,
+                type: type,
+                status: status,
+                paye: paye,
+                dateInvoice: dateInvoice,
+                dateDue: dateDue,
+                totalHt: totalHt,
+                totalTva: totalTva,
+                totalTtc: totalTtc,
+                fkModeReglement: fkModeReglement,
+                fkCondReglement: fkCondReglement,
+                notePublic: notePublic,
+                notePrivate: notePrivate,
+                extrafields: extrafields,
+                rawJson: rawJson,
+                tms: tms,
+                localUpdatedAt: localUpdatedAt,
+                syncStatus: syncStatus,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> remoteId = const Value.absent(),
+                Value<int?> socidRemote = const Value.absent(),
+                Value<int?> socidLocal = const Value.absent(),
+                Value<String?> ref = const Value.absent(),
+                Value<String?> refClient = const Value.absent(),
+                Value<int> type = const Value.absent(),
+                Value<int> status = const Value.absent(),
+                Value<int> paye = const Value.absent(),
+                Value<DateTime?> dateInvoice = const Value.absent(),
+                Value<DateTime?> dateDue = const Value.absent(),
+                Value<String?> totalHt = const Value.absent(),
+                Value<String?> totalTva = const Value.absent(),
+                Value<String?> totalTtc = const Value.absent(),
+                Value<int?> fkModeReglement = const Value.absent(),
+                Value<int?> fkCondReglement = const Value.absent(),
+                Value<String?> notePublic = const Value.absent(),
+                Value<String?> notePrivate = const Value.absent(),
+                Value<String> extrafields = const Value.absent(),
+                Value<String?> rawJson = const Value.absent(),
+                Value<DateTime?> tms = const Value.absent(),
+                required DateTime localUpdatedAt,
+                Value<SyncStatus> syncStatus = const Value.absent(),
+              }) => InvoicesCompanion.insert(
+                id: id,
+                remoteId: remoteId,
+                socidRemote: socidRemote,
+                socidLocal: socidLocal,
+                ref: ref,
+                refClient: refClient,
+                type: type,
+                status: status,
+                paye: paye,
+                dateInvoice: dateInvoice,
+                dateDue: dateDue,
+                totalHt: totalHt,
+                totalTva: totalTva,
+                totalTtc: totalTtc,
+                fkModeReglement: fkModeReglement,
+                fkCondReglement: fkCondReglement,
+                notePublic: notePublic,
+                notePrivate: notePrivate,
+                extrafields: extrafields,
+                rawJson: rawJson,
+                tms: tms,
+                localUpdatedAt: localUpdatedAt,
+                syncStatus: syncStatus,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$InvoicesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $InvoicesTable,
+      InvoiceRow,
+      $$InvoicesTableFilterComposer,
+      $$InvoicesTableOrderingComposer,
+      $$InvoicesTableAnnotationComposer,
+      $$InvoicesTableCreateCompanionBuilder,
+      $$InvoicesTableUpdateCompanionBuilder,
+      (InvoiceRow, BaseReferences<_$AppDatabase, $InvoicesTable, InvoiceRow>),
+      InvoiceRow,
+      PrefetchHooks Function()
+    >;
 typedef $$PendingOperationsTableCreateCompanionBuilder =
     PendingOperationsCompanion Function({
       Value<int> id,
@@ -10648,6 +14116,10 @@ class $AppDatabaseManager {
       $$DraftsTableTableManager(_db, _db.drafts);
   $$ExtrafieldDefinitionsTableTableManager get extrafieldDefinitions =>
       $$ExtrafieldDefinitionsTableTableManager(_db, _db.extrafieldDefinitions);
+  $$InvoiceLinesTableTableManager get invoiceLines =>
+      $$InvoiceLinesTableTableManager(_db, _db.invoiceLines);
+  $$InvoicesTableTableManager get invoices =>
+      $$InvoicesTableTableManager(_db, _db.invoices);
   $$PendingOperationsTableTableManager get pendingOperations =>
       $$PendingOperationsTableTableManager(_db, _db.pendingOperations);
   $$ProjectsTableTableManager get projects =>

@@ -8,6 +8,8 @@ import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_provid
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contact_detail_page.dart';
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contact_form_page.dart';
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contacts_list_page.dart';
+import 'package:dolibarr_mobile/features/invoices/presentation/pages/invoice_detail_page.dart';
+import 'package:dolibarr_mobile/features/invoices/presentation/pages/invoices_list_page.dart';
 import 'package:dolibarr_mobile/features/projects/presentation/pages/project_detail_page.dart';
 import 'package:dolibarr_mobile/features/projects/presentation/pages/project_form_page.dart';
 import 'package:dolibarr_mobile/features/projects/presentation/pages/projects_list_page.dart';
@@ -148,6 +150,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     ),
                   ),
                 ],
+              ),
+            ],
+          ),
+          GoRoute(
+            path: RoutePaths.invoices,
+            builder: (_, __) => const InvoicesListPage(),
+            routes: [
+              GoRoute(
+                path: ':id',
+                builder: (_, state) => InvoiceDetailPage(
+                  localId: int.parse(state.pathParameters['id']!),
+                ),
               ),
             ],
           ),

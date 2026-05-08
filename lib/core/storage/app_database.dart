@@ -2,6 +2,7 @@ import 'package:dolibarr_mobile/core/storage/collections/categories.dart';
 import 'package:dolibarr_mobile/core/storage/collections/contacts.dart';
 import 'package:dolibarr_mobile/core/storage/collections/drafts.dart';
 import 'package:dolibarr_mobile/core/storage/collections/extrafield_definitions.dart';
+import 'package:dolibarr_mobile/core/storage/collections/invoices.dart';
 import 'package:dolibarr_mobile/core/storage/collections/pending_operations.dart';
 import 'package:dolibarr_mobile/core/storage/collections/projects.dart';
 import 'package:dolibarr_mobile/core/storage/collections/sync_metadata.dart';
@@ -24,6 +25,8 @@ part 'app_database.g.dart';
     Categories,
     Drafts,
     ExtrafieldDefinitions,
+    InvoiceLines,
+    Invoices,
     PendingOperations,
     Projects,
     SyncMetadata,
@@ -37,7 +40,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -57,6 +60,10 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 4) {
             await m.createTable(tasks);
+          }
+          if (from < 5) {
+            await m.createTable(invoices);
+            await m.createTable(invoiceLines);
           }
         },
       );

@@ -34,6 +34,16 @@ abstract final class ApiPaths {
   // Tâches projet
   static const String tasks = '/tasks';
   static String taskById(int id) => '/tasks/$id';
+
+  // Factures
+  static const String invoices = '/invoices';
+  static String invoiceById(int id) => '/invoices/$id';
+  static String invoiceLines(int id) => '/invoices/$id/lines';
+  static String invoiceLineById(int invoiceId, int lineId) =>
+      '/invoices/$invoiceId/lines/$lineId';
+  static String invoiceValidate(int id) => '/invoices/$id/validate';
+  static String invoicePayments(int id) => '/invoices/$id/payments';
+  static String invoiceMarkPaid(int id) => '/invoices/$id/markaspaid';
 }
 
 /// Header HTTP obligatoire sur toutes les requêtes authentifiées.

@@ -22,6 +22,8 @@ abstract final class RoutePaths {
   static const String taskNew = '/app/tasks/new';
   static const String taskDetail = '/app/tasks/:id';
   static const String taskEdit = '/app/tasks/:id/edit';
+  static const String invoices = '/app/invoices';
+  static const String invoiceDetail = '/app/invoices/:id';
   static const String settings = '/app/settings';
   static const String pendingOperations = '/app/sync';
 
@@ -59,4 +61,7 @@ abstract final class RoutePaths {
   /// parent par sa PK locale.
   static String taskNewForProject(int projectLocalId) =>
       '/app/tasks/new?project=$projectLocalId';
+
+  static String invoiceDetailFor(int localId) =>
+      '/app/invoices/$localId';
 }
