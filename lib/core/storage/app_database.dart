@@ -5,6 +5,7 @@ import 'package:dolibarr_mobile/core/storage/collections/extrafield_definitions.
 import 'package:dolibarr_mobile/core/storage/collections/pending_operations.dart';
 import 'package:dolibarr_mobile/core/storage/collections/projects.dart';
 import 'package:dolibarr_mobile/core/storage/collections/sync_metadata.dart';
+import 'package:dolibarr_mobile/core/storage/collections/tasks.dart';
 import 'package:dolibarr_mobile/core/storage/collections/third_parties.dart';
 import 'package:dolibarr_mobile/core/storage/sync_status.dart';
 import 'package:drift/drift.dart';
@@ -26,6 +27,7 @@ part 'app_database.g.dart';
     PendingOperations,
     Projects,
     SyncMetadata,
+    Tasks,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -35,7 +37,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -52,6 +54,9 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 3) {
             await m.createTable(projects);
+          }
+          if (from < 4) {
+            await m.createTable(tasks);
           }
         },
       );

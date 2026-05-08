@@ -6225,6 +6225,1031 @@ class SyncMetadataCompanion extends UpdateCompanion<SyncMetadataRow> {
   }
 }
 
+class $TasksTable extends Tasks with TableInfo<$TasksTable, TaskRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TasksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<int> remoteId = GeneratedColumn<int>(
+    'remote_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _projectRemoteMeta = const VerificationMeta(
+    'projectRemote',
+  );
+  @override
+  late final GeneratedColumn<int> projectRemote = GeneratedColumn<int>(
+    'project_remote',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _projectLocalMeta = const VerificationMeta(
+    'projectLocal',
+  );
+  @override
+  late final GeneratedColumn<int> projectLocal = GeneratedColumn<int>(
+    'project_local',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _refMeta = const VerificationMeta('ref');
+  @override
+  late final GeneratedColumn<String> ref = GeneratedColumn<String>(
+    'ref',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _labelMeta = const VerificationMeta('label');
+  @override
+  late final GeneratedColumn<String> label = GeneratedColumn<String>(
+    'label',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<int> status = GeneratedColumn<int>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _progressMeta = const VerificationMeta(
+    'progress',
+  );
+  @override
+  late final GeneratedColumn<int> progress = GeneratedColumn<int>(
+    'progress',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _plannedHoursMeta = const VerificationMeta(
+    'plannedHours',
+  );
+  @override
+  late final GeneratedColumn<String> plannedHours = GeneratedColumn<String>(
+    'planned_hours',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fkUserMeta = const VerificationMeta('fkUser');
+  @override
+  late final GeneratedColumn<int> fkUser = GeneratedColumn<int>(
+    'fk_user',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateStartMeta = const VerificationMeta(
+    'dateStart',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateStart = GeneratedColumn<DateTime>(
+    'date_start',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateEndMeta = const VerificationMeta(
+    'dateEnd',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateEnd = GeneratedColumn<DateTime>(
+    'date_end',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _extrafieldsMeta = const VerificationMeta(
+    'extrafields',
+  );
+  @override
+  late final GeneratedColumn<String> extrafields = GeneratedColumn<String>(
+    'extrafields',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
+  static const VerificationMeta _rawJsonMeta = const VerificationMeta(
+    'rawJson',
+  );
+  @override
+  late final GeneratedColumn<String> rawJson = GeneratedColumn<String>(
+    'raw_json',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tmsMeta = const VerificationMeta('tms');
+  @override
+  late final GeneratedColumn<DateTime> tms = GeneratedColumn<DateTime>(
+    'tms',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _localUpdatedAtMeta = const VerificationMeta(
+    'localUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> localUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'local_updated_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  @override
+  late final GeneratedColumnWithTypeConverter<SyncStatus, int> syncStatus =
+      GeneratedColumn<int>(
+        'sync_status',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: Constant(SyncStatus.synced.index),
+      ).withConverter<SyncStatus>($TasksTable.$convertersyncStatus);
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    remoteId,
+    projectRemote,
+    projectLocal,
+    ref,
+    label,
+    description,
+    status,
+    progress,
+    plannedHours,
+    fkUser,
+    dateStart,
+    dateEnd,
+    extrafields,
+    rawJson,
+    tms,
+    localUpdatedAt,
+    syncStatus,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'tasks';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TaskRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    }
+    if (data.containsKey('project_remote')) {
+      context.handle(
+        _projectRemoteMeta,
+        projectRemote.isAcceptableOrUnknown(
+          data['project_remote']!,
+          _projectRemoteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('project_local')) {
+      context.handle(
+        _projectLocalMeta,
+        projectLocal.isAcceptableOrUnknown(
+          data['project_local']!,
+          _projectLocalMeta,
+        ),
+      );
+    }
+    if (data.containsKey('ref')) {
+      context.handle(
+        _refMeta,
+        ref.isAcceptableOrUnknown(data['ref']!, _refMeta),
+      );
+    }
+    if (data.containsKey('label')) {
+      context.handle(
+        _labelMeta,
+        label.isAcceptableOrUnknown(data['label']!, _labelMeta),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('progress')) {
+      context.handle(
+        _progressMeta,
+        progress.isAcceptableOrUnknown(data['progress']!, _progressMeta),
+      );
+    }
+    if (data.containsKey('planned_hours')) {
+      context.handle(
+        _plannedHoursMeta,
+        plannedHours.isAcceptableOrUnknown(
+          data['planned_hours']!,
+          _plannedHoursMeta,
+        ),
+      );
+    }
+    if (data.containsKey('fk_user')) {
+      context.handle(
+        _fkUserMeta,
+        fkUser.isAcceptableOrUnknown(data['fk_user']!, _fkUserMeta),
+      );
+    }
+    if (data.containsKey('date_start')) {
+      context.handle(
+        _dateStartMeta,
+        dateStart.isAcceptableOrUnknown(data['date_start']!, _dateStartMeta),
+      );
+    }
+    if (data.containsKey('date_end')) {
+      context.handle(
+        _dateEndMeta,
+        dateEnd.isAcceptableOrUnknown(data['date_end']!, _dateEndMeta),
+      );
+    }
+    if (data.containsKey('extrafields')) {
+      context.handle(
+        _extrafieldsMeta,
+        extrafields.isAcceptableOrUnknown(
+          data['extrafields']!,
+          _extrafieldsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('raw_json')) {
+      context.handle(
+        _rawJsonMeta,
+        rawJson.isAcceptableOrUnknown(data['raw_json']!, _rawJsonMeta),
+      );
+    }
+    if (data.containsKey('tms')) {
+      context.handle(
+        _tmsMeta,
+        tms.isAcceptableOrUnknown(data['tms']!, _tmsMeta),
+      );
+    }
+    if (data.containsKey('local_updated_at')) {
+      context.handle(
+        _localUpdatedAtMeta,
+        localUpdatedAt.isAcceptableOrUnknown(
+          data['local_updated_at']!,
+          _localUpdatedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_localUpdatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TaskRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TaskRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}remote_id'],
+      ),
+      projectRemote: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}project_remote'],
+      ),
+      projectLocal: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}project_local'],
+      ),
+      ref: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ref'],
+      ),
+      label: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}label'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}status'],
+      )!,
+      progress: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}progress'],
+      )!,
+      plannedHours: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}planned_hours'],
+      ),
+      fkUser: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fk_user'],
+      ),
+      dateStart: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_start'],
+      ),
+      dateEnd: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_end'],
+      ),
+      extrafields: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}extrafields'],
+      )!,
+      rawJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}raw_json'],
+      ),
+      tms: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}tms'],
+      ),
+      localUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}local_updated_at'],
+      )!,
+      syncStatus: $TasksTable.$convertersyncStatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}sync_status'],
+        )!,
+      ),
+    );
+  }
+
+  @override
+  $TasksTable createAlias(String alias) {
+    return $TasksTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<SyncStatus, int, int> $convertersyncStatus =
+      const EnumIndexConverter<SyncStatus>(SyncStatus.values);
+}
+
+class TaskRow extends DataClass implements Insertable<TaskRow> {
+  final int id;
+  final int? remoteId;
+
+  /// `fk_projet` côté Dolibarr — id du projet parent
+  /// (`remoteId` Project).
+  final int? projectRemote;
+
+  /// FK locale vers Projects.id quand le projet parent est encore en
+  /// pendingCreate (cascade Outbox 2ᵉ niveau). Patché par le SyncEngine
+  /// après push du projet parent.
+  final int? projectLocal;
+  final String? ref;
+  final String label;
+  final String? description;
+
+  /// Statut Dolibarr d'une tâche (0=en cours, 1=terminée).
+  final int status;
+
+  /// Avancement en pourcent (0..100).
+  final int progress;
+
+  /// Heures prévues (string pour préserver la précision).
+  final String? plannedHours;
+
+  /// Utilisateur principal de la tâche.
+  final int? fkUser;
+  final DateTime? dateStart;
+  final DateTime? dateEnd;
+  final String extrafields;
+  final String? rawJson;
+  final DateTime? tms;
+  final DateTime localUpdatedAt;
+  final SyncStatus syncStatus;
+  const TaskRow({
+    required this.id,
+    this.remoteId,
+    this.projectRemote,
+    this.projectLocal,
+    this.ref,
+    required this.label,
+    this.description,
+    required this.status,
+    required this.progress,
+    this.plannedHours,
+    this.fkUser,
+    this.dateStart,
+    this.dateEnd,
+    required this.extrafields,
+    this.rawJson,
+    this.tms,
+    required this.localUpdatedAt,
+    required this.syncStatus,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<int>(remoteId);
+    }
+    if (!nullToAbsent || projectRemote != null) {
+      map['project_remote'] = Variable<int>(projectRemote);
+    }
+    if (!nullToAbsent || projectLocal != null) {
+      map['project_local'] = Variable<int>(projectLocal);
+    }
+    if (!nullToAbsent || ref != null) {
+      map['ref'] = Variable<String>(ref);
+    }
+    map['label'] = Variable<String>(label);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    map['status'] = Variable<int>(status);
+    map['progress'] = Variable<int>(progress);
+    if (!nullToAbsent || plannedHours != null) {
+      map['planned_hours'] = Variable<String>(plannedHours);
+    }
+    if (!nullToAbsent || fkUser != null) {
+      map['fk_user'] = Variable<int>(fkUser);
+    }
+    if (!nullToAbsent || dateStart != null) {
+      map['date_start'] = Variable<DateTime>(dateStart);
+    }
+    if (!nullToAbsent || dateEnd != null) {
+      map['date_end'] = Variable<DateTime>(dateEnd);
+    }
+    map['extrafields'] = Variable<String>(extrafields);
+    if (!nullToAbsent || rawJson != null) {
+      map['raw_json'] = Variable<String>(rawJson);
+    }
+    if (!nullToAbsent || tms != null) {
+      map['tms'] = Variable<DateTime>(tms);
+    }
+    map['local_updated_at'] = Variable<DateTime>(localUpdatedAt);
+    {
+      map['sync_status'] = Variable<int>(
+        $TasksTable.$convertersyncStatus.toSql(syncStatus),
+      );
+    }
+    return map;
+  }
+
+  TasksCompanion toCompanion(bool nullToAbsent) {
+    return TasksCompanion(
+      id: Value(id),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      projectRemote: projectRemote == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projectRemote),
+      projectLocal: projectLocal == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projectLocal),
+      ref: ref == null && nullToAbsent ? const Value.absent() : Value(ref),
+      label: Value(label),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      status: Value(status),
+      progress: Value(progress),
+      plannedHours: plannedHours == null && nullToAbsent
+          ? const Value.absent()
+          : Value(plannedHours),
+      fkUser: fkUser == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fkUser),
+      dateStart: dateStart == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateStart),
+      dateEnd: dateEnd == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateEnd),
+      extrafields: Value(extrafields),
+      rawJson: rawJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rawJson),
+      tms: tms == null && nullToAbsent ? const Value.absent() : Value(tms),
+      localUpdatedAt: Value(localUpdatedAt),
+      syncStatus: Value(syncStatus),
+    );
+  }
+
+  factory TaskRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TaskRow(
+      id: serializer.fromJson<int>(json['id']),
+      remoteId: serializer.fromJson<int?>(json['remoteId']),
+      projectRemote: serializer.fromJson<int?>(json['projectRemote']),
+      projectLocal: serializer.fromJson<int?>(json['projectLocal']),
+      ref: serializer.fromJson<String?>(json['ref']),
+      label: serializer.fromJson<String>(json['label']),
+      description: serializer.fromJson<String?>(json['description']),
+      status: serializer.fromJson<int>(json['status']),
+      progress: serializer.fromJson<int>(json['progress']),
+      plannedHours: serializer.fromJson<String?>(json['plannedHours']),
+      fkUser: serializer.fromJson<int?>(json['fkUser']),
+      dateStart: serializer.fromJson<DateTime?>(json['dateStart']),
+      dateEnd: serializer.fromJson<DateTime?>(json['dateEnd']),
+      extrafields: serializer.fromJson<String>(json['extrafields']),
+      rawJson: serializer.fromJson<String?>(json['rawJson']),
+      tms: serializer.fromJson<DateTime?>(json['tms']),
+      localUpdatedAt: serializer.fromJson<DateTime>(json['localUpdatedAt']),
+      syncStatus: $TasksTable.$convertersyncStatus.fromJson(
+        serializer.fromJson<int>(json['syncStatus']),
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'remoteId': serializer.toJson<int?>(remoteId),
+      'projectRemote': serializer.toJson<int?>(projectRemote),
+      'projectLocal': serializer.toJson<int?>(projectLocal),
+      'ref': serializer.toJson<String?>(ref),
+      'label': serializer.toJson<String>(label),
+      'description': serializer.toJson<String?>(description),
+      'status': serializer.toJson<int>(status),
+      'progress': serializer.toJson<int>(progress),
+      'plannedHours': serializer.toJson<String?>(plannedHours),
+      'fkUser': serializer.toJson<int?>(fkUser),
+      'dateStart': serializer.toJson<DateTime?>(dateStart),
+      'dateEnd': serializer.toJson<DateTime?>(dateEnd),
+      'extrafields': serializer.toJson<String>(extrafields),
+      'rawJson': serializer.toJson<String?>(rawJson),
+      'tms': serializer.toJson<DateTime?>(tms),
+      'localUpdatedAt': serializer.toJson<DateTime>(localUpdatedAt),
+      'syncStatus': serializer.toJson<int>(
+        $TasksTable.$convertersyncStatus.toJson(syncStatus),
+      ),
+    };
+  }
+
+  TaskRow copyWith({
+    int? id,
+    Value<int?> remoteId = const Value.absent(),
+    Value<int?> projectRemote = const Value.absent(),
+    Value<int?> projectLocal = const Value.absent(),
+    Value<String?> ref = const Value.absent(),
+    String? label,
+    Value<String?> description = const Value.absent(),
+    int? status,
+    int? progress,
+    Value<String?> plannedHours = const Value.absent(),
+    Value<int?> fkUser = const Value.absent(),
+    Value<DateTime?> dateStart = const Value.absent(),
+    Value<DateTime?> dateEnd = const Value.absent(),
+    String? extrafields,
+    Value<String?> rawJson = const Value.absent(),
+    Value<DateTime?> tms = const Value.absent(),
+    DateTime? localUpdatedAt,
+    SyncStatus? syncStatus,
+  }) => TaskRow(
+    id: id ?? this.id,
+    remoteId: remoteId.present ? remoteId.value : this.remoteId,
+    projectRemote: projectRemote.present
+        ? projectRemote.value
+        : this.projectRemote,
+    projectLocal: projectLocal.present ? projectLocal.value : this.projectLocal,
+    ref: ref.present ? ref.value : this.ref,
+    label: label ?? this.label,
+    description: description.present ? description.value : this.description,
+    status: status ?? this.status,
+    progress: progress ?? this.progress,
+    plannedHours: plannedHours.present ? plannedHours.value : this.plannedHours,
+    fkUser: fkUser.present ? fkUser.value : this.fkUser,
+    dateStart: dateStart.present ? dateStart.value : this.dateStart,
+    dateEnd: dateEnd.present ? dateEnd.value : this.dateEnd,
+    extrafields: extrafields ?? this.extrafields,
+    rawJson: rawJson.present ? rawJson.value : this.rawJson,
+    tms: tms.present ? tms.value : this.tms,
+    localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+  );
+  TaskRow copyWithCompanion(TasksCompanion data) {
+    return TaskRow(
+      id: data.id.present ? data.id.value : this.id,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      projectRemote: data.projectRemote.present
+          ? data.projectRemote.value
+          : this.projectRemote,
+      projectLocal: data.projectLocal.present
+          ? data.projectLocal.value
+          : this.projectLocal,
+      ref: data.ref.present ? data.ref.value : this.ref,
+      label: data.label.present ? data.label.value : this.label,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      status: data.status.present ? data.status.value : this.status,
+      progress: data.progress.present ? data.progress.value : this.progress,
+      plannedHours: data.plannedHours.present
+          ? data.plannedHours.value
+          : this.plannedHours,
+      fkUser: data.fkUser.present ? data.fkUser.value : this.fkUser,
+      dateStart: data.dateStart.present ? data.dateStart.value : this.dateStart,
+      dateEnd: data.dateEnd.present ? data.dateEnd.value : this.dateEnd,
+      extrafields: data.extrafields.present
+          ? data.extrafields.value
+          : this.extrafields,
+      rawJson: data.rawJson.present ? data.rawJson.value : this.rawJson,
+      tms: data.tms.present ? data.tms.value : this.tms,
+      localUpdatedAt: data.localUpdatedAt.present
+          ? data.localUpdatedAt.value
+          : this.localUpdatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaskRow(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('projectRemote: $projectRemote, ')
+          ..write('projectLocal: $projectLocal, ')
+          ..write('ref: $ref, ')
+          ..write('label: $label, ')
+          ..write('description: $description, ')
+          ..write('status: $status, ')
+          ..write('progress: $progress, ')
+          ..write('plannedHours: $plannedHours, ')
+          ..write('fkUser: $fkUser, ')
+          ..write('dateStart: $dateStart, ')
+          ..write('dateEnd: $dateEnd, ')
+          ..write('extrafields: $extrafields, ')
+          ..write('rawJson: $rawJson, ')
+          ..write('tms: $tms, ')
+          ..write('localUpdatedAt: $localUpdatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    remoteId,
+    projectRemote,
+    projectLocal,
+    ref,
+    label,
+    description,
+    status,
+    progress,
+    plannedHours,
+    fkUser,
+    dateStart,
+    dateEnd,
+    extrafields,
+    rawJson,
+    tms,
+    localUpdatedAt,
+    syncStatus,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TaskRow &&
+          other.id == this.id &&
+          other.remoteId == this.remoteId &&
+          other.projectRemote == this.projectRemote &&
+          other.projectLocal == this.projectLocal &&
+          other.ref == this.ref &&
+          other.label == this.label &&
+          other.description == this.description &&
+          other.status == this.status &&
+          other.progress == this.progress &&
+          other.plannedHours == this.plannedHours &&
+          other.fkUser == this.fkUser &&
+          other.dateStart == this.dateStart &&
+          other.dateEnd == this.dateEnd &&
+          other.extrafields == this.extrafields &&
+          other.rawJson == this.rawJson &&
+          other.tms == this.tms &&
+          other.localUpdatedAt == this.localUpdatedAt &&
+          other.syncStatus == this.syncStatus);
+}
+
+class TasksCompanion extends UpdateCompanion<TaskRow> {
+  final Value<int> id;
+  final Value<int?> remoteId;
+  final Value<int?> projectRemote;
+  final Value<int?> projectLocal;
+  final Value<String?> ref;
+  final Value<String> label;
+  final Value<String?> description;
+  final Value<int> status;
+  final Value<int> progress;
+  final Value<String?> plannedHours;
+  final Value<int?> fkUser;
+  final Value<DateTime?> dateStart;
+  final Value<DateTime?> dateEnd;
+  final Value<String> extrafields;
+  final Value<String?> rawJson;
+  final Value<DateTime?> tms;
+  final Value<DateTime> localUpdatedAt;
+  final Value<SyncStatus> syncStatus;
+  const TasksCompanion({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.projectRemote = const Value.absent(),
+    this.projectLocal = const Value.absent(),
+    this.ref = const Value.absent(),
+    this.label = const Value.absent(),
+    this.description = const Value.absent(),
+    this.status = const Value.absent(),
+    this.progress = const Value.absent(),
+    this.plannedHours = const Value.absent(),
+    this.fkUser = const Value.absent(),
+    this.dateStart = const Value.absent(),
+    this.dateEnd = const Value.absent(),
+    this.extrafields = const Value.absent(),
+    this.rawJson = const Value.absent(),
+    this.tms = const Value.absent(),
+    this.localUpdatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+  });
+  TasksCompanion.insert({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.projectRemote = const Value.absent(),
+    this.projectLocal = const Value.absent(),
+    this.ref = const Value.absent(),
+    this.label = const Value.absent(),
+    this.description = const Value.absent(),
+    this.status = const Value.absent(),
+    this.progress = const Value.absent(),
+    this.plannedHours = const Value.absent(),
+    this.fkUser = const Value.absent(),
+    this.dateStart = const Value.absent(),
+    this.dateEnd = const Value.absent(),
+    this.extrafields = const Value.absent(),
+    this.rawJson = const Value.absent(),
+    this.tms = const Value.absent(),
+    required DateTime localUpdatedAt,
+    this.syncStatus = const Value.absent(),
+  }) : localUpdatedAt = Value(localUpdatedAt);
+  static Insertable<TaskRow> custom({
+    Expression<int>? id,
+    Expression<int>? remoteId,
+    Expression<int>? projectRemote,
+    Expression<int>? projectLocal,
+    Expression<String>? ref,
+    Expression<String>? label,
+    Expression<String>? description,
+    Expression<int>? status,
+    Expression<int>? progress,
+    Expression<String>? plannedHours,
+    Expression<int>? fkUser,
+    Expression<DateTime>? dateStart,
+    Expression<DateTime>? dateEnd,
+    Expression<String>? extrafields,
+    Expression<String>? rawJson,
+    Expression<DateTime>? tms,
+    Expression<DateTime>? localUpdatedAt,
+    Expression<int>? syncStatus,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (projectRemote != null) 'project_remote': projectRemote,
+      if (projectLocal != null) 'project_local': projectLocal,
+      if (ref != null) 'ref': ref,
+      if (label != null) 'label': label,
+      if (description != null) 'description': description,
+      if (status != null) 'status': status,
+      if (progress != null) 'progress': progress,
+      if (plannedHours != null) 'planned_hours': plannedHours,
+      if (fkUser != null) 'fk_user': fkUser,
+      if (dateStart != null) 'date_start': dateStart,
+      if (dateEnd != null) 'date_end': dateEnd,
+      if (extrafields != null) 'extrafields': extrafields,
+      if (rawJson != null) 'raw_json': rawJson,
+      if (tms != null) 'tms': tms,
+      if (localUpdatedAt != null) 'local_updated_at': localUpdatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+    });
+  }
+
+  TasksCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? remoteId,
+    Value<int?>? projectRemote,
+    Value<int?>? projectLocal,
+    Value<String?>? ref,
+    Value<String>? label,
+    Value<String?>? description,
+    Value<int>? status,
+    Value<int>? progress,
+    Value<String?>? plannedHours,
+    Value<int?>? fkUser,
+    Value<DateTime?>? dateStart,
+    Value<DateTime?>? dateEnd,
+    Value<String>? extrafields,
+    Value<String?>? rawJson,
+    Value<DateTime?>? tms,
+    Value<DateTime>? localUpdatedAt,
+    Value<SyncStatus>? syncStatus,
+  }) {
+    return TasksCompanion(
+      id: id ?? this.id,
+      remoteId: remoteId ?? this.remoteId,
+      projectRemote: projectRemote ?? this.projectRemote,
+      projectLocal: projectLocal ?? this.projectLocal,
+      ref: ref ?? this.ref,
+      label: label ?? this.label,
+      description: description ?? this.description,
+      status: status ?? this.status,
+      progress: progress ?? this.progress,
+      plannedHours: plannedHours ?? this.plannedHours,
+      fkUser: fkUser ?? this.fkUser,
+      dateStart: dateStart ?? this.dateStart,
+      dateEnd: dateEnd ?? this.dateEnd,
+      extrafields: extrafields ?? this.extrafields,
+      rawJson: rawJson ?? this.rawJson,
+      tms: tms ?? this.tms,
+      localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<int>(remoteId.value);
+    }
+    if (projectRemote.present) {
+      map['project_remote'] = Variable<int>(projectRemote.value);
+    }
+    if (projectLocal.present) {
+      map['project_local'] = Variable<int>(projectLocal.value);
+    }
+    if (ref.present) {
+      map['ref'] = Variable<String>(ref.value);
+    }
+    if (label.present) {
+      map['label'] = Variable<String>(label.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<int>(status.value);
+    }
+    if (progress.present) {
+      map['progress'] = Variable<int>(progress.value);
+    }
+    if (plannedHours.present) {
+      map['planned_hours'] = Variable<String>(plannedHours.value);
+    }
+    if (fkUser.present) {
+      map['fk_user'] = Variable<int>(fkUser.value);
+    }
+    if (dateStart.present) {
+      map['date_start'] = Variable<DateTime>(dateStart.value);
+    }
+    if (dateEnd.present) {
+      map['date_end'] = Variable<DateTime>(dateEnd.value);
+    }
+    if (extrafields.present) {
+      map['extrafields'] = Variable<String>(extrafields.value);
+    }
+    if (rawJson.present) {
+      map['raw_json'] = Variable<String>(rawJson.value);
+    }
+    if (tms.present) {
+      map['tms'] = Variable<DateTime>(tms.value);
+    }
+    if (localUpdatedAt.present) {
+      map['local_updated_at'] = Variable<DateTime>(localUpdatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<int>(
+        $TasksTable.$convertersyncStatus.toSql(syncStatus.value),
+      );
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TasksCompanion(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('projectRemote: $projectRemote, ')
+          ..write('projectLocal: $projectLocal, ')
+          ..write('ref: $ref, ')
+          ..write('label: $label, ')
+          ..write('description: $description, ')
+          ..write('status: $status, ')
+          ..write('progress: $progress, ')
+          ..write('plannedHours: $plannedHours, ')
+          ..write('fkUser: $fkUser, ')
+          ..write('dateStart: $dateStart, ')
+          ..write('dateEnd: $dateEnd, ')
+          ..write('extrafields: $extrafields, ')
+          ..write('rawJson: $rawJson, ')
+          ..write('tms: $tms, ')
+          ..write('localUpdatedAt: $localUpdatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -6238,6 +7263,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $PendingOperationsTable(this);
   late final $ProjectsTable projects = $ProjectsTable(this);
   late final $SyncMetadataTable syncMetadata = $SyncMetadataTable(this);
+  late final $TasksTable tasks = $TasksTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -6251,6 +7277,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     pendingOperations,
     projects,
     syncMetadata,
+    tasks,
   ];
 }
 
@@ -9157,6 +10184,456 @@ typedef $$SyncMetadataTableProcessedTableManager =
       SyncMetadataRow,
       PrefetchHooks Function()
     >;
+typedef $$TasksTableCreateCompanionBuilder =
+    TasksCompanion Function({
+      Value<int> id,
+      Value<int?> remoteId,
+      Value<int?> projectRemote,
+      Value<int?> projectLocal,
+      Value<String?> ref,
+      Value<String> label,
+      Value<String?> description,
+      Value<int> status,
+      Value<int> progress,
+      Value<String?> plannedHours,
+      Value<int?> fkUser,
+      Value<DateTime?> dateStart,
+      Value<DateTime?> dateEnd,
+      Value<String> extrafields,
+      Value<String?> rawJson,
+      Value<DateTime?> tms,
+      required DateTime localUpdatedAt,
+      Value<SyncStatus> syncStatus,
+    });
+typedef $$TasksTableUpdateCompanionBuilder =
+    TasksCompanion Function({
+      Value<int> id,
+      Value<int?> remoteId,
+      Value<int?> projectRemote,
+      Value<int?> projectLocal,
+      Value<String?> ref,
+      Value<String> label,
+      Value<String?> description,
+      Value<int> status,
+      Value<int> progress,
+      Value<String?> plannedHours,
+      Value<int?> fkUser,
+      Value<DateTime?> dateStart,
+      Value<DateTime?> dateEnd,
+      Value<String> extrafields,
+      Value<String?> rawJson,
+      Value<DateTime?> tms,
+      Value<DateTime> localUpdatedAt,
+      Value<SyncStatus> syncStatus,
+    });
+
+class $$TasksTableFilterComposer extends Composer<_$AppDatabase, $TasksTable> {
+  $$TasksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get projectRemote => $composableBuilder(
+    column: $table.projectRemote,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get projectLocal => $composableBuilder(
+    column: $table.projectLocal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ref => $composableBuilder(
+    column: $table.ref,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get label => $composableBuilder(
+    column: $table.label,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get progress => $composableBuilder(
+    column: $table.progress,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get plannedHours => $composableBuilder(
+    column: $table.plannedHours,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get fkUser => $composableBuilder(
+    column: $table.fkUser,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateStart => $composableBuilder(
+    column: $table.dateStart,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateEnd => $composableBuilder(
+    column: $table.dateEnd,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rawJson => $composableBuilder(
+    column: $table.rawJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get tms => $composableBuilder(
+    column: $table.tms,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<SyncStatus, SyncStatus, int> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+}
+
+class $$TasksTableOrderingComposer
+    extends Composer<_$AppDatabase, $TasksTable> {
+  $$TasksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get projectRemote => $composableBuilder(
+    column: $table.projectRemote,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get projectLocal => $composableBuilder(
+    column: $table.projectLocal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ref => $composableBuilder(
+    column: $table.ref,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get label => $composableBuilder(
+    column: $table.label,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get progress => $composableBuilder(
+    column: $table.progress,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get plannedHours => $composableBuilder(
+    column: $table.plannedHours,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get fkUser => $composableBuilder(
+    column: $table.fkUser,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateStart => $composableBuilder(
+    column: $table.dateStart,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateEnd => $composableBuilder(
+    column: $table.dateEnd,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rawJson => $composableBuilder(
+    column: $table.rawJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get tms => $composableBuilder(
+    column: $table.tms,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TasksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TasksTable> {
+  $$TasksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<int> get projectRemote => $composableBuilder(
+    column: $table.projectRemote,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get projectLocal => $composableBuilder(
+    column: $table.projectLocal,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get ref =>
+      $composableBuilder(column: $table.ref, builder: (column) => column);
+
+  GeneratedColumn<String> get label =>
+      $composableBuilder(column: $table.label, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<int> get progress =>
+      $composableBuilder(column: $table.progress, builder: (column) => column);
+
+  GeneratedColumn<String> get plannedHours => $composableBuilder(
+    column: $table.plannedHours,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get fkUser =>
+      $composableBuilder(column: $table.fkUser, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateStart =>
+      $composableBuilder(column: $table.dateStart, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateEnd =>
+      $composableBuilder(column: $table.dateEnd, builder: (column) => column);
+
+  GeneratedColumn<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get rawJson =>
+      $composableBuilder(column: $table.rawJson, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get tms =>
+      $composableBuilder(column: $table.tms, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<SyncStatus, int> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => column,
+      );
+}
+
+class $$TasksTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TasksTable,
+          TaskRow,
+          $$TasksTableFilterComposer,
+          $$TasksTableOrderingComposer,
+          $$TasksTableAnnotationComposer,
+          $$TasksTableCreateCompanionBuilder,
+          $$TasksTableUpdateCompanionBuilder,
+          (TaskRow, BaseReferences<_$AppDatabase, $TasksTable, TaskRow>),
+          TaskRow,
+          PrefetchHooks Function()
+        > {
+  $$TasksTableTableManager(_$AppDatabase db, $TasksTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TasksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TasksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TasksTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> remoteId = const Value.absent(),
+                Value<int?> projectRemote = const Value.absent(),
+                Value<int?> projectLocal = const Value.absent(),
+                Value<String?> ref = const Value.absent(),
+                Value<String> label = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<int> status = const Value.absent(),
+                Value<int> progress = const Value.absent(),
+                Value<String?> plannedHours = const Value.absent(),
+                Value<int?> fkUser = const Value.absent(),
+                Value<DateTime?> dateStart = const Value.absent(),
+                Value<DateTime?> dateEnd = const Value.absent(),
+                Value<String> extrafields = const Value.absent(),
+                Value<String?> rawJson = const Value.absent(),
+                Value<DateTime?> tms = const Value.absent(),
+                Value<DateTime> localUpdatedAt = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
+              }) => TasksCompanion(
+                id: id,
+                remoteId: remoteId,
+                projectRemote: projectRemote,
+                projectLocal: projectLocal,
+                ref: ref,
+                label: label,
+                description: description,
+                status: status,
+                progress: progress,
+                plannedHours: plannedHours,
+                fkUser: fkUser,
+                dateStart: dateStart,
+                dateEnd: dateEnd,
+                extrafields: extrafields,
+                rawJson: rawJson,
+                tms: tms,
+                localUpdatedAt: localUpdatedAt,
+                syncStatus: syncStatus,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> remoteId = const Value.absent(),
+                Value<int?> projectRemote = const Value.absent(),
+                Value<int?> projectLocal = const Value.absent(),
+                Value<String?> ref = const Value.absent(),
+                Value<String> label = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<int> status = const Value.absent(),
+                Value<int> progress = const Value.absent(),
+                Value<String?> plannedHours = const Value.absent(),
+                Value<int?> fkUser = const Value.absent(),
+                Value<DateTime?> dateStart = const Value.absent(),
+                Value<DateTime?> dateEnd = const Value.absent(),
+                Value<String> extrafields = const Value.absent(),
+                Value<String?> rawJson = const Value.absent(),
+                Value<DateTime?> tms = const Value.absent(),
+                required DateTime localUpdatedAt,
+                Value<SyncStatus> syncStatus = const Value.absent(),
+              }) => TasksCompanion.insert(
+                id: id,
+                remoteId: remoteId,
+                projectRemote: projectRemote,
+                projectLocal: projectLocal,
+                ref: ref,
+                label: label,
+                description: description,
+                status: status,
+                progress: progress,
+                plannedHours: plannedHours,
+                fkUser: fkUser,
+                dateStart: dateStart,
+                dateEnd: dateEnd,
+                extrafields: extrafields,
+                rawJson: rawJson,
+                tms: tms,
+                localUpdatedAt: localUpdatedAt,
+                syncStatus: syncStatus,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$TasksTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TasksTable,
+      TaskRow,
+      $$TasksTableFilterComposer,
+      $$TasksTableOrderingComposer,
+      $$TasksTableAnnotationComposer,
+      $$TasksTableCreateCompanionBuilder,
+      $$TasksTableUpdateCompanionBuilder,
+      (TaskRow, BaseReferences<_$AppDatabase, $TasksTable, TaskRow>),
+      TaskRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -9177,4 +10654,6 @@ class $AppDatabaseManager {
       $$ProjectsTableTableManager(_db, _db.projects);
   $$SyncMetadataTableTableManager get syncMetadata =>
       $$SyncMetadataTableTableManager(_db, _db.syncMetadata);
+  $$TasksTableTableManager get tasks =>
+      $$TasksTableTableManager(_db, _db.tasks);
 }

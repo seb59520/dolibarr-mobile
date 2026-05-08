@@ -10,6 +10,8 @@ import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_local
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/projects/data/datasources/project_local_dao.dart';
 import 'package:dolibarr_mobile/features/projects/data/datasources/project_remote_datasource.dart';
+import 'package:dolibarr_mobile/features/tasks/data/datasources/task_local_dao.dart';
+import 'package:dolibarr_mobile/features/tasks/data/datasources/task_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/thirdparties/data/datasources/third_party_local_dao.dart';
 import 'package:dolibarr_mobile/features/thirdparties/data/datasources/third_party_remote_datasource.dart';
 import 'package:logger/logger.dart';
@@ -66,6 +68,8 @@ class SyncEngine {
     required ContactLocalDao contactDao,
     required ProjectRemoteDataSource projectRemote,
     required ProjectLocalDao projectDao,
+    required TaskRemoteDataSource taskRemote,
+    required TaskLocalDao taskDao,
     required NetworkInfo network,
     Logger? logger,
     DateTime Function() now = DateTime.now,
@@ -76,6 +80,8 @@ class SyncEngine {
         _contactDao = contactDao,
         _projectRemote = projectRemote,
         _projectDao = projectDao,
+        _taskRemote = taskRemote,
+        _taskDao = taskDao,
         _network = network,
         _logger = logger ?? Logger(printer: SimplePrinter()),
         _now = now;
@@ -87,6 +93,8 @@ class SyncEngine {
   final ContactLocalDao _contactDao;
   final ProjectRemoteDataSource _projectRemote;
   final ProjectLocalDao _projectDao;
+  final TaskRemoteDataSource _taskRemote;
+  final TaskLocalDao _taskDao;
   final NetworkInfo _network;
   final Logger _logger;
   final DateTime Function() _now;
@@ -180,6 +188,8 @@ class SyncEngine {
           await _contactDao.hardDelete(row.targetLocalId);
         case PendingOpEntity.project:
           await _projectDao.hardDelete(row.targetLocalId);
+        case PendingOpEntity.task:
+          await _taskDao.hardDelete(row.targetLocalId);
       }
     }
     await _outbox.deleteById(opId);
@@ -197,6 +207,8 @@ class SyncEngine {
           await _dispatchContact(op);
         case PendingOpEntity.project:
           await _dispatchProject(op);
+        case PendingOpEntity.task:
+          await _dispatchTask(op);
       }
       await _outbox.completeAndUnblockChildren(op.id);
       return _Outcome.success;
@@ -252,6 +264,8 @@ class SyncEngine {
         await _contactDao.markConflict(op.targetLocalId);
       case PendingOpEntity.project:
         await _projectDao.markConflict(op.targetLocalId);
+      case PendingOpEntity.task:
+        await _taskDao.markConflict(op.targetLocalId);
     }
   }
 
@@ -422,6 +436,12 @@ class SyncEngine {
           remoteId: remoteId,
           tms: serverTms,
         );
+        // Cascade 2ᵉ niveau : patche les tâches dont le projet parent
+        // vient d'être créé.
+        await _taskDao.patchProjectRemoteByParent(
+          parentLocalId: op.targetLocalId,
+          parentRemoteId: remoteId,
+        );
 
       case PendingOpType.update:
         if (op.expectedTms != null) {
@@ -450,6 +470,66 @@ class SyncEngine {
     }
   }
 
+  // -------------------------- Task -------------------------------------
+
+  Future<void> _dispatchTask(PendingOperationRow op) async {
+    final payload = _decodePayload(op.payload);
+    switch (op.opType) {
+      case PendingOpType.create:
+        // Ré-injecte fk_projet depuis l'entité courante (cas où le
+        // projet parent vient juste d'être créé et son remoteId
+        // patché en cascade).
+        final fresh = await _taskDao.watchById(op.targetLocalId).first;
+        if (fresh != null && fresh.projectRemote != null) {
+          payload['fk_projet'] = fresh.projectRemote;
+        }
+        if (payload['fk_projet'] == null) {
+          throw const ValidationException(
+            message: 'Projet parent non synchronisé — '
+                'impossible de créer la tâche.',
+          );
+        }
+        final remoteId = await _taskRemote.create(payload);
+        DateTime? serverTms;
+        try {
+          final got = await _taskRemote.fetchById(remoteId);
+          serverTms = _parseTms(got['tms']);
+        } catch (_) {
+          // pas critique
+        }
+        await _taskDao.markSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: remoteId,
+          tms: serverTms,
+        );
+
+      case PendingOpType.update:
+        if (op.expectedTms != null) {
+          final freshFromServer =
+              await _taskRemote.fetchById(op.targetRemoteId!);
+          final serverTms = _parseTms(freshFromServer['tms']);
+          if (serverTms != null && serverTms.isAfter(op.expectedTms!)) {
+            throw _ConflictDetected(
+              'Modifié sur le serveur (tms=$serverTms vs ${op.expectedTms})',
+            );
+          }
+        }
+        final body = await _taskRemote.update(
+          op.targetRemoteId!,
+          payload,
+        );
+        await _taskDao.markSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: op.targetRemoteId!,
+          tms: _parseTms(body['tms']),
+        );
+
+      case PendingOpType.delete:
+        await _taskRemote.delete(op.targetRemoteId!);
+        await _taskDao.clearAfterServerDelete(op.targetLocalId);
+    }
+  }
+
   // -------------------------- Helpers ----------------------------------
 
   Future<void> _applyAfterDelete(PendingOperationRow op) async {
@@ -460,6 +540,8 @@ class SyncEngine {
         await _contactDao.clearAfterServerDelete(op.targetLocalId);
       case PendingOpEntity.project:
         await _projectDao.clearAfterServerDelete(op.targetLocalId);
+      case PendingOpEntity.task:
+        await _taskDao.clearAfterServerDelete(op.targetLocalId);
     }
   }
 

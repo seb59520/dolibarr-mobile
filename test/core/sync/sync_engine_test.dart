@@ -12,6 +12,8 @@ import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_remot
 import 'package:dolibarr_mobile/features/contacts/domain/entities/contact.dart';
 import 'package:dolibarr_mobile/features/projects/data/datasources/project_local_dao.dart';
 import 'package:dolibarr_mobile/features/projects/data/datasources/project_remote_datasource.dart';
+import 'package:dolibarr_mobile/features/tasks/data/datasources/task_local_dao.dart';
+import 'package:dolibarr_mobile/features/tasks/data/datasources/task_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/thirdparties/data/datasources/third_party_local_dao.dart';
 import 'package:dolibarr_mobile/features/thirdparties/data/datasources/third_party_remote_datasource.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -30,6 +32,10 @@ class _MockCtDao extends Mock implements ContactLocalDao {}
 class _MockPjRemote extends Mock implements ProjectRemoteDataSource {}
 
 class _MockPjDao extends Mock implements ProjectLocalDao {}
+
+class _MockTskRemote extends Mock implements TaskRemoteDataSource {}
+
+class _MockTskDao extends Mock implements TaskLocalDao {}
 
 class _StubNetwork implements NetworkInfo {
   _StubNetwork({bool online = true}) : _online = online;
@@ -90,6 +96,8 @@ void main() {
   late _MockCtDao ctDao;
   late _MockPjRemote pjRemote;
   late _MockPjDao pjDao;
+  late _MockTskRemote tskRemote;
+  late _MockTskDao tskDao;
   late _StubNetwork network;
   late SyncEngine engine;
 
@@ -103,6 +111,8 @@ void main() {
     ctDao = _MockCtDao();
     pjRemote = _MockPjRemote();
     pjDao = _MockPjDao();
+    tskRemote = _MockTskRemote();
+    tskDao = _MockTskDao();
     network = _StubNetwork();
     now = DateTime(2026, 5, 9, 12);
 
@@ -114,6 +124,8 @@ void main() {
       contactDao: ctDao,
       projectRemote: pjRemote,
       projectDao: pjDao,
+      taskRemote: tskRemote,
+      taskDao: tskDao,
       network: network,
       now: () => now,
     );
@@ -172,6 +184,14 @@ void main() {
     // override pour vérifier l'appel).
     when(
       () => pjDao.patchSocidRemoteByParent(
+        parentLocalId: any(named: 'parentLocalId'),
+        parentRemoteId: any(named: 'parentRemoteId'),
+      ),
+    ).thenAnswer((_) async => 0);
+
+    // Cascade project → tasks.
+    when(
+      () => tskDao.patchProjectRemoteByParent(
         parentLocalId: any(named: 'parentLocalId'),
         parentRemoteId: any(named: 'parentRemoteId'),
       ),

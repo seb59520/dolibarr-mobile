@@ -12,6 +12,8 @@ import 'package:dolibarr_mobile/features/projects/presentation/pages/project_det
 import 'package:dolibarr_mobile/features/projects/presentation/pages/project_form_page.dart';
 import 'package:dolibarr_mobile/features/projects/presentation/pages/projects_list_page.dart';
 import 'package:dolibarr_mobile/features/sync/presentation/pages/pending_operations_page.dart';
+import 'package:dolibarr_mobile/features/tasks/presentation/pages/task_detail_page.dart';
+import 'package:dolibarr_mobile/features/tasks/presentation/pages/task_form_page.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/third_party_detail_page.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/third_party_form_page.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/pages/thirdparties_list_page.dart';
@@ -146,6 +148,33 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     ),
                   ),
                 ],
+              ),
+            ],
+          ),
+          // Routes tâches racine. Les tâches s'attachent toujours à
+          // un projet — pas d'écran liste racine, mais on garde des
+          // routes plates pour /new (avec ?project=), /:id, /:id/edit.
+          GoRoute(
+            path: '/app/tasks/new',
+            builder: (_, state) {
+              final project = state.uri.queryParameters['project'];
+              return TaskFormPage(
+                projectLocalId:
+                    project == null ? null : int.tryParse(project),
+              );
+            },
+          ),
+          GoRoute(
+            path: '/app/tasks/:id',
+            builder: (_, state) => TaskDetailPage(
+              localId: int.parse(state.pathParameters['id']!),
+            ),
+            routes: [
+              GoRoute(
+                path: 'edit',
+                builder: (_, state) => TaskFormPage(
+                  existingLocalId: int.parse(state.pathParameters['id']!),
+                ),
               ),
             ],
           ),

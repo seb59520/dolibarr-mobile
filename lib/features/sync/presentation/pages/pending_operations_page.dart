@@ -70,6 +70,7 @@ class _OpCard extends ConsumerWidget {
       PendingOpEntity.thirdparty => 'Tiers',
       PendingOpEntity.contact => 'Contact',
       PendingOpEntity.project => 'Projet',
+      PendingOpEntity.task => 'Tâche',
     };
     final type = switch (op.opType) {
       PendingOpType.create => 'Création',

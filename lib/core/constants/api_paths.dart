@@ -30,6 +30,10 @@ abstract final class ApiPaths {
   static const String projects = '/projects';
   static String projectById(int id) => '/projects/$id';
   static String projectTasks(int id) => '/projects/$id/tasks';
+
+  // Tâches projet
+  static const String tasks = '/tasks';
+  static String taskById(int id) => '/tasks/$id';
 }
 
 /// Header HTTP obligatoire sur toutes les requêtes authentifiées.

@@ -19,6 +19,9 @@ abstract final class RoutePaths {
   static const String projectNew = '/app/projects/new';
   static const String projectDetail = '/app/projects/:id';
   static const String projectEdit = '/app/projects/:id/edit';
+  static const String taskNew = '/app/tasks/new';
+  static const String taskDetail = '/app/tasks/:id';
+  static const String taskEdit = '/app/tasks/:id/edit';
   static const String settings = '/app/settings';
   static const String pendingOperations = '/app/sync';
 
@@ -47,4 +50,13 @@ abstract final class RoutePaths {
   /// parent par sa PK locale.
   static String projectNewForParent(int parentLocalId) =>
       '/app/projects/new?parent=$parentLocalId';
+
+  static String taskDetailFor(int localId) => '/app/tasks/$localId';
+
+  static String taskEditFor(int localId) => '/app/tasks/$localId/edit';
+
+  /// Crée la route "nouvelle tâche" en pré-sélectionnant un projet
+  /// parent par sa PK locale.
+  static String taskNewForProject(int projectLocalId) =>
+      '/app/tasks/new?project=$projectLocalId';
 }

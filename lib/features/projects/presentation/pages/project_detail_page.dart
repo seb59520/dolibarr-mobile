@@ -2,6 +2,7 @@ import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:dolibarr_mobile/features/projects/domain/entities/project.dart';
 import 'package:dolibarr_mobile/features/projects/presentation/providers/project_providers.dart';
+import 'package:dolibarr_mobile/features/tasks/presentation/widgets/project_tasks_section.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/providers/third_party_providers.dart';
 import 'package:dolibarr_mobile/shared/widgets/confirm_dialog.dart';
 import 'package:dolibarr_mobile/shared/widgets/error_state.dart';
@@ -116,6 +117,7 @@ class _DetailBody extends ConsumerWidget {
               p.oppAmount != null ||
               p.oppPercent != null)
             _FinancialSection(project: p),
+          ProjectTasksSection(projectLocalId: p.localId),
         ],
       ),
     );
