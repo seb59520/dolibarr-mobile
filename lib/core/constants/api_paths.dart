@@ -44,6 +44,10 @@ abstract final class ApiPaths {
   static String invoiceValidate(int id) => '/invoices/$id/validate';
   static String invoicePayments(int id) => '/invoices/$id/payments';
   static String invoiceMarkPaid(int id) => '/invoices/$id/markaspaid';
+
+  // Documents (PDF). Le module appelant + le nom du fichier serveur
+  // sont passés en query string : ?modulepart=facture&original_file=...
+  static const String documentDownload = '/documents/download';
 }
 
 /// Header HTTP obligatoire sur toutes les requêtes authentifiées.

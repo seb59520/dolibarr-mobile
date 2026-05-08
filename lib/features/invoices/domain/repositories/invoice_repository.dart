@@ -2,6 +2,7 @@ import 'package:dolibarr_mobile/core/utils/result.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice_filters.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice_line.dart';
+import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice_payment.dart';
 
 /// Accès aux factures, avec écritures offline-first.
 abstract interface class InvoiceRepository {
@@ -45,4 +46,30 @@ abstract interface class InvoiceRepository {
     int? refLocalId,
   });
   Future<void> discardDraft({int? refLocalId});
+
+  // ---------- Workflow & paiements (online required) ----------------
+
+  /// Passe le brouillon en facture validée. Refresh la facture après.
+  Future<Result<Invoice>> validate(int localId);
+
+  /// Marque la facture payée (paye=1).
+  Future<Result<Invoice>> markAsPaid(int localId);
+
+  /// Liste les paiements (online).
+  Future<Result<List<InvoicePayment>>> fetchPayments(int localId);
+
+  /// Crée un paiement (online).
+  Future<Result<int>> createPayment({
+    required int localId,
+    required String amount,
+    required DateTime date,
+    String? paymentTypeCode,
+    String? num,
+    String? note,
+  });
+
+  /// Télécharge le PDF de la facture et retourne (bytes, filename).
+  Future<Result<({List<int> bytes, String filename})>> downloadPdf(
+    int localId,
+  );
 }

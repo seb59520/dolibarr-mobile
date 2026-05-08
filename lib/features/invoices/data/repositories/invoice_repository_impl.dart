@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:dolibarr_mobile/core/errors/error_mapper.dart';
+import 'package:dolibarr_mobile/core/errors/exceptions.dart';
 import 'package:dolibarr_mobile/core/network/network_info.dart';
 import 'package:dolibarr_mobile/core/storage/pending_operation_dao.dart';
 import 'package:dolibarr_mobile/core/storage/sync_status.dart';
@@ -8,6 +11,7 @@ import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_remot
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice_filters.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice_line.dart';
+import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice_payment.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/repositories/invoice_repository.dart';
 import 'package:dolibarr_mobile/features/thirdparties/data/datasources/draft_local_dao.dart';
 
@@ -295,5 +299,121 @@ final class InvoiceRepositoryImpl implements InvoiceRepository {
       'rang': l.rang,
       if (l.extrafields.isNotEmpty) 'array_options': l.extrafields,
     };
+  }
+
+  // ---------- Workflow & paiements ----------------------------------
+
+  @override
+  Future<Result<Invoice>> validate(int localId) async {
+    try {
+      final invoice = await _dao.watchById(localId).first;
+      if (invoice == null || invoice.remoteId == null) {
+        throw const ValidationException(
+          message: 'Facture non synchronisée — '
+              'validation impossible offline.',
+        );
+      }
+      await _remote.validate(invoice.remoteId!);
+      // Refresh : Dolibarr a changé le statut + ref + tms.
+      final json = await _remote.fetchById(invoice.remoteId!);
+      await _dao.upsertFromServer(json);
+      final fresh = await _dao.findByRemoteId(invoice.remoteId!);
+      return Success(fresh ?? invoice);
+    } catch (e, st) {
+      return FailureResult(ErrorMapper.toFailure(e, st));
+    }
+  }
+
+  @override
+  Future<Result<Invoice>> markAsPaid(int localId) async {
+    try {
+      final invoice = await _dao.watchById(localId).first;
+      if (invoice == null || invoice.remoteId == null) {
+        throw const ValidationException(
+          message: 'Facture non synchronisée — '
+              'marquage payée impossible offline.',
+        );
+      }
+      await _remote.markAsPaid(invoice.remoteId!);
+      final json = await _remote.fetchById(invoice.remoteId!);
+      await _dao.upsertFromServer(json);
+      final fresh = await _dao.findByRemoteId(invoice.remoteId!);
+      return Success(fresh ?? invoice);
+    } catch (e, st) {
+      return FailureResult(ErrorMapper.toFailure(e, st));
+    }
+  }
+
+  @override
+  Future<Result<List<InvoicePayment>>> fetchPayments(int localId) async {
+    try {
+      final invoice = await _dao.watchById(localId).first;
+      if (invoice == null || invoice.remoteId == null) {
+        return const Success([]);
+      }
+      final rows = await _remote.fetchPayments(invoice.remoteId!);
+      return Success(rows.map(InvoicePayment.fromJson).toList());
+    } catch (e, st) {
+      return FailureResult(ErrorMapper.toFailure(e, st));
+    }
+  }
+
+  @override
+  Future<Result<int>> createPayment({
+    required int localId,
+    required String amount,
+    required DateTime date,
+    String? paymentTypeCode,
+    String? num,
+    String? note,
+  }) async {
+    try {
+      final invoice = await _dao.watchById(localId).first;
+      if (invoice == null || invoice.remoteId == null) {
+        throw const ValidationException(
+          message: 'Facture non synchronisée — '
+              'paiement impossible offline.',
+        );
+      }
+      final payload = <String, Object?>{
+        'datepaye': date.millisecondsSinceEpoch ~/ 1000,
+        'amount': amount,
+        if (paymentTypeCode != null) 'paymentid': paymentTypeCode,
+        if (num != null) 'num_payment': num,
+        if (note != null) 'comment': note,
+      };
+      final id = await _remote.createPayment(invoice.remoteId!, payload);
+      // Refresh la facture (paye, totaux peuvent évoluer).
+      try {
+        final json = await _remote.fetchById(invoice.remoteId!);
+        await _dao.upsertFromServer(json);
+      } catch (_) {
+        // pas critique
+      }
+      return Success(id);
+    } catch (e, st) {
+      return FailureResult(ErrorMapper.toFailure(e, st));
+    }
+  }
+
+  @override
+  Future<Result<({List<int> bytes, String filename})>> downloadPdf(
+    int localId,
+  ) async {
+    try {
+      final invoice = await _dao.watchById(localId).first;
+      if (invoice == null || invoice.remoteId == null) {
+        throw const ValidationException(
+          message: 'Facture non synchronisée — PDF indisponible.',
+        );
+      }
+      final result = await _remote.downloadPdf(invoice.remoteId!);
+      // Le contenu est en base64 (souvent avec wrap newlines).
+      final clean = result.content.replaceAll(RegExp(r'\s'), '');
+      final bytes = base64.decode(clean);
+      return Success((bytes: bytes, filename: result.filename));
+    } catch (e, st) {
+      return FailureResult(ErrorMapper.toFailure(e, st));
+    }
   }
 }
