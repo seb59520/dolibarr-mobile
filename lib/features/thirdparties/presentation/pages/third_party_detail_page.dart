@@ -7,7 +7,9 @@ import 'package:dolibarr_mobile/features/projects/presentation/widgets/third_par
 import 'package:dolibarr_mobile/features/proposals/presentation/widgets/third_party_proposals_section.dart';
 import 'package:dolibarr_mobile/features/thirdparties/domain/entities/third_party.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/providers/third_party_providers.dart';
+import 'package:dolibarr_mobile/shared/widgets/colored_avatar.dart';
 import 'package:dolibarr_mobile/shared/widgets/confirm_dialog.dart';
+import 'package:dolibarr_mobile/shared/widgets/dolimob_chip.dart';
 import 'package:dolibarr_mobile/shared/widgets/error_state.dart';
 import 'package:dolibarr_mobile/shared/widgets/loading_skeleton.dart';
 import 'package:dolibarr_mobile/shared/widgets/quick_action_chip.dart';
@@ -94,7 +96,6 @@ class _DetailBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = thirdParty;
-    final theme = Theme.of(context);
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -104,22 +105,7 @@ class _DetailBody extends ConsumerWidget {
       child: ListView(
         padding: const EdgeInsets.all(AppTokens.spaceMd),
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(t.name, style: theme.textTheme.headlineSmall),
-              ),
-              SyncStatusBadge(status: t.syncStatus),
-            ],
-          ),
-          if (t.codeClient != null && t.codeClient!.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(
-                t.codeClient!,
-                style: theme.textTheme.bodySmall,
-              ),
-            ),
+          _HeaderCard(thirdParty: t),
           const SizedBox(height: AppTokens.spaceMd),
           _ActionsRow(thirdParty: t),
           const SizedBox(height: AppTokens.spaceMd),
@@ -136,6 +122,63 @@ class _DetailBody extends ConsumerWidget {
             _NotesSection(thirdParty: t),
         ],
       ),
+    );
+  }
+}
+
+class _HeaderCard extends StatelessWidget {
+  const _HeaderCard({required this.thirdParty});
+  final ThirdParty thirdParty;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = DoliMobColors.of(context);
+    final t = thirdParty;
+    final ChipTone tone;
+    final String typeLabel;
+    if (t.isProspect) {
+      tone = ChipTone.info;
+      typeLabel = 'Prospect';
+    } else if (t.isSupplier) {
+      tone = ChipTone.warning;
+      typeLabel = 'Fournisseur';
+    } else {
+      tone = ChipTone.success;
+      typeLabel = 'Client';
+    }
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ColoredAvatar(name: t.name, size: 56),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                t.name,
+                style: TextStyle(
+                  color: c.ink,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: [
+                  DoliMobChip(label: typeLabel, tone: tone),
+                  if (t.codeClient != null && t.codeClient!.isNotEmpty)
+                    DoliMobChip(label: t.codeClient!, tone: ChipTone.neutral),
+                ],
+              ),
+            ],
+          ),
+        ),
+        SyncStatusBadge(status: t.syncStatus),
+      ],
     );
   }
 }

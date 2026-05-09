@@ -24,6 +24,8 @@ class SettingsPage extends ConsumerWidget {
           if (session != null) _SessionCard(session: session),
           const SizedBox(height: AppTokens.spaceLg),
           const _PendingOperationsTile(),
+          const SizedBox(height: AppTokens.spaceXs),
+          const _TweaksTile(),
           const SizedBox(height: AppTokens.spaceLg),
           FilledButton.tonalIcon(
             onPressed: () => _confirmLogout(context, ref),
@@ -65,6 +67,25 @@ class SettingsPage extends ConsumerWidget {
   }
 }
 
+
+class _TweaksTile extends StatelessWidget {
+  const _TweaksTile();
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        leading: const Icon(LucideIcons.palette),
+        title: const Text('Personnalisation visuelle'),
+        subtitle: const Text(
+          'Mode sombre, accent, police, densité, position du bouton +.',
+        ),
+        trailing: const Icon(LucideIcons.chevronRight),
+        onTap: () => context.go(RoutePaths.tweaks),
+      ),
+    );
+  }
+}
 
 class _PendingOperationsTile extends ConsumerWidget {
   const _PendingOperationsTile();

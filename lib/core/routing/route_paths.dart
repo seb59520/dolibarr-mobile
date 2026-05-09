@@ -32,6 +32,7 @@ abstract final class RoutePaths {
   static const String proposalDetail = '/app/proposals/:id';
   static const String proposalEdit = '/app/proposals/:id/edit';
   static const String settings = '/app/settings';
+  static const String tweaks = '/app/tweaks';
   static const String pendingOperations = '/app/sync';
 
   static String thirdpartyDetailFor(int localId) =>
