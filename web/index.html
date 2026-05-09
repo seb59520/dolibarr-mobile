@@ -31,6 +31,21 @@
 
   <title>dolibarr_mobile</title>
   <link rel="manifest" href="manifest.json">
+
+  <!--
+    Désinscription proactive de tout service worker hérité d'une
+    version antérieure. Depuis le Étape 19 on n'enregistre plus de SW
+    (cf. web/flutter_bootstrap.js). Ce snippet nettoie les SW déjà
+    installés chez les anciens utilisateurs, pour éviter que leur
+    cache obsolète serve un bundle périmé.
+  -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
+        regs.forEach(function (r) { r.unregister(); });
+      });
+    }
+  </script>
 </head>
 <body>
   <!--
