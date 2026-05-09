@@ -1,7 +1,9 @@
 import 'package:dolibarr_mobile/app.dart';
 import 'package:dolibarr_mobile/core/di/providers.dart';
+import 'package:dolibarr_mobile/core/preferences/tweaks.dart';
 import 'package:dolibarr_mobile/core/storage/secure_storage.dart';
 import 'package:dolibarr_mobile/core/sync/sync_providers.dart';
+import 'package:dolibarr_mobile/core/theme/app_theme.dart';
 import 'package:dolibarr_mobile/core/utils/result.dart';
 import 'package:dolibarr_mobile/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/auth/domain/entities/auth_session.dart';
@@ -11,6 +13,8 @@ import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_provid
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class _NoopStorage implements SecureStorage {
   @override
@@ -76,13 +80,21 @@ class _NoopRemote implements AuthRemoteDataSource {
 }
 
 void main() {
+  setUpAll(() {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    AppTheme.useSystemFontInsteadOfGoogleFonts = true;
+  });
+
   testWidgets('DolibarrMobileApp démarre sur le Splash', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
           authRepositoryProvider.overrideWithValue(_StubAuthRepository()),
           authRemoteDataSourceProvider.overrideWithValue(_NoopRemote()),
           secureStorageProvider.overrideWithValue(_NoopStorage()),
+          sharedPreferencesProvider.overrideWithValue(prefs),
           // Court-circuite l'engine sync (besoin de la base Drift sinon).
           syncBootstrapProvider.overrideWith((_) {}),
         ],

@@ -1,3 +1,4 @@
+import 'package:dolibarr_mobile/core/preferences/tweaks.dart';
 import 'package:dolibarr_mobile/core/storage/sync_status.dart';
 import 'package:dolibarr_mobile/core/theme/app_theme.dart';
 import 'package:dolibarr_mobile/shared/widgets/app_card.dart';
@@ -6,8 +7,11 @@ import 'package:dolibarr_mobile/shared/widgets/entity_avatar.dart';
 import 'package:dolibarr_mobile/shared/widgets/error_state.dart';
 import 'package:dolibarr_mobile/shared/widgets/sync_status_badge.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Goldens des 5 composants principaux du Design System.
 ///
@@ -15,19 +19,41 @@ import 'package:lucide_icons/lucide_icons.dart';
 /// polices Roboto (fréquent en CI Linux), les comparaisons strictes
 /// échouent. On vérifie surtout que la structure rend sans erreur.
 /// Pour régénérer manuellement : `flutter test --update-goldens`.
-Widget _wrap(Widget child, {bool dark = false}) {
-  return MaterialApp(
-    debugShowCheckedModeBanner: false,
-    theme: dark ? AppTheme.dark() : AppTheme.light(),
-    home: Scaffold(body: Center(child: child)),
+Widget _wrap({
+  required Widget child,
+  required SharedPreferences prefs,
+  bool dark = false,
+}) {
+  return ProviderScope(
+    overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: dark
+          ? AppTheme.dark(const Tweaks())
+          : AppTheme.light(const Tweaks()),
+      home: Scaffold(body: Center(child: child)),
+    ),
   );
 }
 
 void main() {
+  late SharedPreferences prefs;
+
+  setUpAll(() {
+    // En tests on n'a pas de réseau ni les fonts pré-chargées.
+    GoogleFonts.config.allowRuntimeFetching = false;
+    AppTheme.useSystemFontInsteadOfGoogleFonts = true;
+  });
+
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+    prefs = await SharedPreferences.getInstance();
+  });
+
   group('Goldens — composants Design System', () {
     testWidgets('SyncStatusBadge — états variés', (tester) async {
       await tester.pumpWidget(
-        _wrap(
+        _wrap(prefs: prefs, child: 
           const Wrap(
             spacing: 12,
             children: [
@@ -47,7 +73,7 @@ void main() {
 
     testWidgets('EntityAvatar — initiales', (tester) async {
       await tester.pumpWidget(
-        _wrap(
+        _wrap(prefs: prefs, child: 
           const Wrap(
             spacing: 8,
             children: [
@@ -67,7 +93,7 @@ void main() {
 
     testWidgets('AppCard — exemple peuplé', (tester) async {
       await tester.pumpWidget(
-        _wrap(
+        _wrap(prefs: prefs, child: 
           AppCard(
             onTap: () {},
             child: const Row(
@@ -103,7 +129,7 @@ void main() {
 
     testWidgets('EmptyState', (tester) async {
       await tester.pumpWidget(
-        _wrap(
+        _wrap(prefs: prefs, child: 
           EmptyState(
             icon: LucideIcons.users,
             title: 'Aucun contact',
@@ -121,7 +147,7 @@ void main() {
 
     testWidgets('ErrorState', (tester) async {
       await tester.pumpWidget(
-        _wrap(
+        _wrap(prefs: prefs, child: 
           ErrorState(
             title: 'Impossible de charger les tiers',
             description: 'Vérifiez votre connexion et réessayez.',

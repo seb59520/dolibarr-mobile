@@ -2,7 +2,7 @@ import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:dolibarr_mobile/features/dashboard/domain/entities/dashboard_metrics.dart';
 import 'package:dolibarr_mobile/features/dashboard/presentation/providers/dashboard_providers.dart';
-import 'package:dolibarr_mobile/features/dashboard/presentation/widgets/kpi_card.dart';
+import 'package:dolibarr_mobile/shared/widgets/kpi_card.dart';
 import 'package:dolibarr_mobile/shared/widgets/network_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -103,32 +103,32 @@ class _MetricsGrid extends StatelessWidget {
       childAspectRatio: 1.6,
       children: [
         KpiCard(
-          title: 'CA mois en cours',
+          label: 'CA mois en cours',
           value: fmtMontant(metrics.caMois),
           icon: LucideIcons.trendingUp,
-          color: AppTokens.syncSynced,
+          tone: KpiTone.success,
           onTap: () => GoRouter.of(context).go(RoutePaths.invoices),
         ),
         KpiCard(
-          title: 'Devis en attente',
+          label: 'Devis en attente',
           value: '${metrics.devisEnAttenteCount}',
-          subtitle: 'à signer',
+          hint: 'à signer',
           icon: LucideIcons.fileText,
-          color: AppTokens.syncPending,
+          tone: KpiTone.accent,
           onTap: () => GoRouter.of(context).go(RoutePaths.proposals),
         ),
         KpiCard(
-          title: 'Factures impayées',
+          label: 'Factures impayées',
           value: '${metrics.facturesImpayeesCount}',
-          subtitle: fmtMontant(metrics.facturesImpayeesMontant),
+          hint: fmtMontant(metrics.facturesImpayeesMontant),
           icon: LucideIcons.alertTriangle,
-          color: AppTokens.syncConflict,
+          tone: KpiTone.danger,
           onTap: () => GoRouter.of(context).go(RoutePaths.invoices),
         ),
         KpiCard(
-          title: 'Clients',
+          label: 'Clients',
           value: '—',
-          subtitle: 'voir la liste',
+          hint: 'voir la liste',
           icon: LucideIcons.briefcase,
           onTap: () => GoRouter.of(context).go(RoutePaths.thirdparties),
         ),

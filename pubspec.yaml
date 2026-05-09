@@ -29,6 +29,7 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   freezed_annotation: ^2.4.4
   go_router: ^14.6.1
+  google_fonts: ^6.2.1
   intl: any
   json_annotation: ^4.9.0
   latlong2: ^0.9.1
@@ -40,6 +41,7 @@ dependencies:
   riverpod_annotation: ^2.6.1
   rxdart: ^0.28.0
   share_plus: ^10.1.2
+  shared_preferences: ^2.3.2
   url_launcher: ^6.3.1
 
   # Persistance locale : Drift 2 (SQLite typé Dart). Décision tranchée

@@ -60,6 +60,18 @@ class ThirdPartyFiltersNotifier extends Notifier<ThirdPartyFilters> {
     state = state.copyWith(kinds: next);
   }
 
+  /// Remplace la sélection complète des `kinds`. Utilisé par les chips
+  /// rapides "Clients / Prospects / Fournisseurs" qui exclusivement
+  /// scopent à un seul kind (passer `{}` pour réinitialiser).
+  void toggleKinds(Set<ThirdPartyKind> kinds) {
+    if (state.kinds.length == kinds.length &&
+        state.kinds.containsAll(kinds)) {
+      state = state.copyWith(kinds: {});
+    } else {
+      state = state.copyWith(kinds: kinds);
+    }
+  }
+
   void setActiveOnly({required bool value}) =>
       state = state.copyWith(activeOnly: value);
 

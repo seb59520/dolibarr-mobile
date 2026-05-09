@@ -1,17 +1,23 @@
+import 'package:dolibarr_mobile/core/preferences/tweaks.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Carte cliquable standardisée du Design System.
+/// Carte cliquable du Design System DoliMob.
 ///
-/// Ergonomie : padding cohérent, ripple sur le tap, bordures arrondies
-/// du token. Évite les `Card` directs dans les features pour garantir
-/// l'homogénéité visuelle des listes.
-class AppCard extends StatelessWidget {
+/// Honore le réglage `Tweaks.cardStyle` :
+///   - `flat`     : surface + hairline 0.5px
+///   - `border`   : surface + hairline 1px (plus marqué)
+///   - `elevated` : ombre douce (1+6px)
+///
+/// Border-radius depuis `AppTokens.radiusCardLg` (14px).
+class AppCard extends ConsumerWidget {
   const AppCard({
     required this.child,
     this.onTap,
     this.padding = const EdgeInsets.all(AppTokens.spaceMd),
     this.margin,
+    this.borderRadius,
     super.key,
   });
 
@@ -19,9 +25,37 @@ class AppCard extends StatelessWidget {
   final VoidCallback? onTap;
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry? margin;
+  final double? borderRadius;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final c = DoliMobColors.of(context);
+    final style = ref.watch(tweaksProvider).cardStyle;
+    final radius = BorderRadius.circular(
+      borderRadius ?? AppTokens.radiusCardLg,
+    );
+
+    BoxBorder? border;
+    List<BoxShadow>? shadow;
+    if (style == CardStyleChoice.flat) {
+      border = Border.all(color: c.hairline, width: 0.5);
+    } else if (style == CardStyleChoice.border) {
+      border = Border.all(color: c.hairline, width: 1);
+    } else {
+      shadow = [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: c.dark ? 0.40 : 0.04),
+          blurRadius: 2,
+        ),
+        BoxShadow(
+          color: Colors.black.withValues(alpha: c.dark ? 0.20 : 0.10),
+          blurRadius: 18,
+          spreadRadius: -8,
+          offset: const Offset(0, 6),
+        ),
+      ];
+    }
+
     return Padding(
       padding: margin ??
           const EdgeInsets.symmetric(
@@ -29,14 +63,19 @@ class AppCard extends StatelessWidget {
             vertical: AppTokens.spaceXs,
           ),
       child: Material(
-        color: Theme.of(context).colorScheme.surface,
-        elevation: AppTokens.elevationCard,
-        shadowColor: Colors.black.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(AppTokens.radiusCard),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(padding: padding, child: child),
+        color: Colors.transparent,
+        child: Ink(
+          decoration: BoxDecoration(
+            color: c.surface,
+            borderRadius: radius,
+            border: border,
+            boxShadow: shadow,
+          ),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: radius,
+            child: Padding(padding: padding, child: child),
+          ),
         ),
       ),
     );

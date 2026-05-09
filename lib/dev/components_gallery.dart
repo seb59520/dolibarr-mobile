@@ -1,3 +1,4 @@
+import 'package:dolibarr_mobile/core/preferences/tweaks.dart';
 import 'package:dolibarr_mobile/core/storage/sync_status.dart';
 import 'package:dolibarr_mobile/core/theme/app_theme.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
@@ -27,8 +28,8 @@ class ComponentsGalleryApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Components Gallery',
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
+      theme: AppTheme.light(const Tweaks()),
+      darkTheme: AppTheme.dark(const Tweaks()),
       home: const ComponentsGalleryPage(),
       debugShowCheckedModeBanner: false,
     );
