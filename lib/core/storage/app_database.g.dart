@@ -7070,6 +7070,657 @@ class PendingOperationsCompanion extends UpdateCompanion<PendingOperationRow> {
   }
 }
 
+class $ProductsTable extends Products
+    with TableInfo<$ProductsTable, ProductRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProductsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<int> remoteId = GeneratedColumn<int>(
+    'remote_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _refMeta = const VerificationMeta('ref');
+  @override
+  late final GeneratedColumn<String> ref = GeneratedColumn<String>(
+    'ref',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _labelMeta = const VerificationMeta('label');
+  @override
+  late final GeneratedColumn<String> label = GeneratedColumn<String>(
+    'label',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _productTypeMeta = const VerificationMeta(
+    'productType',
+  );
+  @override
+  late final GeneratedColumn<int> productType = GeneratedColumn<int>(
+    'product_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _priceMeta = const VerificationMeta('price');
+  @override
+  late final GeneratedColumn<String> price = GeneratedColumn<String>(
+    'price',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tvaTxMeta = const VerificationMeta('tvaTx');
+  @override
+  late final GeneratedColumn<String> tvaTx = GeneratedColumn<String>(
+    'tva_tx',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _onSellMeta = const VerificationMeta('onSell');
+  @override
+  late final GeneratedColumn<int> onSell = GeneratedColumn<int>(
+    'on_sell',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _onBuyMeta = const VerificationMeta('onBuy');
+  @override
+  late final GeneratedColumn<int> onBuy = GeneratedColumn<int>(
+    'on_buy',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _fetchedAtMeta = const VerificationMeta(
+    'fetchedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> fetchedAt = GeneratedColumn<DateTime>(
+    'fetched_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    remoteId,
+    ref,
+    label,
+    description,
+    productType,
+    price,
+    tvaTx,
+    onSell,
+    onBuy,
+    fetchedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'products';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ProductRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_remoteIdMeta);
+    }
+    if (data.containsKey('ref')) {
+      context.handle(
+        _refMeta,
+        ref.isAcceptableOrUnknown(data['ref']!, _refMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_refMeta);
+    }
+    if (data.containsKey('label')) {
+      context.handle(
+        _labelMeta,
+        label.isAcceptableOrUnknown(data['label']!, _labelMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_labelMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('product_type')) {
+      context.handle(
+        _productTypeMeta,
+        productType.isAcceptableOrUnknown(
+          data['product_type']!,
+          _productTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_productTypeMeta);
+    }
+    if (data.containsKey('price')) {
+      context.handle(
+        _priceMeta,
+        price.isAcceptableOrUnknown(data['price']!, _priceMeta),
+      );
+    }
+    if (data.containsKey('tva_tx')) {
+      context.handle(
+        _tvaTxMeta,
+        tvaTx.isAcceptableOrUnknown(data['tva_tx']!, _tvaTxMeta),
+      );
+    }
+    if (data.containsKey('on_sell')) {
+      context.handle(
+        _onSellMeta,
+        onSell.isAcceptableOrUnknown(data['on_sell']!, _onSellMeta),
+      );
+    }
+    if (data.containsKey('on_buy')) {
+      context.handle(
+        _onBuyMeta,
+        onBuy.isAcceptableOrUnknown(data['on_buy']!, _onBuyMeta),
+      );
+    }
+    if (data.containsKey('fetched_at')) {
+      context.handle(
+        _fetchedAtMeta,
+        fetchedAt.isAcceptableOrUnknown(data['fetched_at']!, _fetchedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fetchedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ProductRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ProductRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}remote_id'],
+      )!,
+      ref: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ref'],
+      )!,
+      label: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}label'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      productType: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}product_type'],
+      )!,
+      price: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}price'],
+      ),
+      tvaTx: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tva_tx'],
+      ),
+      onSell: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}on_sell'],
+      )!,
+      onBuy: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}on_buy'],
+      )!,
+      fetchedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}fetched_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ProductsTable createAlias(String alias) {
+    return $ProductsTable(attachedDatabase, alias);
+  }
+}
+
+class ProductRow extends DataClass implements Insertable<ProductRow> {
+  final int id;
+  final int remoteId;
+  final String ref;
+  final String label;
+  final String? description;
+
+  /// 0 = produit, 1 = service.
+  final int productType;
+
+  /// Prix unitaire HT par défaut (string pour préserver la précision).
+  final String? price;
+
+  /// Taux de TVA appliqué par défaut.
+  final String? tvaTx;
+
+  /// 1 si actif côté vente / achat.
+  final int onSell;
+  final int onBuy;
+  final DateTime fetchedAt;
+  const ProductRow({
+    required this.id,
+    required this.remoteId,
+    required this.ref,
+    required this.label,
+    this.description,
+    required this.productType,
+    this.price,
+    this.tvaTx,
+    required this.onSell,
+    required this.onBuy,
+    required this.fetchedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['remote_id'] = Variable<int>(remoteId);
+    map['ref'] = Variable<String>(ref);
+    map['label'] = Variable<String>(label);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    map['product_type'] = Variable<int>(productType);
+    if (!nullToAbsent || price != null) {
+      map['price'] = Variable<String>(price);
+    }
+    if (!nullToAbsent || tvaTx != null) {
+      map['tva_tx'] = Variable<String>(tvaTx);
+    }
+    map['on_sell'] = Variable<int>(onSell);
+    map['on_buy'] = Variable<int>(onBuy);
+    map['fetched_at'] = Variable<DateTime>(fetchedAt);
+    return map;
+  }
+
+  ProductsCompanion toCompanion(bool nullToAbsent) {
+    return ProductsCompanion(
+      id: Value(id),
+      remoteId: Value(remoteId),
+      ref: Value(ref),
+      label: Value(label),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      productType: Value(productType),
+      price: price == null && nullToAbsent
+          ? const Value.absent()
+          : Value(price),
+      tvaTx: tvaTx == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tvaTx),
+      onSell: Value(onSell),
+      onBuy: Value(onBuy),
+      fetchedAt: Value(fetchedAt),
+    );
+  }
+
+  factory ProductRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ProductRow(
+      id: serializer.fromJson<int>(json['id']),
+      remoteId: serializer.fromJson<int>(json['remoteId']),
+      ref: serializer.fromJson<String>(json['ref']),
+      label: serializer.fromJson<String>(json['label']),
+      description: serializer.fromJson<String?>(json['description']),
+      productType: serializer.fromJson<int>(json['productType']),
+      price: serializer.fromJson<String?>(json['price']),
+      tvaTx: serializer.fromJson<String?>(json['tvaTx']),
+      onSell: serializer.fromJson<int>(json['onSell']),
+      onBuy: serializer.fromJson<int>(json['onBuy']),
+      fetchedAt: serializer.fromJson<DateTime>(json['fetchedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'remoteId': serializer.toJson<int>(remoteId),
+      'ref': serializer.toJson<String>(ref),
+      'label': serializer.toJson<String>(label),
+      'description': serializer.toJson<String?>(description),
+      'productType': serializer.toJson<int>(productType),
+      'price': serializer.toJson<String?>(price),
+      'tvaTx': serializer.toJson<String?>(tvaTx),
+      'onSell': serializer.toJson<int>(onSell),
+      'onBuy': serializer.toJson<int>(onBuy),
+      'fetchedAt': serializer.toJson<DateTime>(fetchedAt),
+    };
+  }
+
+  ProductRow copyWith({
+    int? id,
+    int? remoteId,
+    String? ref,
+    String? label,
+    Value<String?> description = const Value.absent(),
+    int? productType,
+    Value<String?> price = const Value.absent(),
+    Value<String?> tvaTx = const Value.absent(),
+    int? onSell,
+    int? onBuy,
+    DateTime? fetchedAt,
+  }) => ProductRow(
+    id: id ?? this.id,
+    remoteId: remoteId ?? this.remoteId,
+    ref: ref ?? this.ref,
+    label: label ?? this.label,
+    description: description.present ? description.value : this.description,
+    productType: productType ?? this.productType,
+    price: price.present ? price.value : this.price,
+    tvaTx: tvaTx.present ? tvaTx.value : this.tvaTx,
+    onSell: onSell ?? this.onSell,
+    onBuy: onBuy ?? this.onBuy,
+    fetchedAt: fetchedAt ?? this.fetchedAt,
+  );
+  ProductRow copyWithCompanion(ProductsCompanion data) {
+    return ProductRow(
+      id: data.id.present ? data.id.value : this.id,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      ref: data.ref.present ? data.ref.value : this.ref,
+      label: data.label.present ? data.label.value : this.label,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      productType: data.productType.present
+          ? data.productType.value
+          : this.productType,
+      price: data.price.present ? data.price.value : this.price,
+      tvaTx: data.tvaTx.present ? data.tvaTx.value : this.tvaTx,
+      onSell: data.onSell.present ? data.onSell.value : this.onSell,
+      onBuy: data.onBuy.present ? data.onBuy.value : this.onBuy,
+      fetchedAt: data.fetchedAt.present ? data.fetchedAt.value : this.fetchedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProductRow(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('ref: $ref, ')
+          ..write('label: $label, ')
+          ..write('description: $description, ')
+          ..write('productType: $productType, ')
+          ..write('price: $price, ')
+          ..write('tvaTx: $tvaTx, ')
+          ..write('onSell: $onSell, ')
+          ..write('onBuy: $onBuy, ')
+          ..write('fetchedAt: $fetchedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    remoteId,
+    ref,
+    label,
+    description,
+    productType,
+    price,
+    tvaTx,
+    onSell,
+    onBuy,
+    fetchedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ProductRow &&
+          other.id == this.id &&
+          other.remoteId == this.remoteId &&
+          other.ref == this.ref &&
+          other.label == this.label &&
+          other.description == this.description &&
+          other.productType == this.productType &&
+          other.price == this.price &&
+          other.tvaTx == this.tvaTx &&
+          other.onSell == this.onSell &&
+          other.onBuy == this.onBuy &&
+          other.fetchedAt == this.fetchedAt);
+}
+
+class ProductsCompanion extends UpdateCompanion<ProductRow> {
+  final Value<int> id;
+  final Value<int> remoteId;
+  final Value<String> ref;
+  final Value<String> label;
+  final Value<String?> description;
+  final Value<int> productType;
+  final Value<String?> price;
+  final Value<String?> tvaTx;
+  final Value<int> onSell;
+  final Value<int> onBuy;
+  final Value<DateTime> fetchedAt;
+  const ProductsCompanion({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.ref = const Value.absent(),
+    this.label = const Value.absent(),
+    this.description = const Value.absent(),
+    this.productType = const Value.absent(),
+    this.price = const Value.absent(),
+    this.tvaTx = const Value.absent(),
+    this.onSell = const Value.absent(),
+    this.onBuy = const Value.absent(),
+    this.fetchedAt = const Value.absent(),
+  });
+  ProductsCompanion.insert({
+    this.id = const Value.absent(),
+    required int remoteId,
+    required String ref,
+    required String label,
+    this.description = const Value.absent(),
+    required int productType,
+    this.price = const Value.absent(),
+    this.tvaTx = const Value.absent(),
+    this.onSell = const Value.absent(),
+    this.onBuy = const Value.absent(),
+    required DateTime fetchedAt,
+  }) : remoteId = Value(remoteId),
+       ref = Value(ref),
+       label = Value(label),
+       productType = Value(productType),
+       fetchedAt = Value(fetchedAt);
+  static Insertable<ProductRow> custom({
+    Expression<int>? id,
+    Expression<int>? remoteId,
+    Expression<String>? ref,
+    Expression<String>? label,
+    Expression<String>? description,
+    Expression<int>? productType,
+    Expression<String>? price,
+    Expression<String>? tvaTx,
+    Expression<int>? onSell,
+    Expression<int>? onBuy,
+    Expression<DateTime>? fetchedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (ref != null) 'ref': ref,
+      if (label != null) 'label': label,
+      if (description != null) 'description': description,
+      if (productType != null) 'product_type': productType,
+      if (price != null) 'price': price,
+      if (tvaTx != null) 'tva_tx': tvaTx,
+      if (onSell != null) 'on_sell': onSell,
+      if (onBuy != null) 'on_buy': onBuy,
+      if (fetchedAt != null) 'fetched_at': fetchedAt,
+    });
+  }
+
+  ProductsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? remoteId,
+    Value<String>? ref,
+    Value<String>? label,
+    Value<String?>? description,
+    Value<int>? productType,
+    Value<String?>? price,
+    Value<String?>? tvaTx,
+    Value<int>? onSell,
+    Value<int>? onBuy,
+    Value<DateTime>? fetchedAt,
+  }) {
+    return ProductsCompanion(
+      id: id ?? this.id,
+      remoteId: remoteId ?? this.remoteId,
+      ref: ref ?? this.ref,
+      label: label ?? this.label,
+      description: description ?? this.description,
+      productType: productType ?? this.productType,
+      price: price ?? this.price,
+      tvaTx: tvaTx ?? this.tvaTx,
+      onSell: onSell ?? this.onSell,
+      onBuy: onBuy ?? this.onBuy,
+      fetchedAt: fetchedAt ?? this.fetchedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<int>(remoteId.value);
+    }
+    if (ref.present) {
+      map['ref'] = Variable<String>(ref.value);
+    }
+    if (label.present) {
+      map['label'] = Variable<String>(label.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (productType.present) {
+      map['product_type'] = Variable<int>(productType.value);
+    }
+    if (price.present) {
+      map['price'] = Variable<String>(price.value);
+    }
+    if (tvaTx.present) {
+      map['tva_tx'] = Variable<String>(tvaTx.value);
+    }
+    if (onSell.present) {
+      map['on_sell'] = Variable<int>(onSell.value);
+    }
+    if (onBuy.present) {
+      map['on_buy'] = Variable<int>(onBuy.value);
+    }
+    if (fetchedAt.present) {
+      map['fetched_at'] = Variable<DateTime>(fetchedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProductsCompanion(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('ref: $ref, ')
+          ..write('label: $label, ')
+          ..write('description: $description, ')
+          ..write('productType: $productType, ')
+          ..write('price: $price, ')
+          ..write('tvaTx: $tvaTx, ')
+          ..write('onSell: $onSell, ')
+          ..write('onBuy: $onBuy, ')
+          ..write('fetchedAt: $fetchedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ProjectsTable extends Projects
     with TableInfo<$ProjectsTable, ProjectRow> {
   @override
@@ -11995,6 +12646,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $InvoicesTable invoices = $InvoicesTable(this);
   late final $PendingOperationsTable pendingOperations =
       $PendingOperationsTable(this);
+  late final $ProductsTable products = $ProductsTable(this);
   late final $ProjectsTable projects = $ProjectsTable(this);
   late final $ProposalLinesTable proposalLines = $ProposalLinesTable(this);
   late final $ProposalsTable proposals = $ProposalsTable(this);
@@ -12013,6 +12665,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     invoiceLines,
     invoices,
     pendingOperations,
+    products,
     projects,
     proposalLines,
     proposals,
@@ -15257,6 +15910,315 @@ typedef $$PendingOperationsTableProcessedTableManager =
       PendingOperationRow,
       PrefetchHooks Function()
     >;
+typedef $$ProductsTableCreateCompanionBuilder =
+    ProductsCompanion Function({
+      Value<int> id,
+      required int remoteId,
+      required String ref,
+      required String label,
+      Value<String?> description,
+      required int productType,
+      Value<String?> price,
+      Value<String?> tvaTx,
+      Value<int> onSell,
+      Value<int> onBuy,
+      required DateTime fetchedAt,
+    });
+typedef $$ProductsTableUpdateCompanionBuilder =
+    ProductsCompanion Function({
+      Value<int> id,
+      Value<int> remoteId,
+      Value<String> ref,
+      Value<String> label,
+      Value<String?> description,
+      Value<int> productType,
+      Value<String?> price,
+      Value<String?> tvaTx,
+      Value<int> onSell,
+      Value<int> onBuy,
+      Value<DateTime> fetchedAt,
+    });
+
+class $$ProductsTableFilterComposer
+    extends Composer<_$AppDatabase, $ProductsTable> {
+  $$ProductsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ref => $composableBuilder(
+    column: $table.ref,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get label => $composableBuilder(
+    column: $table.label,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get productType => $composableBuilder(
+    column: $table.productType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get price => $composableBuilder(
+    column: $table.price,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tvaTx => $composableBuilder(
+    column: $table.tvaTx,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get onSell => $composableBuilder(
+    column: $table.onSell,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get onBuy => $composableBuilder(
+    column: $table.onBuy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get fetchedAt => $composableBuilder(
+    column: $table.fetchedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ProductsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProductsTable> {
+  $$ProductsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ref => $composableBuilder(
+    column: $table.ref,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get label => $composableBuilder(
+    column: $table.label,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get productType => $composableBuilder(
+    column: $table.productType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get price => $composableBuilder(
+    column: $table.price,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tvaTx => $composableBuilder(
+    column: $table.tvaTx,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get onSell => $composableBuilder(
+    column: $table.onSell,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get onBuy => $composableBuilder(
+    column: $table.onBuy,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get fetchedAt => $composableBuilder(
+    column: $table.fetchedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ProductsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProductsTable> {
+  $$ProductsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<String> get ref =>
+      $composableBuilder(column: $table.ref, builder: (column) => column);
+
+  GeneratedColumn<String> get label =>
+      $composableBuilder(column: $table.label, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get productType => $composableBuilder(
+    column: $table.productType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get price =>
+      $composableBuilder(column: $table.price, builder: (column) => column);
+
+  GeneratedColumn<String> get tvaTx =>
+      $composableBuilder(column: $table.tvaTx, builder: (column) => column);
+
+  GeneratedColumn<int> get onSell =>
+      $composableBuilder(column: $table.onSell, builder: (column) => column);
+
+  GeneratedColumn<int> get onBuy =>
+      $composableBuilder(column: $table.onBuy, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get fetchedAt =>
+      $composableBuilder(column: $table.fetchedAt, builder: (column) => column);
+}
+
+class $$ProductsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProductsTable,
+          ProductRow,
+          $$ProductsTableFilterComposer,
+          $$ProductsTableOrderingComposer,
+          $$ProductsTableAnnotationComposer,
+          $$ProductsTableCreateCompanionBuilder,
+          $$ProductsTableUpdateCompanionBuilder,
+          (
+            ProductRow,
+            BaseReferences<_$AppDatabase, $ProductsTable, ProductRow>,
+          ),
+          ProductRow,
+          PrefetchHooks Function()
+        > {
+  $$ProductsTableTableManager(_$AppDatabase db, $ProductsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProductsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProductsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ProductsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> remoteId = const Value.absent(),
+                Value<String> ref = const Value.absent(),
+                Value<String> label = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<int> productType = const Value.absent(),
+                Value<String?> price = const Value.absent(),
+                Value<String?> tvaTx = const Value.absent(),
+                Value<int> onSell = const Value.absent(),
+                Value<int> onBuy = const Value.absent(),
+                Value<DateTime> fetchedAt = const Value.absent(),
+              }) => ProductsCompanion(
+                id: id,
+                remoteId: remoteId,
+                ref: ref,
+                label: label,
+                description: description,
+                productType: productType,
+                price: price,
+                tvaTx: tvaTx,
+                onSell: onSell,
+                onBuy: onBuy,
+                fetchedAt: fetchedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int remoteId,
+                required String ref,
+                required String label,
+                Value<String?> description = const Value.absent(),
+                required int productType,
+                Value<String?> price = const Value.absent(),
+                Value<String?> tvaTx = const Value.absent(),
+                Value<int> onSell = const Value.absent(),
+                Value<int> onBuy = const Value.absent(),
+                required DateTime fetchedAt,
+              }) => ProductsCompanion.insert(
+                id: id,
+                remoteId: remoteId,
+                ref: ref,
+                label: label,
+                description: description,
+                productType: productType,
+                price: price,
+                tvaTx: tvaTx,
+                onSell: onSell,
+                onBuy: onBuy,
+                fetchedAt: fetchedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ProductsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProductsTable,
+      ProductRow,
+      $$ProductsTableFilterComposer,
+      $$ProductsTableOrderingComposer,
+      $$ProductsTableAnnotationComposer,
+      $$ProductsTableCreateCompanionBuilder,
+      $$ProductsTableUpdateCompanionBuilder,
+      (ProductRow, BaseReferences<_$AppDatabase, $ProductsTable, ProductRow>),
+      ProductRow,
+      PrefetchHooks Function()
+    >;
 typedef $$ProjectsTableCreateCompanionBuilder =
     ProjectsCompanion Function({
       Value<int> id,
@@ -17463,6 +18425,8 @@ class $AppDatabaseManager {
       $$InvoicesTableTableManager(_db, _db.invoices);
   $$PendingOperationsTableTableManager get pendingOperations =>
       $$PendingOperationsTableTableManager(_db, _db.pendingOperations);
+  $$ProductsTableTableManager get products =>
+      $$ProductsTableTableManager(_db, _db.products);
   $$ProjectsTableTableManager get projects =>
       $$ProjectsTableTableManager(_db, _db.projects);
   $$ProposalLinesTableTableManager get proposalLines =>

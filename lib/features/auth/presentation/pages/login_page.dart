@@ -93,7 +93,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     result.fold(
       onSuccess: (_) {
         final next = GoRouterState.of(context).uri.queryParameters['next'];
-        context.go(next ?? RoutePaths.thirdparties);
+        context.go(next ?? RoutePaths.dashboard);
       },
       onFailure: (f) {
         ScaffoldMessenger.of(context).showSnackBar(

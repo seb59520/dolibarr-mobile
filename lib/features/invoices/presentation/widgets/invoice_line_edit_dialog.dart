@@ -1,7 +1,10 @@
 import 'package:dolibarr_mobile/core/storage/sync_status.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice_line.dart';
+import 'package:dolibarr_mobile/features/products/domain/entities/product.dart';
+import 'package:dolibarr_mobile/features/products/presentation/widgets/product_picker_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 /// Dialog modal de saisie d'une ligne de facture (création OU édition).
 ///
@@ -51,6 +54,7 @@ class _InvoiceLineEditDialogState extends State<InvoiceLineEditDialog> {
   final _remiseCtrl = TextEditingController();
 
   InvoiceLineProductType _type = InvoiceLineProductType.service;
+  int? _fkProduct;
 
   @override
   void initState() {
@@ -64,7 +68,25 @@ class _InvoiceLineEditDialogState extends State<InvoiceLineEditDialog> {
       _tvaCtrl.text = l.tvaTx ?? '';
       _remiseCtrl.text = l.remisePercent ?? '';
       _type = l.productType;
+      _fkProduct = l.fkProduct;
     }
+  }
+
+  Future<void> _pickProduct() async {
+    final product = await ProductPickerSheet.show(context);
+    if (product == null || !mounted) return;
+    setState(() {
+      _fkProduct = product.remoteId;
+      _labelCtrl.text = product.label;
+      if (product.description != null && product.description!.isNotEmpty) {
+        _descCtrl.text = product.description!;
+      }
+      if (product.price != null) _subpriceCtrl.text = product.price!;
+      if (product.tvaTx != null) _tvaCtrl.text = product.tvaTx!;
+      _type = product.type == ProductType.service
+          ? InvoiceLineProductType.service
+          : InvoiceLineProductType.product;
+    });
   }
 
   @override
@@ -104,7 +126,7 @@ class _InvoiceLineEditDialogState extends State<InvoiceLineEditDialog> {
       remoteId: base?.remoteId,
       invoiceLocal: widget.invoiceLocalId,
       invoiceRemote: widget.invoiceRemoteId ?? base?.invoiceRemote,
-      fkProduct: base?.fkProduct,
+      fkProduct: _fkProduct ?? base?.fkProduct,
       label: notEmpty(_labelCtrl.text),
       description: notEmpty(_descCtrl.text),
       productType: _type,
@@ -149,6 +171,16 @@ class _InvoiceLineEditDialogState extends State<InvoiceLineEditDialog> {
                 selected: {_type},
                 onSelectionChanged: (s) =>
                     setState(() => _type = s.first),
+              ),
+              const SizedBox(height: AppTokens.spaceXs),
+              OutlinedButton.icon(
+                onPressed: _pickProduct,
+                icon: const Icon(LucideIcons.search, size: 16),
+                label: Text(
+                  _fkProduct == null
+                      ? 'Choisir depuis le catalogue'
+                      : 'Changer de produit (#$_fkProduct)',
+                ),
               ),
               const SizedBox(height: AppTokens.spaceMd),
               TextFormField(

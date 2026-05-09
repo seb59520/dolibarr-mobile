@@ -586,6 +586,7 @@ class _WorkflowActionsState extends ConsumerState<_WorkflowActions> {
     final canValidate = p.isDraft && p.remoteId != null;
     final canClose = p.status == ProposalStatus.validated &&
         p.remoteId != null;
+    final canConvert = p.isSigned && p.remoteId != null;
     final canSetInvoiced = p.isSigned && p.remoteId != null;
     final canDownloadPdf = !p.isDraft && p.remoteId != null;
 
@@ -614,6 +615,15 @@ class _WorkflowActionsState extends ConsumerState<_WorkflowActions> {
             label: const Text('Refusé'),
           ),
         );
+    }
+    if (canConvert) {
+      actions.add(
+        FilledButton.tonalIcon(
+          onPressed: _busy ? null : _convertToInvoice,
+          icon: const Icon(LucideIcons.fileOutput, size: 16),
+          label: const Text('Créer facture'),
+        ),
+      );
     }
     if (canSetInvoiced) {
       actions.add(
@@ -676,6 +686,30 @@ class _WorkflowActionsState extends ConsumerState<_WorkflowActions> {
             ? 'Devis marqué signé.'
             : 'Devis marqué refusé.',
       ),
+      onFailure: (f) => _toast('Échec : $f'),
+    );
+  }
+
+  Future<void> _convertToInvoice() async {
+    final ok = await ConfirmDialog.show(
+      context,
+      title: 'Créer la facture à partir de ce devis ?',
+      message: 'Une nouvelle facture brouillon sera créée avec '
+          'les mêmes lignes. Le devis sera marqué facturé.',
+      confirmLabel: 'Créer',
+    );
+    if (ok != true || !mounted) return;
+    setState(() => _busy = true);
+    final r = await ref
+        .read(proposalRepositoryProvider)
+        .convertToInvoice(widget.proposal.localId);
+    if (!mounted) return;
+    setState(() => _busy = false);
+    r.fold(
+      onSuccess: (data) {
+        _toast('Facture créée — ouverture…');
+        context.go(RoutePaths.invoiceDetailFor(data.invoiceLocalId));
+      },
       onFailure: (f) => _toast('Échec : $f'),
     );
   }

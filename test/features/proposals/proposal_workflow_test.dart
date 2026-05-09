@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:dolibarr_mobile/core/network/network_info.dart';
 import 'package:dolibarr_mobile/core/storage/pending_operation_dao.dart';
 import 'package:dolibarr_mobile/core/utils/result.dart';
+import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_local_dao.dart';
+import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_remote_datasource.dart';
+import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice.dart';
 import 'package:dolibarr_mobile/features/proposals/data/datasources/proposal_local_dao.dart';
 import 'package:dolibarr_mobile/features/proposals/data/datasources/proposal_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/proposals/data/repositories/proposal_repository_impl.dart';
@@ -20,6 +23,10 @@ class _MockNetwork extends Mock implements NetworkInfo {}
 class _MockDraftDao extends Mock implements DraftLocalDao {}
 
 class _MockOutbox extends Mock implements PendingOperationDao {}
+
+class _MockInvoiceRemote extends Mock implements InvoiceRemoteDataSource {}
+
+class _MockInvoiceDao extends Mock implements InvoiceLocalDao {}
 
 Proposal _entity({
   int localId = 5,
@@ -46,6 +53,8 @@ void main() {
   late _MockNetwork network;
   late _MockDraftDao draftDao;
   late _MockOutbox outbox;
+  late _MockInvoiceRemote invoiceRemote;
+  late _MockInvoiceDao invoiceDao;
   late ProposalRepositoryImpl repo;
 
   setUp(() {
@@ -54,12 +63,16 @@ void main() {
     network = _MockNetwork();
     draftDao = _MockDraftDao();
     outbox = _MockOutbox();
+    invoiceRemote = _MockInvoiceRemote();
+    invoiceDao = _MockInvoiceDao();
     repo = ProposalRepositoryImpl(
       remote: remote,
       dao: dao,
       network: network,
       draftDao: draftDao,
       outbox: outbox,
+      invoiceRemote: invoiceRemote,
+      invoiceDao: invoiceDao,
     );
   });
 
@@ -128,7 +141,7 @@ void main() {
 
       final result = await repo.close(5, ProposalStatus.refused);
       expect(result.isSuccess, isTrue);
-      verify(() => remote.close(100, -1, note: null)).called(1);
+      verify(() => remote.close(100, -1)).called(1);
     });
 
     test('draft → refus (statut non final)', () async {
@@ -156,6 +169,89 @@ void main() {
       expect(result.isSuccess, isTrue);
       verify(() => remote.setInvoiced(100)).called(1);
     });
+  });
+
+  group('convertToInvoice', () {
+    test(
+      'devis signé → POST /invoices + lines + setInvoiced + refresh',
+      () async {
+        when(() => dao.watchById(5)).thenAnswer(
+          (_) => Stream.value(_entity(status: ProposalStatus.signed)),
+        );
+        when(() => dao.watchLinesByProposalLocal(5))
+            .thenAnswer((_) => Stream.value(const []));
+        when(() => invoiceRemote.create(any()))
+            .thenAnswer((_) async => 200);
+        when(() => remote.setInvoiced(any())).thenAnswer((_) async => {});
+        when(() => remote.fetchById(any())).thenAnswer((_) async => {});
+        when(() => invoiceRemote.fetchById(any())).thenAnswer(
+          (_) async => {'id': 200, 'fk_statut': 0},
+        );
+        when(() => dao.upsertFromServer(any())).thenAnswer((_) async {});
+        when(() => invoiceDao.upsertFromServer(any()))
+            .thenAnswer((_) async {});
+        when(() => invoiceDao.findByRemoteId(200)).thenAnswer(
+          (_) async => Invoice(
+            localId: 42,
+            remoteId: 200,
+            socidRemote: 1,
+            localUpdatedAt: DateTime(2026, 5, 9),
+          ),
+        );
+
+        final result = await repo.convertToInvoice(5);
+        expect(result.isSuccess, isTrue);
+        verify(() => invoiceRemote.create(any())).called(1);
+        verify(() => remote.setInvoiced(100)).called(1);
+        final value = (result as Success<
+                ({int invoiceLocalId, int invoiceRemoteId})>)
+            .value;
+        expect(value.invoiceLocalId, 42);
+        expect(value.invoiceRemoteId, 200);
+      },
+    );
+
+    test('devis brouillon → ValidationFailure (pas signé)', () async {
+      when(() => dao.watchById(5))
+          .thenAnswer((_) => Stream.value(_entity()));
+
+      final result = await repo.convertToInvoice(5);
+      expect(result.isFailure, isTrue);
+      verifyNever(() => invoiceRemote.create(any()));
+    });
+
+    test(
+      'setInvoiced échoue mais facture créée → reste un succès',
+      () async {
+        when(() => dao.watchById(5)).thenAnswer(
+          (_) => Stream.value(_entity(status: ProposalStatus.signed)),
+        );
+        when(() => dao.watchLinesByProposalLocal(5))
+            .thenAnswer((_) => Stream.value(const []));
+        when(() => invoiceRemote.create(any()))
+            .thenAnswer((_) async => 200);
+        when(() => remote.setInvoiced(any()))
+            .thenThrow(Exception('boom'));
+        when(() => remote.fetchById(any())).thenAnswer((_) async => {});
+        when(() => invoiceRemote.fetchById(any())).thenAnswer(
+          (_) async => {'id': 200},
+        );
+        when(() => dao.upsertFromServer(any())).thenAnswer((_) async {});
+        when(() => invoiceDao.upsertFromServer(any()))
+            .thenAnswer((_) async {});
+        when(() => invoiceDao.findByRemoteId(200)).thenAnswer(
+          (_) async => Invoice(
+            localId: 42,
+            remoteId: 200,
+            socidRemote: 1,
+            localUpdatedAt: DateTime(2026, 5, 9),
+          ),
+        );
+
+        final result = await repo.convertToInvoice(5);
+        expect(result.isSuccess, isTrue);
+      },
+    );
   });
 
   group('downloadPdf', () {

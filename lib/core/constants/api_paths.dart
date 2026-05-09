@@ -45,6 +45,10 @@ abstract final class ApiPaths {
   static String invoicePayments(int id) => '/invoices/$id/payments';
   static String invoiceMarkPaid(int id) => '/invoices/$id/markaspaid';
 
+  // Produits / services
+  static const String products = '/products';
+  static String productById(int id) => '/products/$id';
+
   // Devis (propositions commerciales)
   static const String proposals = '/proposals';
   static String proposalById(int id) => '/proposals/$id';

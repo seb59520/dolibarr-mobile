@@ -3,7 +3,45 @@
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Les versions suivent [SemVer](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.0-dev] — Étape 18 (en cours)
+## [1.2.0-dev] — Étapes 18-22 (en cours)
+
+### Étape 22 — Dashboard d'accueil
+
+- 7ᵉ tab "Accueil" en 1ère position (icon home), mode
+  `NavigationDestinationLabelBehavior.alwaysHide` pour gagner la
+  place avec 7 destinations.
+- `DashboardPage` avec 4 KPI cards (CA mois, devis en attente,
+  factures impayées avec montant, clients) + 3 quick actions
+  (nouveau tiers/devis/facture) + flux d'activité récente
+  (10 dernières entités modifiées tous types confondus).
+- `DashboardRepository` agrège depuis les DAO Drift via
+  `Rx.combineLatest` (rxdart 0.28). Reactif sur toute mutation locale.
+- Splash + login redirigent désormais vers `/app/dashboard`.
+
+### Étape 21 — Catalogue produits/services
+
+- Endpoint `/products` (lecture seule, sqlfilters tosell=1+tostatut=1).
+- Drift v7, table `products` (ref, label, description, type, price,
+  tva_tx, on_sell, on_buy).
+- `ProductRepository` SWR : refresh API → cache local + watch.
+- `ProductPickerSheet` (bottom-sheet recherche locale + pull-to-refresh)
+  intégré dans `ProposalLineEditDialog` ET `InvoiceLineEditDialog` :
+  bouton "Choisir depuis le catalogue" → pré-remplit
+  label/desc/PU/TVA/type + fk_product de la ligne.
+- 3 tests sqlfilters + parsing + pagination produits.
+
+### Étape 20 — Conversion devis → facture
+
+- Méthode `ProposalRepository.convertToInvoice(localId)` qui :
+  1. duplique le header devis vers `POST /invoices` (draft, type
+     standard, ref_client + dates + notes + extrafields hérités),
+  2. crée chaque ligne via `POST /invoices/:id/lines`,
+  3. marque le devis facturé via `setinvoiced` (best-effort),
+  4. refresh local des deux entités.
+- Bouton "Créer facture" sur la fiche devis signé (à côté de
+  "Marquer facturé"), navigation auto vers la nouvelle facture.
+- 3 tests workflow conversion (succès, devis non signé refusé,
+  setInvoiced échoue mais facture créée → succès).
 
 ### Étape 18 — Devis (CRUD + workflow online)
 

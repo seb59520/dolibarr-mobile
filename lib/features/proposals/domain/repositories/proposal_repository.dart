@@ -50,6 +50,13 @@ abstract interface class ProposalRepository {
   /// Marque le devis comme facturé (statut Dolibarr "facturé").
   Future<Result<Proposal>> setInvoiced(int localId);
 
+  /// Convertit un devis signé en facture brouillon en dupliquant
+  /// header + lignes via l'API Dolibarr, puis marque le devis comme
+  /// facturé. Retourne le couple (localId, remoteId) de la nouvelle
+  /// facture pour permettre la navigation vers sa fiche.
+  Future<Result<({int invoiceLocalId, int invoiceRemoteId})>>
+      convertToInvoice(int localId);
+
   /// Télécharge le PDF du devis (base64 décodé en bytes).
   Future<Result<({List<int> bytes, String filename})>> downloadPdf(
     int localId,

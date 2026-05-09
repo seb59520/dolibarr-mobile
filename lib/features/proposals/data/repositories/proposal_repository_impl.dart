@@ -6,6 +6,8 @@ import 'package:dolibarr_mobile/core/network/network_info.dart';
 import 'package:dolibarr_mobile/core/storage/pending_operation_dao.dart';
 import 'package:dolibarr_mobile/core/storage/sync_status.dart';
 import 'package:dolibarr_mobile/core/utils/result.dart';
+import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_local_dao.dart';
+import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/proposals/data/datasources/proposal_local_dao.dart';
 import 'package:dolibarr_mobile/features/proposals/data/datasources/proposal_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/proposals/domain/entities/proposal.dart';
@@ -23,17 +25,23 @@ final class ProposalRepositoryImpl implements ProposalRepository {
     required NetworkInfo network,
     required DraftLocalDao draftDao,
     required PendingOperationDao outbox,
+    required InvoiceRemoteDataSource invoiceRemote,
+    required InvoiceLocalDao invoiceDao,
   })  : _remote = remote,
         _dao = dao,
         _network = network,
         _draftDao = draftDao,
-        _outbox = outbox;
+        _outbox = outbox,
+        _invoiceRemote = invoiceRemote,
+        _invoiceDao = invoiceDao;
 
   final ProposalRemoteDataSource _remote;
   final ProposalLocalDao _dao;
   final NetworkInfo _network;
   final DraftLocalDao _draftDao;
   final PendingOperationDao _outbox;
+  final InvoiceRemoteDataSource _invoiceRemote;
+  final InvoiceLocalDao _invoiceDao;
 
   @override
   Stream<List<Proposal>> watchList(ProposalFilters filters) {
@@ -312,6 +320,114 @@ final class ProposalRepositoryImpl implements ProposalRepository {
       return Success(fresh ?? proposal);
     } catch (e, st) {
       return FailureResult(ErrorMapper.toFailure(e, st));
+    }
+  }
+
+  @override
+  Future<Result<({int invoiceLocalId, int invoiceRemoteId})>>
+      convertToInvoice(int localId) async {
+    try {
+      final proposal = await _dao.watchById(localId).first;
+      if (proposal == null || proposal.remoteId == null) {
+        throw const ValidationException(
+          message: 'Devis non synchronisé — '
+              'conversion impossible offline.',
+        );
+      }
+      if (!proposal.isSigned) {
+        throw const ValidationException(
+          message: 'Le devis doit être signé pour être converti.',
+        );
+      }
+      if (proposal.socidRemote == null) {
+        throw const ValidationException(
+          message: 'Tiers du devis non synchronisé.',
+        );
+      }
+      final lines = await _dao.watchLinesByProposalLocal(localId).first;
+
+      // 1. POST /invoices avec le header dérivé du devis.
+      final invoicePayload = <String, Object?>{
+        'socid': proposal.socidRemote,
+        'type': 0, // facture standard
+        'fk_statut': 0, // brouillon
+        if (proposal.refClient != null) 'ref_client': proposal.refClient,
+        'date': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        if (proposal.fkModeReglement != null)
+          'mode_reglement_id': proposal.fkModeReglement,
+        if (proposal.fkCondReglement != null)
+          'cond_reglement_id': proposal.fkCondReglement,
+        if (proposal.notePublic != null) 'note_public': proposal.notePublic,
+        if (proposal.notePrivate != null)
+          'note_private': proposal.notePrivate,
+        if (proposal.extrafields.isNotEmpty)
+          'array_options': proposal.extrafields,
+      };
+      final invoiceRemoteId = await _invoiceRemote.create(invoicePayload);
+
+      // 2. POST /invoices/:id/lines pour chaque ligne du devis.
+      for (final l in lines) {
+        final linePayload = <String, Object?>{
+          if (l.fkProduct != null) 'fk_product': l.fkProduct,
+          if (l.label != null) 'label': l.label,
+          if (l.description != null) 'desc': l.description,
+          'product_type': l.productType.apiValue,
+          'qty': l.qty,
+          if (l.subprice != null) 'subprice': l.subprice,
+          if (l.tvaTx != null) 'tva_tx': l.tvaTx,
+          if (l.remisePercent != null) 'remise_percent': l.remisePercent,
+          'rang': l.rang,
+          if (l.extrafields.isNotEmpty) 'array_options': l.extrafields,
+        };
+        await _invoiceRemote.createLine(invoiceRemoteId, linePayload);
+      }
+
+      // 3. Marque le devis comme facturé (idempotent).
+      try {
+        await _remote.setInvoiced(proposal.remoteId!);
+      } catch (_) {
+        // Pas critique : la facture a été créée. L'utilisateur pourra
+        // re-tenter le marquage depuis le bouton "Facturé".
+      }
+
+      // 4. Refresh local : le devis ET la nouvelle facture.
+      await Future.wait<void>([
+        _refreshProposal(proposal.remoteId!),
+        _refreshInvoice(invoiceRemoteId),
+      ]);
+
+      final freshInvoice =
+          await _invoiceDao.findByRemoteId(invoiceRemoteId);
+      if (freshInvoice == null) {
+        throw const ServerException(
+          statusCode: 200,
+          message: 'Facture créée mais introuvable après refresh.',
+        );
+      }
+      return Success((
+        invoiceLocalId: freshInvoice.localId,
+        invoiceRemoteId: invoiceRemoteId,
+      ));
+    } catch (e, st) {
+      return FailureResult(ErrorMapper.toFailure(e, st));
+    }
+  }
+
+  Future<void> _refreshProposal(int remoteId) async {
+    try {
+      final json = await _remote.fetchById(remoteId);
+      await _dao.upsertFromServer(json);
+    } catch (_) {
+      // pas critique
+    }
+  }
+
+  Future<void> _refreshInvoice(int remoteId) async {
+    try {
+      final json = await _invoiceRemote.fetchById(remoteId);
+      await _invoiceDao.upsertFromServer(json);
+    } catch (_) {
+      // pas critique
     }
   }
 

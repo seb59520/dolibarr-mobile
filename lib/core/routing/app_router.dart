@@ -8,6 +8,7 @@ import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_provid
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contact_detail_page.dart';
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contact_form_page.dart';
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contacts_list_page.dart';
+import 'package:dolibarr_mobile/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:dolibarr_mobile/features/invoices/presentation/pages/invoice_detail_page.dart';
 import 'package:dolibarr_mobile/features/invoices/presentation/pages/invoice_form_page.dart';
 import 'package:dolibarr_mobile/features/invoices/presentation/pages/invoices_list_page.dart';
@@ -69,6 +70,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         navigatorKey: shellKey,
         builder: (_, __, child) => ShellPage(child: child),
         routes: [
+          GoRoute(
+            path: RoutePaths.dashboard,
+            builder: (_, __) => const DashboardPage(),
+          ),
           GoRoute(
             path: RoutePaths.thirdparties,
             builder: (_, __) => const ThirdPartiesListPage(),

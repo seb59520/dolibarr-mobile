@@ -44,7 +44,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
     if (!mounted) return;
 
     if (auth is AuthAuthenticated) {
-      context.go(RoutePaths.thirdparties);
+      context.go(RoutePaths.dashboard);
     } else if (!onboardingDone) {
       context.go(RoutePaths.onboarding);
     } else {

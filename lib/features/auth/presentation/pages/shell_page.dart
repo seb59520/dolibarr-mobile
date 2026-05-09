@@ -11,6 +11,11 @@ class ShellPage extends StatelessWidget {
 
   static const _tabs = [
     _TabRoute(
+      path: RoutePaths.dashboard,
+      label: 'Accueil',
+      icon: LucideIcons.home,
+    ),
+    _TabRoute(
       path: RoutePaths.thirdparties,
       label: 'Tiers',
       icon: LucideIcons.briefcase,
@@ -56,10 +61,13 @@ class ShellPage extends StatelessWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: active,
         onDestinationSelected: (i) => context.go(_tabs[i].path),
+        // 7 tabs : on cache les labels pour éviter le wrap.
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         destinations: [
           for (final t in _tabs)
             NavigationDestination(
               icon: Icon(t.icon),
+              tooltip: t.label,
               label: t.label,
             ),
         ],

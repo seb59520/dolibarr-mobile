@@ -1,4 +1,5 @@
 import 'package:dolibarr_mobile/core/di/providers.dart';
+import 'package:dolibarr_mobile/features/invoices/presentation/providers/invoice_providers.dart';
 import 'package:dolibarr_mobile/features/proposals/data/datasources/proposal_local_dao.dart';
 import 'package:dolibarr_mobile/features/proposals/data/datasources/proposal_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/proposals/data/repositories/proposal_repository_impl.dart';
@@ -25,6 +26,8 @@ final proposalRepositoryProvider = Provider<ProposalRepository>((ref) {
     network: ref.watch(networkInfoProvider),
     draftDao: ref.watch(draftLocalDaoProvider),
     outbox: ref.watch(pendingOperationDaoProvider),
+    invoiceRemote: ref.watch(invoiceRemoteDataSourceProvider),
+    invoiceDao: ref.watch(invoiceLocalDaoProvider),
   );
 });
 
