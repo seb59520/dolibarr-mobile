@@ -48,19 +48,23 @@ void main() {
       expect(adapter.lastSqlFilters, isNull);
     });
 
-    test('activeOnly + myOnly → AND combiné', () async {
-      final adapter = _CapturingAdapter();
-      await _ds(adapter).fetchPage(
-        filters: const ThirdPartyFilters(myOnly: true),
-        page: 0,
-        limit: 100,
-        userId: 7,
-      );
-      final f = adapter.lastSqlFilters!;
-      expect(f, contains('(t.status:=:1)'));
-      expect(f, contains('(t.fk_commercial:=:7)'));
-      expect(f, contains(' AND '));
-    });
+    test(
+      'myOnly est volontairement no-op côté API '
+      "(la colonne `t.fk_commercial` n'existe pas dans `llx_societe`, "
+      'cf commentaire dans third_party_remote_datasource.dart)',
+      () async {
+        final adapter = _CapturingAdapter();
+        await _ds(adapter).fetchPage(
+          filters: const ThirdPartyFilters(myOnly: true),
+          page: 0,
+          limit: 100,
+          userId: 7,
+        );
+        final f = adapter.lastSqlFilters!;
+        expect(f, contains('(t.status:=:1)'));
+        expect(f, isNot(contains('fk_commercial')));
+      },
+    );
 
     test('kind=customer seul → client in 1,3', () async {
       final adapter = _CapturingAdapter();
@@ -68,7 +72,6 @@ void main() {
         filters: const ThirdPartyFilters(
           kinds: {ThirdPartyKind.customer},
           activeOnly: false,
-          myOnly: false,
         ),
         page: 0,
         limit: 100,
@@ -82,7 +85,6 @@ void main() {
         filters: const ThirdPartyFilters(
           kinds: {ThirdPartyKind.supplier},
           activeOnly: false,
-          myOnly: false,
         ),
         page: 0,
         limit: 100,
@@ -96,7 +98,6 @@ void main() {
         filters: const ThirdPartyFilters(
           search: "L'Oréal",
           activeOnly: false,
-          myOnly: false,
         ),
         page: 0,
         limit: 100,
@@ -109,7 +110,7 @@ void main() {
     test('limit + page transmis comme query params', () async {
       final adapter = _CapturingAdapter();
       await _ds(adapter).fetchPage(
-        filters: const ThirdPartyFilters(activeOnly: false, myOnly: false),
+        filters: const ThirdPartyFilters(activeOnly: false),
         page: 3,
         limit: 50,
       );

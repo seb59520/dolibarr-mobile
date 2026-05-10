@@ -57,13 +57,16 @@ class FiltersBottomSheet extends ConsumerWidget {
             value: filters.activeOnly,
             onChanged: (v) => notifier.setActiveOnly(value: v),
           ),
-          SwitchListTile(
+          const SwitchListTile(
             contentPadding: EdgeInsets.zero,
-            title: const Text('Mes tiers uniquement'),
-            subtitle:
-                const Text('Filtrés par commercial connecté côté API'),
-            value: filters.myOnly,
-            onChanged: (v) => notifier.setMyOnly(value: v),
+            title: Text('Mes tiers uniquement'),
+            subtitle: Text(
+              'Bientôt — nécessite un sync dédié des commerciaux par tier '
+              '(la table `llx_societe_commerciaux` n’est pas exposée '
+              'par le `sqlfilters` Dolibarr).',
+            ),
+            value: false,
+            onChanged: null,
           ),
           const Divider(height: AppTokens.spaceLg * 2),
           Text('Catégories', style: theme.textTheme.titleSmall),

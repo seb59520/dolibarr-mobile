@@ -156,8 +156,16 @@ final class ThirdPartyRemoteDataSourceImpl
       // Sinon on laisse passer — filtrage local complet en UI.
     }
 
+    // "Mes tiers uniquement" : volontairement no-op côté sqlfilters.
+    // Dolibarr stocke le commercial-suiveur dans la table de relation
+    // `llx_societe_commerciaux`, et `sqlfilters` n'accepte ni JOIN ni
+    // sous-requête (`(t.rowid:in:(SELECT …))` → 400 Bad syntax).
+    // Implémenter ce filtre nécessite un sync dédié des representatives
+    // par tier (endpoint `/thirdparties/{id}/representatives`) — out of
+    // scope ici. Le toggle UI est grisé en attendant.
+    // userId conservé dans la signature pour la future implémentation.
     if (f.myOnly && userId != null) {
-      parts.add('(t.fk_commercial:=:$userId)');
+      // intentionnellement vide — voir commentaire ci-dessus
     }
 
     if (f.search.trim().isNotEmpty) {
