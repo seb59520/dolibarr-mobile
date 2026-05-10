@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dolibarr_mobile/core/di/providers.dart';
 import 'package:dolibarr_mobile/core/preferences/tweaks.dart';
 import 'package:dolibarr_mobile/core/storage/app_database.dart';
+import 'package:dolibarr_mobile/core/storage/secure_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,11 +31,23 @@ void bootstrap(Widget Function() builder) {
     final db = AppDatabase();
     final prefs = await SharedPreferences.getInstance();
 
+    // Lit la baseUrl persistée AVANT runApp pour que le `dioProvider`
+    // partagé soit construit avec la bonne instance dès le cold start
+    // (avant ce fix, on retombait sur `dolibarr.invalid` à chaque
+    // reload web et toutes les requêtes tiers/factures échouaient).
+    // On partage cette même instance de SecureStorage avec l'app pour
+    // éviter deux singletons concurrents (Keychain/IndexedDB).
+    final secureStorage = SecureStorageImpl();
+    final storedBaseUrl = await secureStorage.readBaseUrl();
+
     runApp(
       ProviderScope(
         overrides: [
           appDatabaseProvider.overrideWithValue(db),
           sharedPreferencesProvider.overrideWithValue(prefs),
+          secureStorageProvider.overrideWithValue(secureStorage),
+          if (storedBaseUrl != null && storedBaseUrl.isNotEmpty)
+            initialBaseUrlProvider.overrideWithValue(storedBaseUrl),
         ],
         child: builder(),
       ),

@@ -102,6 +102,13 @@ class AuthNotifier extends Notifier<AuthState> {
 
   Future<Result<AuthSession>> login(Credentials c) async {
     final result = await ref.read(loginUserProvider)(c);
+    // Propage la baseUrl au `appConfigProvider` pour que le `dioProvider`
+    // partagé (consommé par tiers/factures/etc.) se reconstruise avec la
+    // bonne instance Dolibarr — sinon il reste figé sur la valeur lue au
+    // boot et toutes les requêtes data tapent sur le placeholder.
+    if (result is Success<AuthSession>) {
+      ref.read(appConfigProvider.notifier).setBaseUrl(c.baseUrl);
+    }
     state = result.fold(
       onSuccess: AuthAuthenticated.new,
       onFailure: AuthError.new,

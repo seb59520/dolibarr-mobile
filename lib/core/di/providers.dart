@@ -14,14 +14,34 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Tous les providers exposés ici sont fournis sans surcharge en prod et
 /// surchargeables en test via `ProviderScope.overrides`.
 
-/// Configuration runtime de l'app. Reconstruite après login (override
-/// dans `bootstrap.dart` ou par un ChangeNotifier dédié plus tard).
-final appConfigProvider = Provider<AppConfig>((ref) {
-  final url = Env.defaultDolibarrUrl.isNotEmpty
+/// URL Dolibarr utilisée pour l'init de [appConfigProvider].
+///
+/// Override par `bootstrap.dart` avec la valeur lue depuis le
+/// [SecureStorage] si une session existe — permet de reconstruire le
+/// `Dio` partagé avec la bonne baseUrl dès le cold start (et plus
+/// uniquement après un login interactif).
+final initialBaseUrlProvider = Provider<String>((ref) {
+  return Env.defaultDolibarrUrl.isNotEmpty
       ? Env.defaultDolibarrUrl
       : 'https://dolibarr.invalid';
-  return AppConfig.fromBaseUrl(url);
 });
+
+/// Configuration runtime de l'app. Notifier mutable : `setBaseUrl()`
+/// après login fait re-build automatique de [dioProvider] via watch.
+class AppConfigNotifier extends Notifier<AppConfig> {
+  @override
+  AppConfig build() {
+    return AppConfig.fromBaseUrl(ref.watch(initialBaseUrlProvider));
+  }
+
+  void setBaseUrl(String url) {
+    if (url == state.baseUrl) return;
+    state = state.copyWith(baseUrl: url);
+  }
+}
+
+final appConfigProvider =
+    NotifierProvider<AppConfigNotifier, AppConfig>(AppConfigNotifier.new);
 
 /// Stockage sécurisé (clé API + URL instance).
 final secureStorageProvider = Provider<SecureStorage>((ref) {
