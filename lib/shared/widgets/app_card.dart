@@ -40,7 +40,7 @@ class AppCard extends ConsumerWidget {
     if (style == CardStyleChoice.flat) {
       border = Border.all(color: c.hairline, width: 0.5);
     } else if (style == CardStyleChoice.border) {
-      border = Border.all(color: c.hairline, width: 1);
+      border = Border.all(color: c.hairline);
     } else {
       shadow = [
         BoxShadow(

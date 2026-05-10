@@ -147,7 +147,6 @@ class _HeaderCard extends StatelessWidget {
       typeLabel = 'Client';
     }
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ColoredAvatar(name: t.name, size: 56),
         const SizedBox(width: 14),
@@ -171,7 +170,7 @@ class _HeaderCard extends StatelessWidget {
                 children: [
                   DoliMobChip(label: typeLabel, tone: tone),
                   if (t.codeClient != null && t.codeClient!.isNotEmpty)
-                    DoliMobChip(label: t.codeClient!, tone: ChipTone.neutral),
+                    DoliMobChip(label: t.codeClient!),
                 ],
               ),
             ],
