@@ -15,7 +15,7 @@ final class ThirdPartyFilters extends Equatable {
     this.kinds = const {},
     this.activeOnly = true,
     this.categoryIds = const {},
-    this.myOnly = true,
+    this.myOnly = false,
   });
 
   /// Texte de recherche (nom, code, ville). Vide = tous.

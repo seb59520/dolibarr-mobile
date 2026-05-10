@@ -171,7 +171,7 @@ class _ThirdPartiesListPageState extends ConsumerState<ThirdPartiesListPage> {
     return f.kinds.isNotEmpty ||
         f.categoryIds.isNotEmpty ||
         !f.activeOnly ||
-        !f.myOnly;
+        f.myOnly;
   }
 
   Widget _buildList(List<ThirdParty> items) {

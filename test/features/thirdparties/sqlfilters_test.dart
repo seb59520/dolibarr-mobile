@@ -51,7 +51,7 @@ void main() {
     test('activeOnly + myOnly → AND combiné', () async {
       final adapter = _CapturingAdapter();
       await _ds(adapter).fetchPage(
-        filters: const ThirdPartyFilters(),
+        filters: const ThirdPartyFilters(myOnly: true),
         page: 0,
         limit: 100,
         userId: 7,
