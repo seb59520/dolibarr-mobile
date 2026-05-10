@@ -14,6 +14,14 @@ class ThirdPartyLocalDao extends DatabaseAccessor<AppDatabase>
     with _$ThirdPartyLocalDaoMixin {
   ThirdPartyLocalDao(super.attachedDatabase);
 
+  /// Stream du nombre total de tiers en cache local, sans aucun filtre.
+  /// Utilisé pour diagnostiquer un cache vide vs des filtres trop stricts.
+  Stream<int> watchTotalCount() {
+    final count = thirdParties.id.count();
+    final q = selectOnly(thirdParties)..addColumns([count]);
+    return q.map((row) => row.read(count) ?? 0).watchSingle();
+  }
+
   /// Stream filtré localement. La recherche serveur est complémentaire
   /// (l'utilisateur voit immédiatement le sous-ensemble du cache puis
   /// le résultat serveur fusionne).

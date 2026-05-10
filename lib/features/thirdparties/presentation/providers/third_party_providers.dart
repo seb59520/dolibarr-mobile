@@ -43,6 +43,22 @@ final thirdPartyFiltersProvider =
   ThirdPartyFiltersNotifier.new,
 );
 
+/// Résultat de la dernière tentative de refresh — affiché par la liste
+/// pour diagnostiquer une absence de données (cache vide / API muette).
+class ThirdPartiesSyncStatus {
+  const ThirdPartiesSyncStatus({
+    required this.at,
+    this.count,
+    this.error,
+  });
+  final DateTime at;
+  final int? count;
+  final String? error;
+}
+
+final thirdPartiesSyncStatusProvider =
+    StateProvider<ThirdPartiesSyncStatus?>((ref) => null);
+
 class ThirdPartyFiltersNotifier extends Notifier<ThirdPartyFilters> {
   @override
   ThirdPartyFilters build() => const ThirdPartyFilters();
@@ -82,6 +98,13 @@ class ThirdPartyFiltersNotifier extends Notifier<ThirdPartyFilters> {
       state = state.copyWith(categoryIds: ids);
 
   void reset() => state = const ThirdPartyFilters();
+
+  /// Coupe TOUS les filtres (y compris `activeOnly`) pour ne rien
+  /// masquer côté UI/API — utilisé par le bouton "Tout afficher" de
+  /// l'EmptyState pour distinguer un cache vide d'un filtre trop strict.
+  void clearAll() => state = const ThirdPartyFilters(
+        activeOnly: false,
+      );
 }
 
 /// Liste réactive de tiers selon les filtres + l'utilisateur connecté.
@@ -94,6 +117,11 @@ final thirdPartiesListProvider =
         filters,
         userId: userId,
       );
+});
+
+/// Nombre total de tiers en cache local — diagnostic d'une liste vide.
+final thirdPartiesLocalCountProvider = StreamProvider<int>((ref) {
+  return ref.watch(thirdPartyLocalDaoProvider).watchTotalCount();
 });
 
 /// Détail réactif d'un tiers par son `localId` Drift.

@@ -38,6 +38,7 @@ class _ThirdPartiesListPageState extends ConsumerState<ThirdPartiesListPage> {
     _scroll.addListener(_onScroll);
     final initial = ref.read(thirdPartyFiltersProvider).search;
     _searchCtrl.text = initial;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _refresh());
   }
 
   @override
@@ -93,11 +94,26 @@ class _ThirdPartiesListPageState extends ConsumerState<ThirdPartiesListPage> {
     final filters = ref.read(thirdPartyFiltersProvider);
     final auth = ref.read(authNotifierProvider);
     final userId = auth is AuthAuthenticated ? auth.session.userId : null;
-    await ref.read(thirdPartyRepositoryProvider).refreshPage(
-          filters: filters,
-          page: 0,
-          userId: userId,
+    final result =
+        await ref.read(thirdPartyRepositoryProvider).refreshPage(
+              filters: filters,
+              page: 0,
+              userId: userId,
+            );
+    if (!mounted) return;
+    result.fold(
+      onSuccess: (count) {
+        ref.read(thirdPartiesSyncStatusProvider.notifier).state =
+            ThirdPartiesSyncStatus(at: DateTime.now(), count: count);
+      },
+      onFailure: (failure) {
+        ref.read(thirdPartiesSyncStatusProvider.notifier).state =
+            ThirdPartiesSyncStatus(
+          at: DateTime.now(),
+          error: failure.message ?? failure.runtimeType.toString(),
         );
+      },
+    );
   }
 
   @override
@@ -144,6 +160,7 @@ class _ThirdPartiesListPageState extends ConsumerState<ThirdPartiesListPage> {
               onChanged: filtersNotifier.setSearch,
             ),
             _QuickChipsRow(filters: filters),
+            const _SyncDiagnosticBanner(),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: _refresh,
@@ -176,15 +193,30 @@ class _ThirdPartiesListPageState extends ConsumerState<ThirdPartiesListPage> {
 
   Widget _buildList(List<ThirdParty> items) {
     if (items.isEmpty) {
+      final filters = ref.read(thirdPartyFiltersProvider);
+      final hasAnyFilter = filters.search.isNotEmpty ||
+          filters.kinds.isNotEmpty ||
+          filters.categoryIds.isNotEmpty ||
+          filters.activeOnly ||
+          filters.myOnly;
       return EmptyState(
         icon: LucideIcons.briefcase,
         title: 'Aucun tiers',
-        description: ref.read(thirdPartyFiltersProvider).search.isEmpty
-            ? 'Aucun tiers visible avec les filtres courants.'
-            : 'Aucun résultat pour cette recherche.',
-        actionLabel: 'Réinitialiser les filtres',
-        action: () =>
-            ref.read(thirdPartyFiltersProvider.notifier).reset(),
+        description: hasAnyFilter
+            ? 'Aucun tiers visible avec les filtres courants — '
+                'le filtre "Tiers actifs uniquement" peut masquer '
+                'les tiers archivés.'
+            : 'Aucun tiers reçu du serveur — vérifiez que votre '
+                'compte API a la permission de lire la liste des tiers.',
+        actionLabel: hasAnyFilter
+            ? 'Tout afficher (désactiver tous les filtres)'
+            : 'Recharger',
+        action: () {
+          if (hasAnyFilter) {
+            ref.read(thirdPartyFiltersProvider.notifier).clearAll();
+          }
+          _refresh();
+        },
       );
     }
     return ListView(
@@ -410,6 +442,66 @@ class _QuickChip extends StatelessWidget {
             fontSize: 13,
             fontWeight: FontWeight.w500,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SyncDiagnosticBanner extends ConsumerWidget {
+  const _SyncDiagnosticBanner();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final status = ref.watch(thirdPartiesSyncStatusProvider);
+    final localCountAsync = ref.watch(thirdPartiesLocalCountProvider);
+    final c = DoliMobColors.of(context);
+
+    if (status == null) return const SizedBox.shrink();
+
+    final hasError = status.error != null;
+    final localCount = localCountAsync.maybeWhen(
+      data: (n) => n,
+      orElse: () => null,
+    );
+
+    final label = hasError
+        ? 'Synchro échouée · ${status.error}'
+        : 'Synchro · ${status.count} reçus depuis le serveur'
+            "${localCount != null ? ' · $localCount en cache local' : ''}";
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: hasError
+              ? const Color(0xFFFCE9E7)
+              : (status.count == 0
+                  ? const Color(0xFFFFF4DC)
+                  : const Color(0xFFE7F4ED)),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: c.hairline),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              hasError
+                  ? LucideIcons.alertTriangle
+                  : (status.count == 0
+                      ? LucideIcons.info
+                      : LucideIcons.checkCircle),
+              size: 16,
+              color: c.ink,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(color: c.ink, fontSize: 12.5),
+              ),
+            ),
+          ],
         ),
       ),
     );
