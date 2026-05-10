@@ -44,15 +44,22 @@ abstract final class AppTheme {
         ? Typography.whiteCupertino
         : Typography.blackCupertino;
 
-    final textTheme = useSystemFontInsteadOfGoogleFonts
-        ? baseTextTheme.apply(
-            bodyColor: dolimob.ink,
-            displayColor: dolimob.ink,
-          )
-        : GoogleFonts.getTextTheme(tweaks.font.cssName, baseTextTheme).apply(
-            bodyColor: dolimob.ink,
-            displayColor: dolimob.ink,
-          );
+    // GoogleFonts.getTextTheme peut throw au boot web si le fetch échoue
+    // (CORS, offline, CSP). On retombe gracieusement sur la font système.
+    TextTheme tt;
+    if (useSystemFontInsteadOfGoogleFonts) {
+      tt = baseTextTheme;
+    } else {
+      try {
+        tt = GoogleFonts.getTextTheme(tweaks.font.cssName, baseTextTheme);
+      } catch (_) {
+        tt = baseTextTheme;
+      }
+    }
+    final textTheme = tt.apply(
+      bodyColor: dolimob.ink,
+      displayColor: dolimob.ink,
+    );
 
     return ThemeData(
       useMaterial3: true,
