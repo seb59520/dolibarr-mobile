@@ -40,7 +40,9 @@ workflows:
       - name: Flutter analyze + test
         script: |
           flutter analyze
-          flutter test
+          # Exclut les goldens : trop sensibles aux différences de rendu
+          # entre Linux (génération) et macOS (CI Codemagic).
+          flutter test --exclude-tags=golden
       - name: Build iOS IPA
         script: |
           flutter build ipa \
@@ -75,7 +77,7 @@ workflows:
       - name: Flutter analyze + test
         script: |
           flutter analyze
-          flutter test
+          flutter test --exclude-tags=golden
       - name: Build Android APK
         script: flutter build apk --release
     artifacts:

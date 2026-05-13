@@ -1,0 +1,7 @@
+tags:
+  golden:
+    description: >
+      Tests goldens (comparaison pixel-perfect). Sensibles à l'OS et aux
+      polices : à régénérer avec `flutter test --update-goldens` sur
+      l'OS cible. Exclus en CI (Codemagic / GitHub Actions) via
+      `flutter test --exclude-tags=golden`.

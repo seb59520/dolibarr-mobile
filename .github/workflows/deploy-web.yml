@@ -36,7 +36,7 @@ jobs:
         run: docker exec -w /workspace flutter-ci flutter analyze
 
       - name: Flutter test
-        run: docker exec -w /workspace flutter-ci flutter test --reporter expanded
+        run: docker exec -w /workspace flutter-ci flutter test --reporter expanded --exclude-tags=golden
 
       - name: Flutter build web (release)
         run: docker exec -w /workspace flutter-ci flutter build web --release --no-tree-shake-icons

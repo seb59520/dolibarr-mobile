@@ -1,3 +1,6 @@
+@Tags(['golden'])
+library;
+
 import 'package:dolibarr_mobile/core/preferences/tweaks.dart';
 import 'package:dolibarr_mobile/core/storage/sync_status.dart';
 import 'package:dolibarr_mobile/core/theme/app_theme.dart';
