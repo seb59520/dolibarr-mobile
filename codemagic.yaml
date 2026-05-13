@@ -1,0 +1,73 @@
+workflows:
+  ios-testflight:
+    name: iOS — build + publish to TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    integrations:
+      app_store_connect: dolibarr-mobile-asc
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: cloud.scinnova.dolibarrMobile
+      flutter: 3.41.9
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Set CFBundleVersion from build number
+        script: |
+          # Aligne le build number IPA sur le compteur Codemagic pour
+          # éviter les rejets « version already exists » à l'upload.
+          cd $CM_BUILD_DIR
+          BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APP_ID" 2>/dev/null || echo 0) + 1))
+          echo "Build number: $BUILD_NUMBER"
+          flutter pub get
+      - name: Generate Drift / Freezed / JSON code
+        script: dart run build_runner build --delete-conflicting-outputs
+      - name: Pod install
+        script: |
+          cd ios
+          pod install
+      - name: Flutter analyze + test
+        script: |
+          flutter analyze
+          flutter test
+      - name: Build iOS IPA
+        script: |
+          flutter build ipa \
+            --release \
+            --build-number=$BUILD_NUMBER \
+            --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - Internal testers
+        submit_to_app_store: false
+
+  android-release:
+    name: Android — release APK
+    instance_type: linux_x2
+    max_build_duration: 30
+    environment:
+      flutter: 3.41.9
+      groups:
+        - android_signing # optionnel : keystore prod si tu en crées un
+    scripts:
+      - name: Flutter pub get
+        script: flutter pub get
+      - name: Generate Drift / Freezed / JSON code
+        script: dart run build_runner build --delete-conflicting-outputs
+      - name: Flutter analyze + test
+        script: |
+          flutter analyze
+          flutter test
+      - name: Build Android APK
+        script: flutter build apk --release
+    artifacts:
+      - build/app/outputs/flutter-apk/*-release.apk
+      - build/app/outputs/bundle/release/*.aab
