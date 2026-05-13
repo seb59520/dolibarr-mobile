@@ -6,59 +6,18 @@ workflows:
     integrations:
       app_store_connect: dolibarr-mobile-asc
     environment:
-      # Pas de bloc ios_signing : ses hooks pre-build appellent
-      # fetch-signing-files SANS --create et échouent au premier build
-      # (no matching profiles found). On gère le signing entièrement
-      # dans les scripts ci-dessous.
+      ios_signing:
+        # Les certs Apple Development + Apple Distribution sont
+        # pré-générés via Codemagic UI (Code signing identities) et
+        # liés à l'intégration dolibarr-mobile-asc. Le bloc ios_signing
+        # déclenche l'instrumentation auto qui fetche les certs + crée
+        # le profile App Store si manquant.
+        distribution_type: app_store
+        bundle_identifier: cloud.scinnova.dolibarrMobile
       flutter: 3.41.9
       xcode: latest
       cocoapods: default
     scripts:
-      - name: Set up keychain
-        script: keychain initialize
-      - name: Diagnostic — list existing certs via API
-        script: |
-          echo "=== iOS Distribution certs ==="
-          app-store-connect certificates list --type IOS_DISTRIBUTION || true
-          echo "=== iOS Development certs ==="
-          app-store-connect certificates list --type IOS_DEVELOPMENT || true
-          echo "=== Profiles ==="
-          app-store-connect profiles list || true
-      - name: Create signing certificates (bootstrap)
-        script: |
-          # fetch-signing-files --create plante avec
-          # "Cannot save Signing Certificates without certificate private key"
-          # quand le cert n'existe pas encore — bug du CLI sur la création
-          # combinée. On passe par la commande dédiée certificates create
-          # qui génère le keypair et l'envoie à Apple proprement.
-          app-store-connect certificates create \
-            --type IOS_DEVELOPMENT \
-            --save || echo "Dev certificate may already exist"
-          app-store-connect certificates create \
-            --type IOS_DISTRIBUTION \
-            --save
-      - name: Fetch signing files (profiles)
-        script: |
-          # Maintenant que les certs existent, fetch les profiles.
-          app-store-connect fetch-signing-files \
-            "cloud.scinnova.dolibarrMobile" \
-            --type IOS_APP_DEVELOPMENT \
-            --create || true
-          app-store-connect fetch-signing-files \
-            "cloud.scinnova.dolibarrMobile" \
-            --type IOS_APP_STORE \
-            --create
-      - name: Add certificates to keychain
-        script: keychain add-certificates
-      - name: Apply profiles to Xcode project
-        script: xcode-project use-profiles
-      - name: Diagnostic signing
-        script: |
-          echo "=== Profiles installed ==="
-          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ || true
-          echo "=== Effective build settings ==="
-          cd ios
-          xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -showBuildSettings 2>/dev/null | grep -E "CODE_SIGN|PROVISIONING|DEVELOPMENT_TEAM|BUNDLE_IDENTIFIER" | head -20 || true
       - name: Set build number
         script: |
           BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APP_ID" 2>/dev/null || echo 0) + 1))
