@@ -6,18 +6,33 @@ workflows:
     integrations:
       app_store_connect: dolibarr-mobile-asc
     environment:
-      ios_signing:
-        # Les certs Apple Development + Apple Distribution sont
-        # pré-générés via Codemagic UI (Code signing identities) et
-        # liés à l'intégration dolibarr-mobile-asc. Le bloc ios_signing
-        # déclenche l'instrumentation auto qui fetche les certs + crée
-        # le profile App Store si manquant.
-        distribution_type: app_store
-        bundle_identifier: cloud.scinnova.dolibarrMobile
+      # Pas de bloc ios_signing : son hook implicite plante avec
+      # "No matching profiles found" tant que le provisioning profile
+      # n'existe pas. On gère via scripts explicites qui ont --create.
+      # Les certs eux-mêmes sont déjà bootstrappés via Codemagic UI
+      # (Code signing identities → dolibarr-mobile-dev/dist).
       flutter: 3.41.9
       xcode: latest
       cocoapods: default
     scripts:
+      - name: Set up keychain
+        script: keychain initialize
+      - name: Fetch + create signing files
+        script: |
+          # Les certs existent déjà dans le team storage (créés via UI),
+          # cette commande va juste créer/fetcher le provisioning profile.
+          app-store-connect fetch-signing-files \
+            "cloud.scinnova.dolibarrMobile" \
+            --type IOS_APP_DEVELOPMENT \
+            --create || true
+          app-store-connect fetch-signing-files \
+            "cloud.scinnova.dolibarrMobile" \
+            --type IOS_APP_STORE \
+            --create
+      - name: Add certificates to keychain
+        script: keychain add-certificates
+      - name: Apply profiles to Xcode project
+        script: xcode-project use-profiles
       - name: Set build number
         script: |
           BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APP_ID" 2>/dev/null || echo 0) + 1))
