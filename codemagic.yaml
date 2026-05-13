@@ -16,32 +16,22 @@ workflows:
     scripts:
       - name: Set up keychain
         script: keychain initialize
-      - name: Generate fresh signing certificates if missing
-        script: |
-          # Si un cert iOS Distribution existe déjà côté Apple sans
-          # private key locale, fetch-signing-files plante. On le force
-          # à créer un cert NEUF avec clé privée locale via la commande
-          # `certificates create-cli` qui génère le keypair en local.
-          app-store-connect certificates create \
-            --type IOS_DISTRIBUTION \
-            --save || echo "Distribution cert already present locally"
-          app-store-connect certificates create \
-            --type IOS_DEVELOPMENT \
-            --save || echo "Development cert already present locally"
       - name: Fetch dev + app-store signing files
         script: |
           # Fetch BOTH types : Flutter preflight exige un dev cert, et
-          # l'archive Release a besoin du profile App Store.
+          # l'archive Release a besoin du profile App Store. Le flag
+          # --create génère le profile s'il n'existe pas. Si un cert
+          # iOS Distribution existait déjà côté Apple sans private key
+          # locale, il faut le révoquer manuellement sur le portail
+          # avant ce build.
           app-store-connect fetch-signing-files \
             "cloud.scinnova.dolibarrMobile" \
             --type IOS_APP_DEVELOPMENT \
-            --create \
-            --save || true
+            --create || true
           app-store-connect fetch-signing-files \
             "cloud.scinnova.dolibarrMobile" \
             --type IOS_APP_STORE \
-            --create \
-            --save
+            --create
       - name: Add certificates to keychain
         script: keychain add-certificates
       - name: Apply profiles to Xcode project
