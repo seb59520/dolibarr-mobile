@@ -16,6 +16,14 @@ workflows:
     scripts:
       - name: Set up keychain
         script: keychain initialize
+      - name: Diagnostic — list existing certs via API
+        script: |
+          echo "=== iOS Distribution certs ==="
+          app-store-connect certificates list --type IOS_DISTRIBUTION || true
+          echo "=== iOS Development certs ==="
+          app-store-connect certificates list --type IOS_DEVELOPMENT || true
+          echo "=== Profiles ==="
+          app-store-connect profiles list || true
       - name: Fetch dev + app-store signing files
         script: |
           # Fetch BOTH types : Flutter preflight exige un dev cert, et
