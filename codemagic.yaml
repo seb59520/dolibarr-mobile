@@ -24,14 +24,22 @@ workflows:
           app-store-connect certificates list --type IOS_DEVELOPMENT || true
           echo "=== Profiles ==="
           app-store-connect profiles list || true
-      - name: Fetch dev + app-store signing files
+      - name: Create signing certificates (bootstrap)
         script: |
-          # Fetch BOTH types : Flutter preflight exige un dev cert, et
-          # l'archive Release a besoin du profile App Store. Le flag
-          # --create génère le profile s'il n'existe pas. Si un cert
-          # iOS Distribution existait déjà côté Apple sans private key
-          # locale, il faut le révoquer manuellement sur le portail
-          # avant ce build.
+          # fetch-signing-files --create plante avec
+          # "Cannot save Signing Certificates without certificate private key"
+          # quand le cert n'existe pas encore — bug du CLI sur la création
+          # combinée. On passe par la commande dédiée certificates create
+          # qui génère le keypair et l'envoie à Apple proprement.
+          app-store-connect certificates create \
+            --type IOS_DEVELOPMENT \
+            --save || echo "Dev certificate may already exist"
+          app-store-connect certificates create \
+            --type IOS_DISTRIBUTION \
+            --save
+      - name: Fetch signing files (profiles)
+        script: |
+          # Maintenant que les certs existent, fetch les profiles.
           app-store-connect fetch-signing-files \
             "cloud.scinnova.dolibarrMobile" \
             --type IOS_APP_DEVELOPMENT \
