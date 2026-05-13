@@ -1,0 +1,57 @@
+name: Deploy web bundle
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'lib/**'
+      - 'web/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - 'assets/**'
+      - '.github/workflows/deploy-web.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-web
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    name: Build Flutter web + rsync to nginx
+    runs-on: [self-hosted, docker-srv, flutter]
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Pub get
+        run: docker exec -w /workspace flutter-ci flutter pub get
+
+      - name: Build runner (Drift / Freezed / JSON)
+        run: docker exec -w /workspace flutter-ci dart run build_runner build --delete-conflicting-outputs
+
+      - name: Flutter analyze
+        run: docker exec -w /workspace flutter-ci flutter analyze
+
+      - name: Flutter test
+        run: docker exec -w /workspace flutter-ci flutter test --reporter expanded
+
+      - name: Flutter build web (release)
+        run: docker exec -w /workspace flutter-ci flutter build web --release --no-tree-shake-icons
+
+      - name: Deploy via rsync to nginx html
+        run: |
+          rsync -a --delete \
+            /opt/actions-runner-dolibarr-mobile/_work/dolibarr-mobile/dolibarr-mobile/build/web/ \
+            /opt/docker/dolibarr-mobile-web/html/
+          echo "Deployed at $(date --iso-8601=seconds)"
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Deploy summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit : \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- URL    : https://dolibarr-mobile.lab.scinnova-academy.cloud" >> $GITHUB_STEP_SUMMARY
+          echo "- Time   : $(date --iso-8601=seconds)" >> $GITHUB_STEP_SUMMARY
