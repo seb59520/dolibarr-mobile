@@ -6,56 +6,59 @@ workflows:
     integrations:
       app_store_connect: dolibarr-mobile-asc
     environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: cloud.scinnova.dolibarrMobile
       flutter: 3.41.9
       xcode: latest
       cocoapods: default
     scripts:
-      - name: Set CFBundleVersion from build number
+      - name: Set up keychain
+        script: keychain initialize
+      - name: Fetch dev + app-store signing files
         script: |
-          # Aligne le build number IPA sur le compteur Codemagic pour
-          # éviter les rejets « version already exists » à l'upload.
-          BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APP_ID" 2>/dev/null || echo 0) + 1))
-          echo "Build number: $BUILD_NUMBER"
-          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
-      - name: Initialize keychain + fetch/create signing files
-        script: |
-          # Mode signing explicite : crée le distribution certificate
-          # et le provisioning profile App Store si absents, plutôt que
-          # de s'appuyer sur la magie ios_signing implicite.
-          keychain initialize
+          # Fetch BOTH types : Flutter preflight exige un dev cert, et
+          # l'archive Release a besoin du profile App Store.
+          app-store-connect fetch-signing-files \
+            "cloud.scinnova.dolibarrMobile" \
+            --type IOS_APP_DEVELOPMENT \
+            --create || true
           app-store-connect fetch-signing-files \
             "cloud.scinnova.dolibarrMobile" \
             --type IOS_APP_STORE \
             --create
-          keychain add-certificates
-          xcode-project use-profiles
+      - name: Add certificates to keychain
+        script: keychain add-certificates
+      - name: Apply profiles to Xcode project
+        script: xcode-project use-profiles
+      - name: Diagnostic signing
+        script: |
+          echo "=== Profiles installed ==="
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ || true
+          echo "=== Effective build settings ==="
+          cd ios
+          xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -showBuildSettings 2>/dev/null | grep -E "CODE_SIGN|PROVISIONING|DEVELOPMENT_TEAM|BUNDLE_IDENTIFIER" | head -20 || true
+      - name: Set build number
+        script: |
+          BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APP_ID" 2>/dev/null || echo 0) + 1))
+          echo "Build number: $BUILD_NUMBER"
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
       - name: Flutter pub get
         script: flutter pub get
       - name: Generate Drift / Freezed / JSON code
         script: dart run build_runner build --delete-conflicting-outputs
       - name: Pod install
-        script: |
-          cd ios
-          pod install
+        script: find . -name "Podfile" -execdir pod install \;
       - name: Flutter analyze + test
         script: |
           flutter analyze
-          # Exclut les goldens : trop sensibles aux différences de rendu
-          # entre Linux (génération) et macOS (CI Codemagic).
           flutter test --exclude-tags=golden
-      - name: Build Flutter iOS (sans signing)
+      - name: Flutter build ipa
         script: |
-          # On compile l'app sans signature ; xcode-project s'occupera
-          # de l'archive signée + export IPA juste après. Évite l'erreur
-          # « No development certificates available » de flutter build ipa
-          # qui tente une signature dev avant la release.
-          flutter build ios --release --no-codesign --build-number=$BUILD_NUMBER
-      - name: Archive + export IPA (signed app-store)
-        script: |
-          xcode-project build-ipa \
-            --workspace "$CM_BUILD_DIR/ios/Runner.xcworkspace" \
-            --scheme "Runner" \
-            --config "Release"
+          flutter build ipa \
+            --release \
+            --build-number=$BUILD_NUMBER \
+            --export-options-plist=/Users/builder/export_options.plist
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
