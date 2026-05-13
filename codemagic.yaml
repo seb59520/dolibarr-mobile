@@ -6,9 +6,10 @@ workflows:
     integrations:
       app_store_connect: dolibarr-mobile-asc
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: cloud.scinnova.dolibarrMobile
+      # Pas de bloc ios_signing : ses hooks pre-build appellent
+      # fetch-signing-files SANS --create et échouent au premier build
+      # (no matching profiles found). On gère le signing entièrement
+      # dans les scripts ci-dessous.
       flutter: 3.41.9
       xcode: latest
       cocoapods: default
