@@ -6,9 +6,6 @@ workflows:
     integrations:
       app_store_connect: dolibarr-mobile-asc
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: cloud.scinnova.dolibarrMobile
       flutter: 3.41.9
       xcode: latest
       cocoapods: default
@@ -17,10 +14,23 @@ workflows:
         script: |
           # Aligne le build number IPA sur le compteur Codemagic pour
           # éviter les rejets « version already exists » à l'upload.
-          cd $CM_BUILD_DIR
           BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APP_ID" 2>/dev/null || echo 0) + 1))
           echo "Build number: $BUILD_NUMBER"
-          flutter pub get
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
+      - name: Initialize keychain + fetch/create signing files
+        script: |
+          # Mode signing explicite : crée le distribution certificate
+          # et le provisioning profile App Store si absents, plutôt que
+          # de s'appuyer sur la magie ios_signing implicite.
+          keychain initialize
+          app-store-connect fetch-signing-files \
+            "cloud.scinnova.dolibarrMobile" \
+            --type IOS_APP_STORE \
+            --create
+          keychain add-certificates
+          xcode-project use-profiles
+      - name: Flutter pub get
+        script: flutter pub get
       - name: Generate Drift / Freezed / JSON code
         script: dart run build_runner build --delete-conflicting-outputs
       - name: Pod install
