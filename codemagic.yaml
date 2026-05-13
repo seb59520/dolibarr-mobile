@@ -43,12 +43,19 @@ workflows:
           # Exclut les goldens : trop sensibles aux différences de rendu
           # entre Linux (génération) et macOS (CI Codemagic).
           flutter test --exclude-tags=golden
-      - name: Build iOS IPA
+      - name: Build Flutter iOS (sans signing)
         script: |
-          flutter build ipa \
-            --release \
-            --build-number=$BUILD_NUMBER \
-            --export-options-plist=/Users/builder/export_options.plist
+          # On compile l'app sans signature ; xcode-project s'occupera
+          # de l'archive signée + export IPA juste après. Évite l'erreur
+          # « No development certificates available » de flutter build ipa
+          # qui tente une signature dev avant la release.
+          flutter build ios --release --no-codesign --build-number=$BUILD_NUMBER
+      - name: Archive + export IPA (signed app-store)
+        script: |
+          xcode-project build-ipa \
+            --workspace "$CM_BUILD_DIR/ios/Runner.xcworkspace" \
+            --scheme "Runner" \
+            --config "Release"
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
