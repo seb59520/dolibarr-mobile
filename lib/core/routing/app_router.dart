@@ -19,6 +19,7 @@ import 'package:dolibarr_mobile/features/projects/presentation/pages/projects_li
 import 'package:dolibarr_mobile/features/proposals/presentation/pages/proposal_detail_page.dart';
 import 'package:dolibarr_mobile/features/proposals/presentation/pages/proposal_form_page.dart';
 import 'package:dolibarr_mobile/features/proposals/presentation/pages/proposals_list_page.dart';
+import 'package:dolibarr_mobile/features/stats/presentation/pages/stats_page.dart';
 import 'package:dolibarr_mobile/features/sync/presentation/pages/pending_operations_page.dart';
 import 'package:dolibarr_mobile/features/tasks/presentation/pages/task_detail_page.dart';
 import 'package:dolibarr_mobile/features/tasks/presentation/pages/task_form_page.dart';
@@ -270,6 +271,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: RoutePaths.pendingOperations,
             builder: (_, __) => const PendingOperationsPage(),
+          ),
+          GoRoute(
+            path: RoutePaths.stats,
+            builder: (_, __) => const StatsPage(),
           ),
         ],
       ),

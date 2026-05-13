@@ -125,11 +125,12 @@ class _MetricsGrid extends StatelessWidget {
           onTap: () => GoRouter.of(context).go(RoutePaths.invoices),
         ),
         KpiCard(
-          label: 'Clients',
-          value: '—',
-          hint: 'voir la liste',
-          icon: LucideIcons.briefcase,
-          onTap: () => GoRouter.of(context).go(RoutePaths.thirdparties),
+          label: 'Statistiques',
+          value: 'CA / Paiements',
+          hint: '12 mois + années',
+          icon: LucideIcons.barChart3,
+          tone: KpiTone.accent,
+          onTap: () => GoRouter.of(context).go(RoutePaths.stats),
         ),
       ],
     );

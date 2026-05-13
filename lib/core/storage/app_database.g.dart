@@ -4925,6 +4925,573 @@ class InvoiceLinesCompanion extends UpdateCompanion<InvoiceLineRow> {
   }
 }
 
+class $InvoicePaymentsTable extends InvoicePayments
+    with TableInfo<$InvoicePaymentsTable, InvoicePaymentRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InvoicePaymentsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<int> remoteId = GeneratedColumn<int>(
+    'remote_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _invoiceRemoteIdMeta = const VerificationMeta(
+    'invoiceRemoteId',
+  );
+  @override
+  late final GeneratedColumn<int> invoiceRemoteId = GeneratedColumn<int>(
+    'invoice_remote_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<String> amount = GeneratedColumn<String>(
+    'amount',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _numMeta = const VerificationMeta('num');
+  @override
+  late final GeneratedColumn<String> num = GeneratedColumn<String>(
+    'num',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _refMeta = const VerificationMeta('ref');
+  @override
+  late final GeneratedColumn<String> ref = GeneratedColumn<String>(
+    'ref',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _localUpdatedAtMeta = const VerificationMeta(
+    'localUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> localUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'local_updated_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    remoteId,
+    invoiceRemoteId,
+    date,
+    amount,
+    type,
+    num,
+    ref,
+    localUpdatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'invoice_payments';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InvoicePaymentRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_remoteIdMeta);
+    }
+    if (data.containsKey('invoice_remote_id')) {
+      context.handle(
+        _invoiceRemoteIdMeta,
+        invoiceRemoteId.isAcceptableOrUnknown(
+          data['invoice_remote_id']!,
+          _invoiceRemoteIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_invoiceRemoteIdMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    }
+    if (data.containsKey('num')) {
+      context.handle(
+        _numMeta,
+        num.isAcceptableOrUnknown(data['num']!, _numMeta),
+      );
+    }
+    if (data.containsKey('ref')) {
+      context.handle(
+        _refMeta,
+        ref.isAcceptableOrUnknown(data['ref']!, _refMeta),
+      );
+    }
+    if (data.containsKey('local_updated_at')) {
+      context.handle(
+        _localUpdatedAtMeta,
+        localUpdatedAt.isAcceptableOrUnknown(
+          data['local_updated_at']!,
+          _localUpdatedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_localUpdatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  InvoicePaymentRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InvoicePaymentRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}remote_id'],
+      )!,
+      invoiceRemoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}invoice_remote_id'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      ),
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}amount'],
+      ),
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      ),
+      num: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}num'],
+      ),
+      ref: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ref'],
+      ),
+      localUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}local_updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $InvoicePaymentsTable createAlias(String alias) {
+    return $InvoicePaymentsTable(attachedDatabase, alias);
+  }
+}
+
+class InvoicePaymentRow extends DataClass
+    implements Insertable<InvoicePaymentRow> {
+  final int id;
+
+  /// `rowid` Dolibarr du paiement (`llx_paiement.rowid`).
+  final int remoteId;
+
+  /// `fk_facture` rattaché — on conserve uniquement le `remoteId` côté
+  /// facture car les paiements ne sont jamais créés offline depuis
+  /// l'app (lecture-seule depuis Stats).
+  final int invoiceRemoteId;
+
+  /// Date du règlement (`llx_paiement.datep`).
+  final DateTime? date;
+
+  /// Montant TTC stringifié pour préserver la précision décimale
+  /// (cohérent avec les autres montants stockés en TEXT dans le projet).
+  final String? amount;
+
+  /// Code mode de paiement (`CHQ`, `VIR`, `LIQ`…). Optionnel.
+  final String? type;
+
+  /// Numéro/référence du moyen de paiement (n° chèque, ref virement).
+  final String? num;
+
+  /// Référence Dolibarr (`PAY-…`) si générée.
+  final String? ref;
+  final DateTime localUpdatedAt;
+  const InvoicePaymentRow({
+    required this.id,
+    required this.remoteId,
+    required this.invoiceRemoteId,
+    this.date,
+    this.amount,
+    this.type,
+    this.num,
+    this.ref,
+    required this.localUpdatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['remote_id'] = Variable<int>(remoteId);
+    map['invoice_remote_id'] = Variable<int>(invoiceRemoteId);
+    if (!nullToAbsent || date != null) {
+      map['date'] = Variable<DateTime>(date);
+    }
+    if (!nullToAbsent || amount != null) {
+      map['amount'] = Variable<String>(amount);
+    }
+    if (!nullToAbsent || type != null) {
+      map['type'] = Variable<String>(type);
+    }
+    if (!nullToAbsent || num != null) {
+      map['num'] = Variable<String>(num);
+    }
+    if (!nullToAbsent || ref != null) {
+      map['ref'] = Variable<String>(ref);
+    }
+    map['local_updated_at'] = Variable<DateTime>(localUpdatedAt);
+    return map;
+  }
+
+  InvoicePaymentsCompanion toCompanion(bool nullToAbsent) {
+    return InvoicePaymentsCompanion(
+      id: Value(id),
+      remoteId: Value(remoteId),
+      invoiceRemoteId: Value(invoiceRemoteId),
+      date: date == null && nullToAbsent ? const Value.absent() : Value(date),
+      amount: amount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(amount),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      num: num == null && nullToAbsent ? const Value.absent() : Value(num),
+      ref: ref == null && nullToAbsent ? const Value.absent() : Value(ref),
+      localUpdatedAt: Value(localUpdatedAt),
+    );
+  }
+
+  factory InvoicePaymentRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InvoicePaymentRow(
+      id: serializer.fromJson<int>(json['id']),
+      remoteId: serializer.fromJson<int>(json['remoteId']),
+      invoiceRemoteId: serializer.fromJson<int>(json['invoiceRemoteId']),
+      date: serializer.fromJson<DateTime?>(json['date']),
+      amount: serializer.fromJson<String?>(json['amount']),
+      type: serializer.fromJson<String?>(json['type']),
+      num: serializer.fromJson<String?>(json['num']),
+      ref: serializer.fromJson<String?>(json['ref']),
+      localUpdatedAt: serializer.fromJson<DateTime>(json['localUpdatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'remoteId': serializer.toJson<int>(remoteId),
+      'invoiceRemoteId': serializer.toJson<int>(invoiceRemoteId),
+      'date': serializer.toJson<DateTime?>(date),
+      'amount': serializer.toJson<String?>(amount),
+      'type': serializer.toJson<String?>(type),
+      'num': serializer.toJson<String?>(num),
+      'ref': serializer.toJson<String?>(ref),
+      'localUpdatedAt': serializer.toJson<DateTime>(localUpdatedAt),
+    };
+  }
+
+  InvoicePaymentRow copyWith({
+    int? id,
+    int? remoteId,
+    int? invoiceRemoteId,
+    Value<DateTime?> date = const Value.absent(),
+    Value<String?> amount = const Value.absent(),
+    Value<String?> type = const Value.absent(),
+    Value<String?> num = const Value.absent(),
+    Value<String?> ref = const Value.absent(),
+    DateTime? localUpdatedAt,
+  }) => InvoicePaymentRow(
+    id: id ?? this.id,
+    remoteId: remoteId ?? this.remoteId,
+    invoiceRemoteId: invoiceRemoteId ?? this.invoiceRemoteId,
+    date: date.present ? date.value : this.date,
+    amount: amount.present ? amount.value : this.amount,
+    type: type.present ? type.value : this.type,
+    num: num.present ? num.value : this.num,
+    ref: ref.present ? ref.value : this.ref,
+    localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+  );
+  InvoicePaymentRow copyWithCompanion(InvoicePaymentsCompanion data) {
+    return InvoicePaymentRow(
+      id: data.id.present ? data.id.value : this.id,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      invoiceRemoteId: data.invoiceRemoteId.present
+          ? data.invoiceRemoteId.value
+          : this.invoiceRemoteId,
+      date: data.date.present ? data.date.value : this.date,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      type: data.type.present ? data.type.value : this.type,
+      num: data.num.present ? data.num.value : this.num,
+      ref: data.ref.present ? data.ref.value : this.ref,
+      localUpdatedAt: data.localUpdatedAt.present
+          ? data.localUpdatedAt.value
+          : this.localUpdatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvoicePaymentRow(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('invoiceRemoteId: $invoiceRemoteId, ')
+          ..write('date: $date, ')
+          ..write('amount: $amount, ')
+          ..write('type: $type, ')
+          ..write('num: $num, ')
+          ..write('ref: $ref, ')
+          ..write('localUpdatedAt: $localUpdatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    remoteId,
+    invoiceRemoteId,
+    date,
+    amount,
+    type,
+    num,
+    ref,
+    localUpdatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InvoicePaymentRow &&
+          other.id == this.id &&
+          other.remoteId == this.remoteId &&
+          other.invoiceRemoteId == this.invoiceRemoteId &&
+          other.date == this.date &&
+          other.amount == this.amount &&
+          other.type == this.type &&
+          other.num == this.num &&
+          other.ref == this.ref &&
+          other.localUpdatedAt == this.localUpdatedAt);
+}
+
+class InvoicePaymentsCompanion extends UpdateCompanion<InvoicePaymentRow> {
+  final Value<int> id;
+  final Value<int> remoteId;
+  final Value<int> invoiceRemoteId;
+  final Value<DateTime?> date;
+  final Value<String?> amount;
+  final Value<String?> type;
+  final Value<String?> num;
+  final Value<String?> ref;
+  final Value<DateTime> localUpdatedAt;
+  const InvoicePaymentsCompanion({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.invoiceRemoteId = const Value.absent(),
+    this.date = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.type = const Value.absent(),
+    this.num = const Value.absent(),
+    this.ref = const Value.absent(),
+    this.localUpdatedAt = const Value.absent(),
+  });
+  InvoicePaymentsCompanion.insert({
+    this.id = const Value.absent(),
+    required int remoteId,
+    required int invoiceRemoteId,
+    this.date = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.type = const Value.absent(),
+    this.num = const Value.absent(),
+    this.ref = const Value.absent(),
+    required DateTime localUpdatedAt,
+  }) : remoteId = Value(remoteId),
+       invoiceRemoteId = Value(invoiceRemoteId),
+       localUpdatedAt = Value(localUpdatedAt);
+  static Insertable<InvoicePaymentRow> custom({
+    Expression<int>? id,
+    Expression<int>? remoteId,
+    Expression<int>? invoiceRemoteId,
+    Expression<DateTime>? date,
+    Expression<String>? amount,
+    Expression<String>? type,
+    Expression<String>? num,
+    Expression<String>? ref,
+    Expression<DateTime>? localUpdatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (invoiceRemoteId != null) 'invoice_remote_id': invoiceRemoteId,
+      if (date != null) 'date': date,
+      if (amount != null) 'amount': amount,
+      if (type != null) 'type': type,
+      if (num != null) 'num': num,
+      if (ref != null) 'ref': ref,
+      if (localUpdatedAt != null) 'local_updated_at': localUpdatedAt,
+    });
+  }
+
+  InvoicePaymentsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? remoteId,
+    Value<int>? invoiceRemoteId,
+    Value<DateTime?>? date,
+    Value<String?>? amount,
+    Value<String?>? type,
+    Value<String?>? num,
+    Value<String?>? ref,
+    Value<DateTime>? localUpdatedAt,
+  }) {
+    return InvoicePaymentsCompanion(
+      id: id ?? this.id,
+      remoteId: remoteId ?? this.remoteId,
+      invoiceRemoteId: invoiceRemoteId ?? this.invoiceRemoteId,
+      date: date ?? this.date,
+      amount: amount ?? this.amount,
+      type: type ?? this.type,
+      num: num ?? this.num,
+      ref: ref ?? this.ref,
+      localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<int>(remoteId.value);
+    }
+    if (invoiceRemoteId.present) {
+      map['invoice_remote_id'] = Variable<int>(invoiceRemoteId.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<String>(amount.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (num.present) {
+      map['num'] = Variable<String>(num.value);
+    }
+    if (ref.present) {
+      map['ref'] = Variable<String>(ref.value);
+    }
+    if (localUpdatedAt.present) {
+      map['local_updated_at'] = Variable<DateTime>(localUpdatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvoicePaymentsCompanion(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('invoiceRemoteId: $invoiceRemoteId, ')
+          ..write('date: $date, ')
+          ..write('amount: $amount, ')
+          ..write('type: $type, ')
+          ..write('num: $num, ')
+          ..write('ref: $ref, ')
+          ..write('localUpdatedAt: $localUpdatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $InvoicesTable extends Invoices
     with TableInfo<$InvoicesTable, InvoiceRow> {
   @override
@@ -12643,6 +13210,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $ExtrafieldDefinitionsTable extrafieldDefinitions =
       $ExtrafieldDefinitionsTable(this);
   late final $InvoiceLinesTable invoiceLines = $InvoiceLinesTable(this);
+  late final $InvoicePaymentsTable invoicePayments = $InvoicePaymentsTable(
+    this,
+  );
   late final $InvoicesTable invoices = $InvoicesTable(this);
   late final $PendingOperationsTable pendingOperations =
       $PendingOperationsTable(this);
@@ -12663,6 +13233,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     drafts,
     extrafieldDefinitions,
     invoiceLines,
+    invoicePayments,
     invoices,
     pendingOperations,
     products,
@@ -14957,6 +15528,286 @@ typedef $$InvoiceLinesTableProcessedTableManager =
         BaseReferences<_$AppDatabase, $InvoiceLinesTable, InvoiceLineRow>,
       ),
       InvoiceLineRow,
+      PrefetchHooks Function()
+    >;
+typedef $$InvoicePaymentsTableCreateCompanionBuilder =
+    InvoicePaymentsCompanion Function({
+      Value<int> id,
+      required int remoteId,
+      required int invoiceRemoteId,
+      Value<DateTime?> date,
+      Value<String?> amount,
+      Value<String?> type,
+      Value<String?> num,
+      Value<String?> ref,
+      required DateTime localUpdatedAt,
+    });
+typedef $$InvoicePaymentsTableUpdateCompanionBuilder =
+    InvoicePaymentsCompanion Function({
+      Value<int> id,
+      Value<int> remoteId,
+      Value<int> invoiceRemoteId,
+      Value<DateTime?> date,
+      Value<String?> amount,
+      Value<String?> type,
+      Value<String?> num,
+      Value<String?> ref,
+      Value<DateTime> localUpdatedAt,
+    });
+
+class $$InvoicePaymentsTableFilterComposer
+    extends Composer<_$AppDatabase, $InvoicePaymentsTable> {
+  $$InvoicePaymentsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get invoiceRemoteId => $composableBuilder(
+    column: $table.invoiceRemoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get num => $composableBuilder(
+    column: $table.num,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ref => $composableBuilder(
+    column: $table.ref,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$InvoicePaymentsTableOrderingComposer
+    extends Composer<_$AppDatabase, $InvoicePaymentsTable> {
+  $$InvoicePaymentsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get invoiceRemoteId => $composableBuilder(
+    column: $table.invoiceRemoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get num => $composableBuilder(
+    column: $table.num,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ref => $composableBuilder(
+    column: $table.ref,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$InvoicePaymentsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $InvoicePaymentsTable> {
+  $$InvoicePaymentsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<int> get invoiceRemoteId => $composableBuilder(
+    column: $table.invoiceRemoteId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get num =>
+      $composableBuilder(column: $table.num, builder: (column) => column);
+
+  GeneratedColumn<String> get ref =>
+      $composableBuilder(column: $table.ref, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$InvoicePaymentsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $InvoicePaymentsTable,
+          InvoicePaymentRow,
+          $$InvoicePaymentsTableFilterComposer,
+          $$InvoicePaymentsTableOrderingComposer,
+          $$InvoicePaymentsTableAnnotationComposer,
+          $$InvoicePaymentsTableCreateCompanionBuilder,
+          $$InvoicePaymentsTableUpdateCompanionBuilder,
+          (
+            InvoicePaymentRow,
+            BaseReferences<
+              _$AppDatabase,
+              $InvoicePaymentsTable,
+              InvoicePaymentRow
+            >,
+          ),
+          InvoicePaymentRow,
+          PrefetchHooks Function()
+        > {
+  $$InvoicePaymentsTableTableManager(
+    _$AppDatabase db,
+    $InvoicePaymentsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InvoicePaymentsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$InvoicePaymentsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$InvoicePaymentsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> remoteId = const Value.absent(),
+                Value<int> invoiceRemoteId = const Value.absent(),
+                Value<DateTime?> date = const Value.absent(),
+                Value<String?> amount = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> num = const Value.absent(),
+                Value<String?> ref = const Value.absent(),
+                Value<DateTime> localUpdatedAt = const Value.absent(),
+              }) => InvoicePaymentsCompanion(
+                id: id,
+                remoteId: remoteId,
+                invoiceRemoteId: invoiceRemoteId,
+                date: date,
+                amount: amount,
+                type: type,
+                num: num,
+                ref: ref,
+                localUpdatedAt: localUpdatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int remoteId,
+                required int invoiceRemoteId,
+                Value<DateTime?> date = const Value.absent(),
+                Value<String?> amount = const Value.absent(),
+                Value<String?> type = const Value.absent(),
+                Value<String?> num = const Value.absent(),
+                Value<String?> ref = const Value.absent(),
+                required DateTime localUpdatedAt,
+              }) => InvoicePaymentsCompanion.insert(
+                id: id,
+                remoteId: remoteId,
+                invoiceRemoteId: invoiceRemoteId,
+                date: date,
+                amount: amount,
+                type: type,
+                num: num,
+                ref: ref,
+                localUpdatedAt: localUpdatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$InvoicePaymentsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $InvoicePaymentsTable,
+      InvoicePaymentRow,
+      $$InvoicePaymentsTableFilterComposer,
+      $$InvoicePaymentsTableOrderingComposer,
+      $$InvoicePaymentsTableAnnotationComposer,
+      $$InvoicePaymentsTableCreateCompanionBuilder,
+      $$InvoicePaymentsTableUpdateCompanionBuilder,
+      (
+        InvoicePaymentRow,
+        BaseReferences<_$AppDatabase, $InvoicePaymentsTable, InvoicePaymentRow>,
+      ),
+      InvoicePaymentRow,
       PrefetchHooks Function()
     >;
 typedef $$InvoicesTableCreateCompanionBuilder =
@@ -18421,6 +19272,8 @@ class $AppDatabaseManager {
       $$ExtrafieldDefinitionsTableTableManager(_db, _db.extrafieldDefinitions);
   $$InvoiceLinesTableTableManager get invoiceLines =>
       $$InvoiceLinesTableTableManager(_db, _db.invoiceLines);
+  $$InvoicePaymentsTableTableManager get invoicePayments =>
+      $$InvoicePaymentsTableTableManager(_db, _db.invoicePayments);
   $$InvoicesTableTableManager get invoices =>
       $$InvoicesTableTableManager(_db, _db.invoices);
   $$PendingOperationsTableTableManager get pendingOperations =>
