@@ -1,5 +1,6 @@
 import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
+import 'package:dolibarr_mobile/core/utils/formatters.dart';
 import 'package:dolibarr_mobile/features/projects/domain/entities/project.dart';
 import 'package:dolibarr_mobile/features/projects/presentation/providers/project_providers.dart';
 import 'package:dolibarr_mobile/features/tasks/presentation/widgets/project_tasks_section.dart';
@@ -335,11 +336,17 @@ class _FinancialSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _Field(label: 'Budget', value: p.budgetAmount),
-          _Field(label: 'Opportunité', value: p.oppAmount),
+          _Field(
+            label: 'Budget',
+            value: p.budgetAmount == null ? null : formatMoney(p.budgetAmount),
+          ),
+          _Field(
+            label: 'Opportunité',
+            value: p.oppAmount == null ? null : formatMoney(p.oppAmount),
+          ),
           _Field(
             label: '% gain',
-            value: p.oppPercent == null ? null : '${p.oppPercent} %',
+            value: p.oppPercent == null ? null : formatPercent(p.oppPercent),
           ),
         ],
       ),

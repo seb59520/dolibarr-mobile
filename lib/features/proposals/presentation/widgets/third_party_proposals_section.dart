@@ -1,5 +1,6 @@
 import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
+import 'package:dolibarr_mobile/core/utils/formatters.dart';
 import 'package:dolibarr_mobile/features/proposals/domain/entities/proposal.dart';
 import 'package:dolibarr_mobile/features/proposals/presentation/providers/proposal_providers.dart';
 import 'package:flutter/material.dart';
@@ -96,7 +97,7 @@ class _ProposalTile extends StatelessWidget {
       leading: Icon(LucideIcons.fileText, color: color),
       title: Text(p.displayLabel),
       subtitle: Text(
-        '${p.totalTtc != null ? '${p.totalTtc} € · ' : ''}'
+        '${p.totalTtc != null ? '${formatMoney(p.totalTtc)} · ' : ''}'
         '${_label(p)}'
             .trim(),
       ),

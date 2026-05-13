@@ -85,6 +85,18 @@ class TweaksPage extends ConsumerWidget {
             },
             onChanged: notifier.setFabPosition,
           ),
+          const SizedBox(height: 18),
+          const _SectionHeader(text: 'Affichage des factures'),
+          _MultiToggleRow<InvoiceCardField>(
+            values: tweaks.invoiceFields,
+            options: InvoiceCardField.values,
+            labelOf: (f) => switch (f) {
+              InvoiceCardField.client => 'Nom du client',
+              InvoiceCardField.dueDate => 'Date d’échéance',
+              InvoiceCardField.totalHt => 'Total HT',
+            },
+            onToggled: notifier.toggleInvoiceField,
+          ),
         ],
       ),
     );
@@ -185,6 +197,65 @@ class _AccentRow extends StatelessWidget {
                         ? c.ink
                         : Colors.transparent,
                     width: 3,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MultiToggleRow<T> extends StatelessWidget {
+  const _MultiToggleRow({
+    required this.values,
+    required this.options,
+    required this.labelOf,
+    required this.onToggled,
+  });
+  final Set<T> values;
+  final List<T> options;
+  final String Function(T) labelOf;
+  final ValueChanged<T> onToggled;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = DoliMobColors.of(context);
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: c.surface,
+        borderRadius: BorderRadius.circular(AppTokens.radiusCardLg),
+        border: Border.all(color: c.hairline, width: 0.5),
+      ),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          for (final opt in options)
+            GestureDetector(
+              onTap: () => onToggled(opt),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: values.contains(opt) ? c.accentSoft : c.fill,
+                  border: Border.all(
+                    color: values.contains(opt)
+                        ? c.accent
+                        : Colors.transparent,
+                  ),
+                  borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+                ),
+                child: Text(
+                  labelOf(opt),
+                  style: TextStyle(
+                    color: values.contains(opt) ? c.accent : c.ink,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),

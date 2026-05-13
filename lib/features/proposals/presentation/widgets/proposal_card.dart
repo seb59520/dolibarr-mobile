@@ -1,4 +1,5 @@
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
+import 'package:dolibarr_mobile/core/utils/formatters.dart';
 import 'package:dolibarr_mobile/features/proposals/domain/entities/proposal.dart';
 import 'package:dolibarr_mobile/shared/widgets/app_card.dart';
 import 'package:dolibarr_mobile/shared/widgets/sync_status_badge.dart';
@@ -80,7 +81,7 @@ class ProposalCard extends StatelessWidget {
                 if (p.totalTtc != null) ...[
                   const SizedBox(height: 2),
                   Text(
-                    '${p.totalTtc} € TTC',
+                    '${formatMoney(p.totalTtc)} TTC',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),

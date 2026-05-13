@@ -1,5 +1,6 @@
 import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
+import 'package:dolibarr_mobile/core/utils/formatters.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice.dart';
 import 'package:dolibarr_mobile/features/invoices/presentation/providers/invoice_providers.dart';
 import 'package:flutter/material.dart';
@@ -96,7 +97,7 @@ class _InvoiceTile extends StatelessWidget {
       ),
       title: Text(i.displayLabel),
       subtitle: Text(
-        '${i.totalTtc != null ? '${i.totalTtc} € · ' : ''}'
+        '${i.totalTtc != null ? '${formatMoney(i.totalTtc)} · ' : ''}'
         '${i.isPaid ? 'Payée' : (i.isOverdue ? 'En retard' : '')}'
             .trim(),
       ),

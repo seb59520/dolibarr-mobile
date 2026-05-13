@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
+import 'package:dolibarr_mobile/core/utils/formatters.dart';
 import 'package:dolibarr_mobile/features/proposals/domain/entities/proposal.dart';
 import 'package:dolibarr_mobile/features/proposals/domain/entities/proposal_line.dart';
 import 'package:dolibarr_mobile/features/proposals/presentation/providers/proposal_providers.dart';
@@ -444,7 +445,7 @@ class _LineTile extends StatelessWidget {
               ),
               if (line.totalHt != null)
                 Text(
-                  '${line.totalHt} €',
+                  formatMoney(line.totalHt),
                   style: theme.textTheme.bodyMedium,
                 ),
               if (editable)
@@ -463,9 +464,11 @@ class _LineTile extends StatelessWidget {
           ],
           const SizedBox(height: 2),
           Text(
-            'Qté ${line.qty}'
-            '${line.subprice != null ? ' × ${line.subprice} €' : ''}'
-            '${line.tvaTx != null ? ' · TVA ${line.tvaTx} %' : ''}',
+            [
+              'Qté ${formatQty(line.qty)}',
+              if (line.subprice != null) '× ${formatMoney(line.subprice)}',
+              if (line.tvaTx != null) 'TVA ${formatPercent(line.tvaTx)}',
+            ].join(' · '),
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -489,9 +492,9 @@ class _TotalsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _Field(label: 'Total HT', value: '${proposal.totalHt ?? '—'} €'),
-          _Field(label: 'TVA', value: '${proposal.totalTva ?? '—'} €'),
-          _Field(label: 'Total TTC', value: '${proposal.totalTtc ?? '—'} €'),
+          _Field(label: 'Total HT', value: formatMoney(proposal.totalHt)),
+          _Field(label: 'TVA', value: formatMoney(proposal.totalTva)),
+          _Field(label: 'Total TTC', value: formatMoney(proposal.totalTtc)),
         ],
       ),
     );

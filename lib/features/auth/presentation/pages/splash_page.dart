@@ -43,12 +43,22 @@ class _SplashPageState extends ConsumerState<SplashPage> {
     }
     if (!mounted) return;
 
+    final next = GoRouterState.of(context).uri.queryParameters['next'];
+
     if (auth is AuthAuthenticated) {
-      context.go(RoutePaths.dashboard);
+      // Si l'utilisateur a refresh sur une route protégée, on l'y renvoie
+      // au lieu d'écraser sa navigation par le dashboard.
+      context.go(next ?? RoutePaths.dashboard);
     } else if (!onboardingDone) {
       context.go(RoutePaths.onboarding);
     } else {
-      context.go(RoutePaths.login);
+      // Préserve `next` pour qu'après login l'utilisateur retombe sur la
+      // route demandée (LoginPage lit ce param).
+      context.go(
+        next != null && next.isNotEmpty
+            ? '${RoutePaths.login}?next=${Uri.encodeComponent(next)}'
+            : RoutePaths.login,
+      );
     }
   }
 

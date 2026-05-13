@@ -36,8 +36,9 @@ void bootstrap(Widget Function() builder) {
     // (avant ce fix, on retombait sur `dolibarr.invalid` à chaque
     // reload web et toutes les requêtes tiers/factures échouaient).
     // On partage cette même instance de SecureStorage avec l'app pour
-    // éviter deux singletons concurrents (Keychain/IndexedDB).
-    final secureStorage = SecureStorageImpl();
+    // éviter deux singletons concurrents (Keychain/IndexedDB) et on lui
+    // injecte les SharedPreferences pour son fallback web.
+    final secureStorage = SecureStorageImpl(webPrefs: prefs);
     final storedBaseUrl = await secureStorage.readBaseUrl();
 
     runApp(

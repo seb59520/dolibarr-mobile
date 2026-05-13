@@ -4,6 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Champs optionnels affichables sur une carte de facture (liste) et
+/// en sous-titre du détail. Indépendants entre eux.
+enum InvoiceCardField {
+  client,
+  dueDate,
+  totalHt;
+}
+
+const _kDefaultInvoiceFields = <InvoiceCardField>{InvoiceCardField.client};
+
 /// Snapshot des préférences visuelles éditables depuis la page Tweaks.
 ///
 /// Persistées via `SharedPreferences` (non sensibles, indépendantes du
@@ -17,6 +27,7 @@ class Tweaks extends Equatable {
     this.density = DensityChoice.regular,
     this.cardStyle = CardStyleChoice.flat,
     this.fabPosition = FabPosition.right,
+    this.invoiceFields = _kDefaultInvoiceFields,
   });
 
   final bool dark;
@@ -25,6 +36,7 @@ class Tweaks extends Equatable {
   final DensityChoice density;
   final CardStyleChoice cardStyle;
   final FabPosition fabPosition;
+  final Set<InvoiceCardField> invoiceFields;
 
   Tweaks copyWith({
     bool? dark,
@@ -33,6 +45,7 @@ class Tweaks extends Equatable {
     DensityChoice? density,
     CardStyleChoice? cardStyle,
     FabPosition? fabPosition,
+    Set<InvoiceCardField>? invoiceFields,
   }) =>
       Tweaks(
         dark: dark ?? this.dark,
@@ -41,11 +54,19 @@ class Tweaks extends Equatable {
         density: density ?? this.density,
         cardStyle: cardStyle ?? this.cardStyle,
         fabPosition: fabPosition ?? this.fabPosition,
+        invoiceFields: invoiceFields ?? this.invoiceFields,
       );
 
   @override
-  List<Object?> get props =>
-      [dark, accent, font, density, cardStyle, fabPosition];
+  List<Object?> get props => [
+        dark,
+        accent,
+        font,
+        density,
+        cardStyle,
+        fabPosition,
+        invoiceFields,
+      ];
 }
 
 const _kDark = 'tweaks.dark';
@@ -54,6 +75,7 @@ const _kFont = 'tweaks.font';
 const _kDensity = 'tweaks.density';
 const _kCardStyle = 'tweaks.cardStyle';
 const _kFab = 'tweaks.fabPosition';
+const _kInvoiceFields = 'tweaks.invoiceFields';
 
 /// Provider du store de préférences (instancié à app boot).
 final sharedPreferencesProvider =
@@ -91,7 +113,21 @@ class TweaksNotifier extends Notifier<Tweaks> {
         FabPosition.values,
         FabPosition.right,
       ),
+      invoiceFields: _decodeInvoiceFields(
+        _prefs.getStringList(_kInvoiceFields),
+      ),
     );
+  }
+
+  Set<InvoiceCardField> _decodeInvoiceFields(List<String>? raw) {
+    if (raw == null) return _kDefaultInvoiceFields;
+    final out = <InvoiceCardField>{};
+    for (final name in raw) {
+      for (final v in InvoiceCardField.values) {
+        if (v.name == name) out.add(v);
+      }
+    }
+    return out;
   }
 
   Future<void> setDark({required bool value}) async {
@@ -122,6 +158,16 @@ class TweaksNotifier extends Notifier<Tweaks> {
   Future<void> setFabPosition(FabPosition p) async {
     state = state.copyWith(fabPosition: p);
     await _prefs.setString(_kFab, p.name);
+  }
+
+  Future<void> toggleInvoiceField(InvoiceCardField f) async {
+    final next = Set<InvoiceCardField>.from(state.invoiceFields);
+    if (!next.add(f)) next.remove(f);
+    state = state.copyWith(invoiceFields: next);
+    await _prefs.setStringList(
+      _kInvoiceFields,
+      next.map((e) => e.name).toList(),
+    );
   }
 
   T _decodeEnum<T extends Enum>(String? raw, List<T> values, T fallback) {

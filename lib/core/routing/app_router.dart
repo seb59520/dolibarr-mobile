@@ -50,8 +50,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       if (!isProtected) return null;
       if (auth is AuthAuthenticated) return null;
-      // Route protégée + non authentifié → /login en préservant la cible.
+      // Au cold start (refresh navigateur sur une route protégée), la
+      // restauration de session n'est pas finie : on passe par le splash
+      // qui attend `restore()` puis navigue vers `next` si la session est
+      // valide — sans ça, l'utilisateur est éjecté vers /login alors que
+      // sa clé API est bien persistée.
       final next = Uri.encodeComponent(loc);
+      if (auth is AuthRestoring) {
+        return '${RoutePaths.splash}?next=$next';
+      }
       return '${RoutePaths.login}?next=$next';
     },
     routes: [

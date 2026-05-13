@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-/// Shell principal après connexion : 4 onglets (Tiers / Contacts / Projets /
-/// Paramètres).
-class ShellPage extends StatelessWidget {
+class ShellPage extends StatefulWidget {
   const ShellPage({required this.child, super.key});
   final Widget child;
 
+  @override
+  State<ShellPage> createState() => _ShellPageState();
+}
+
+class _ShellPageState extends State<ShellPage> {
   static const _tabs = [
     _TabRoute(
       path: RoutePaths.dashboard,
@@ -47,6 +50,8 @@ class ShellPage extends StatelessWidget {
     ),
   ];
 
+  bool? _userExtended;
+
   int _activeIndex(BuildContext context) {
     final loc = GoRouterState.of(context).matchedLocation;
     final i = _tabs.indexWhere((t) => loc.startsWith(t.path));
@@ -56,22 +61,49 @@ class ShellPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final active = _activeIndex(context);
-    return Scaffold(
-      body: child,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: active,
-        onDestinationSelected: (i) => context.go(_tabs[i].path),
-        // 7 tabs : on cache les labels pour éviter le wrap.
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-        destinations: [
-          for (final t in _tabs)
-            NavigationDestination(
-              icon: Icon(t.icon),
-              tooltip: t.label,
-              label: t.label,
-            ),
-        ],
-      ),
+    return LayoutBuilder(
+      builder: (ctx, constraints) {
+        final w = constraints.maxWidth;
+        final autoExtended = w >= 1000;
+        final extended = _userExtended ?? autoExtended;
+        final compact = w < 600 && !extended;
+
+        return Scaffold(
+          body: Row(
+            children: [
+              NavigationRail(
+                extended: extended,
+                minWidth: compact ? 56 : 72,
+                minExtendedWidth: 220,
+                labelType: extended
+                    ? NavigationRailLabelType.none
+                    : (compact
+                        ? NavigationRailLabelType.selected
+                        : NavigationRailLabelType.all),
+                selectedIndex: active,
+                onDestinationSelected: (i) => context.go(_tabs[i].path),
+                leading: IconButton(
+                  icon: Icon(
+                    extended ? LucideIcons.chevronLeft : LucideIcons.menu,
+                  ),
+                  tooltip: extended ? 'Réduire le menu' : 'Étendre le menu',
+                  onPressed: () =>
+                      setState(() => _userExtended = !extended),
+                ),
+                destinations: [
+                  for (final t in _tabs)
+                    NavigationRailDestination(
+                      icon: Icon(t.icon),
+                      label: Text(t.label),
+                    ),
+                ],
+              ),
+              const VerticalDivider(thickness: 1, width: 1),
+              Expanded(child: widget.child),
+            ],
+          ),
+        );
+      },
     );
   }
 }

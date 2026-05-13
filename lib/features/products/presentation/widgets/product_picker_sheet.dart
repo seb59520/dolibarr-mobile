@@ -1,4 +1,5 @@
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
+import 'package:dolibarr_mobile/core/utils/formatters.dart';
 import 'package:dolibarr_mobile/features/products/domain/entities/product.dart';
 import 'package:dolibarr_mobile/features/products/presentation/providers/product_providers.dart';
 import 'package:flutter/material.dart';
@@ -120,8 +121,8 @@ class _ProductTile extends StatelessWidget {
       subtitle: Text(
         [
           p.ref,
-          if (p.price != null) '${p.price} € HT',
-          if (p.tvaTx != null) 'TVA ${p.tvaTx} %',
+          if (p.price != null) '${formatMoney(p.price)} HT',
+          if (p.tvaTx != null) 'TVA ${formatPercent(p.tvaTx)}',
         ].join(' · '),
         style: theme.textTheme.bodySmall,
       ),

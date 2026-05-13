@@ -1,3 +1,4 @@
+import 'package:dolibarr_mobile/core/utils/formatters.dart';
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_local_dao.dart';
 import 'package:dolibarr_mobile/features/contacts/domain/entities/contact_filters.dart';
 import 'package:dolibarr_mobile/features/dashboard/domain/entities/dashboard_metrics.dart';
@@ -155,7 +156,9 @@ final class DashboardRepositoryImpl implements DashboardRepository {
               entityType: 'invoice',
               localId: i.localId,
               label: i.displayLabel,
-              subtitle: i.totalTtc != null ? '${i.totalTtc} € TTC' : null,
+              subtitle: i.totalTtc != null
+                  ? '${formatMoney(i.totalTtc)} TTC'
+                  : null,
               updatedAt: i.localUpdatedAt,
             ),
           ),
@@ -170,7 +173,9 @@ final class DashboardRepositoryImpl implements DashboardRepository {
               entityType: 'proposal',
               localId: p.localId,
               label: p.displayLabel,
-              subtitle: p.totalTtc != null ? '${p.totalTtc} € TTC' : null,
+              subtitle: p.totalTtc != null
+                  ? '${formatMoney(p.totalTtc)} TTC'
+                  : null,
               updatedAt: p.localUpdatedAt,
             ),
           ),

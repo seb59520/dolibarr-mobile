@@ -1,5 +1,6 @@
 import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
+import 'package:dolibarr_mobile/core/utils/formatters.dart';
 import 'package:dolibarr_mobile/features/dashboard/domain/entities/dashboard_metrics.dart';
 import 'package:dolibarr_mobile/features/dashboard/presentation/providers/dashboard_providers.dart';
 import 'package:dolibarr_mobile/shared/widgets/kpi_card.dart';
@@ -92,8 +93,6 @@ class _MetricsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String fmtMontant(double v) =>
-        '${v.toStringAsFixed(2).replaceAll('.', ',')} €';
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -104,7 +103,7 @@ class _MetricsGrid extends StatelessWidget {
       children: [
         KpiCard(
           label: 'CA mois en cours',
-          value: fmtMontant(metrics.caMois),
+          value: formatMoney(metrics.caMois),
           icon: LucideIcons.trendingUp,
           tone: KpiTone.success,
           onTap: () => GoRouter.of(context).go(RoutePaths.invoices),
@@ -120,7 +119,7 @@ class _MetricsGrid extends StatelessWidget {
         KpiCard(
           label: 'Factures impayées',
           value: '${metrics.facturesImpayeesCount}',
-          hint: fmtMontant(metrics.facturesImpayeesMontant),
+          hint: formatMoney(metrics.facturesImpayeesMontant),
           icon: LucideIcons.alertTriangle,
           tone: KpiTone.danger,
           onTap: () => GoRouter.of(context).go(RoutePaths.invoices),

@@ -1,11 +1,15 @@
+import 'package:dolibarr_mobile/core/preferences/tweaks.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
+import 'package:dolibarr_mobile/core/utils/formatters.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice.dart';
+import 'package:dolibarr_mobile/features/thirdparties/presentation/providers/third_party_providers.dart';
 import 'package:dolibarr_mobile/shared/widgets/app_card.dart';
 import 'package:dolibarr_mobile/shared/widgets/sync_status_badge.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-class InvoiceCard extends StatelessWidget {
+class InvoiceCard extends ConsumerWidget {
   const InvoiceCard({
     required this.invoice,
     this.onTap,
@@ -18,10 +22,25 @@ class InvoiceCard extends StatelessWidget {
   final bool offline;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final i = invoice;
     final statusColor = _statusColor(i);
+    final fields = ref.watch(
+      tweaksProvider.select((t) => t.invoiceFields),
+    );
+    final showClient =
+        fields.contains(InvoiceCardField.client) && i.socidLocal != null;
+    final clientName = showClient
+        ? ref
+            .watch(thirdPartyByIdProvider(i.socidLocal!))
+            .maybeWhen(data: (tp) => tp?.name, orElse: () => null)
+        : null;
+    final showDueDate =
+        fields.contains(InvoiceCardField.dueDate) && i.dateDue != null;
+    final showHt =
+        fields.contains(InvoiceCardField.totalHt) && i.totalHt != null;
+
     return AppCard(
       onTap: onTap,
       child: Row(
@@ -56,6 +75,23 @@ class InvoiceCard extends StatelessWidget {
                     ),
                   ],
                 ),
+                if (clientName != null) ...[
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      const Icon(LucideIcons.briefcase, size: 12),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          clientName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 const SizedBox(height: 2),
                 Row(
                   children: [
@@ -77,13 +113,47 @@ class InvoiceCard extends StatelessWidget {
                     ),
                   ],
                 ),
+                if (showDueDate) ...[
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      Icon(
+                        LucideIcons.clock,
+                        size: 12,
+                        color: i.isOverdue ? AppTokens.syncConflict : null,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Échéance ${_fmt(i.dateDue!)}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: i.isOverdue ? AppTokens.syncConflict : null,
+                          fontWeight:
+                              i.isOverdue ? FontWeight.w600 : FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 if (i.totalTtc != null) ...[
                   const SizedBox(height: 2),
-                  Text(
-                    '${i.totalTtc} € TTC',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        '${formatMoney(i.totalTtc)} TTC',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      if (showHt) ...[
+                        const SizedBox(width: 8),
+                        Text(
+                          '(${formatMoney(i.totalHt)} HT)',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ],
+                    ],
                   ),
                 ],
               ],
