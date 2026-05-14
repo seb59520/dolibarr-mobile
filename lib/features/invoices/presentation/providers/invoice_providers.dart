@@ -1,4 +1,5 @@
 import 'package:dolibarr_mobile/core/di/providers.dart';
+import 'package:dolibarr_mobile/core/preferences/tweaks.dart';
 import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_local_dao.dart';
 import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/invoices/data/repositories/invoice_repository_impl.dart';
@@ -33,9 +34,25 @@ final invoiceFiltersProvider =
   InvoiceFiltersNotifier.new,
 );
 
+/// Clés `SharedPreferences` pour la persistance du tri.
+const _kInvoiceSortBy = 'invoices.sortBy';
+const _kInvoiceSortDesc = 'invoices.sortDescending';
+
 class InvoiceFiltersNotifier extends Notifier<InvoiceFilters> {
   @override
-  InvoiceFilters build() => const InvoiceFilters();
+  InvoiceFilters build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    final sortByName = prefs.getString(_kInvoiceSortBy);
+    final sortBy = InvoiceSortBy.values.firstWhere(
+      (v) => v.name == sortByName,
+      orElse: () => InvoiceSortBy.dateInvoice,
+    );
+    final sortDesc = prefs.getBool(_kInvoiceSortDesc) ?? true;
+    return InvoiceFilters(
+      sortBy: sortBy,
+      sortDescending: sortDesc,
+    );
+  }
 
   void setSearch(String search) =>
       state = state.copyWith(search: search);
@@ -60,6 +77,20 @@ class InvoiceFiltersNotifier extends Notifier<InvoiceFilters> {
   void setDateTo(DateTime? d) => state = d == null
       ? state.copyWith(clearDateTo: true)
       : state.copyWith(dateTo: d);
+
+  /// Active un critère de tri. Si déjà actif → inverse le sens.
+  Future<void> setSort(InvoiceSortBy by) async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    if (state.sortBy == by) {
+      final next = !state.sortDescending;
+      state = state.copyWith(sortDescending: next);
+      await prefs.setBool(_kInvoiceSortDesc, next);
+    } else {
+      state = state.copyWith(sortBy: by, sortDescending: true);
+      await prefs.setString(_kInvoiceSortBy, by.name);
+      await prefs.setBool(_kInvoiceSortDesc, true);
+    }
+  }
 
   void reset() => state = const InvoiceFilters();
 }

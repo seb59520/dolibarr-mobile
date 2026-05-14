@@ -23,7 +23,9 @@ final class StatsRepositoryImpl implements StatsRepository {
   final DateTime Function() _clock;
 
   @override
-  Stream<StatsSnapshot> watchSnapshot({int monthWindow = 12}) {
+  Stream<StatsSnapshot> watchSnapshot({
+    StatsPeriod period = StatsPeriod.rolling12,
+  }) {
     final invoices = _invoiceDao.watchFiltered(
       InvoiceFilters(statuses: InvoiceStatus.values.toSet()),
     );
@@ -32,13 +34,50 @@ final class StatsRepositoryImpl implements StatsRepository {
         StatsSnapshot>(
       invoices,
       payments,
-      (inv, pay) => compute(
-        invoices: inv,
-        payments: pay,
-        monthWindow: monthWindow,
-        now: _clock(),
-      ),
+      (inv, pay) {
+        final now = _clock();
+        return compute(
+          invoices: inv,
+          payments: pay,
+          monthWindow: _resolveWindow(period, inv, pay, now),
+          now: now,
+        );
+      },
     );
+  }
+
+  /// Convertit une [StatsPeriod] en nombre de mois à inclure.
+  /// Garantit un minimum de 1 et un maximum protecteur de 240 mois (20 ans).
+  static int _resolveWindow(
+    StatsPeriod period,
+    List<Invoice> invoices,
+    List<InvoicePayment> payments,
+    DateTime now,
+  ) {
+    switch (period) {
+      case StatsPeriod.rolling12:
+        return 12;
+      case StatsPeriod.currentYear:
+        return now.month;
+      case StatsPeriod.allHistory:
+        DateTime? earliest;
+        for (final i in invoices) {
+          if (i.status == InvoiceStatus.draft) continue;
+          if (i.status == InvoiceStatus.abandoned) continue;
+          final d = i.dateInvoice;
+          if (d == null) continue;
+          if (earliest == null || d.isBefore(earliest)) earliest = d;
+        }
+        for (final p in payments) {
+          final d = p.date;
+          if (d == null) continue;
+          if (earliest == null || d.isBefore(earliest)) earliest = d;
+        }
+        if (earliest == null) return 12;
+        final months = (now.year - earliest.year) * 12
+            + (now.month - earliest.month) + 1;
+        return months.clamp(1, 240);
+    }
   }
 
   /// Visible-for-testing : pur, déterministe, ne dépend que de ses

@@ -17,9 +17,20 @@ class ProposalLocalDao extends DatabaseAccessor<AppDatabase>
   ProposalLocalDao(super.attachedDatabase);
 
   Stream<List<Proposal>> watchFiltered(ProposalFilters f) {
+    OrderingTerm primary($ProposalsTable t) {
+      final mode =
+          f.sortDescending ? OrderingMode.desc : OrderingMode.asc;
+      return switch (f.sortBy) {
+        ProposalSortBy.dateProposal =>
+          OrderingTerm(expression: t.dateProposal, mode: mode),
+        ProposalSortBy.dateEnd =>
+          OrderingTerm(expression: t.dateEnd, mode: mode),
+      };
+    }
+
     final query = select(proposals)
       ..orderBy([
-        (t) => OrderingTerm.desc(t.dateProposal),
+        primary,
         (t) => OrderingTerm.desc(t.id),
       ]);
     return query.watch().map(
@@ -91,8 +102,24 @@ class ProposalLocalDao extends DatabaseAccessor<AppDatabase>
     if (existing != null && existing.syncStatus != SyncStatus.synced) {
       return;
     }
+    // Résout le tiers local depuis `socid`/`fk_soc` afin que les UIs
+    // qui s'appuient sur `socidLocal` (carte devis, fiche détail, tuiles
+    // dashboard) affichent le nom du client sans seconde sync.
+    final socidRemote =
+        int.tryParse('${json['socid'] ?? json['fk_soc'] ?? ''}');
+    int? socidLocal;
+    if (socidRemote != null) {
+      final tp = await (select(thirdParties)
+            ..where((t) => t.remoteId.equals(socidRemote)))
+          .getSingleOrNull();
+      socidLocal = tp?.id;
+    }
     await transaction(() async {
-      final companion = _proposalCompanionFromJson(json, existing?.localId);
+      final companion = _proposalCompanionFromJson(
+        json,
+        existing?.localId,
+        socidLocal: socidLocal,
+      );
       await into(proposals).insertOnConflictUpdate(companion);
       final fresh = await findByRemoteId(remoteId);
       final lines = json['lines'];
@@ -444,8 +471,9 @@ class ProposalLocalDao extends DatabaseAccessor<AppDatabase>
 
   ProposalsCompanion _proposalCompanionFromJson(
     Map<String, Object?> json,
-    int? localId,
-  ) {
+    int? localId, {
+    int? socidLocal,
+  }) {
     String? s(String key) {
       final v = json[key];
       if (v == null || v == '' || v == 'null') return null;
@@ -468,6 +496,8 @@ class ProposalLocalDao extends DatabaseAccessor<AppDatabase>
       id: localId == null ? const Value.absent() : Value(localId),
       remoteId: Value(int.tryParse('${json['id'] ?? ''}')),
       socidRemote: Value(iN('socid') ?? iN('fk_soc')),
+      socidLocal:
+          socidLocal == null ? const Value.absent() : Value(socidLocal),
       ref: Value(s('ref')),
       refClient: Value(s('ref_client')),
       status: Value(i('fk_statut') == 0 ? i('status') : i('fk_statut')),

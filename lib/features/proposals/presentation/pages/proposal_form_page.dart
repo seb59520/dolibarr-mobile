@@ -77,7 +77,17 @@ class _ProposalFormPageState extends ConsumerState<ProposalFormPage> {
     if (_initialized) return;
     _initialized = true;
     _existing = existing;
-    if (existing != null) _hydrateFrom(existing);
+    if (existing != null) {
+      _hydrateFrom(existing);
+      // Fallback : devis serveur sans `socidLocal` résolu → on tente
+      // une résolution via `socidRemote`.
+      if (_parentLocalId == null && existing.socidRemote != null) {
+        final tp = await ref
+            .read(thirdPartyLocalDaoProvider)
+            .findByRemoteId(existing.socidRemote!);
+        if (tp != null) _parentLocalId = tp.localId;
+      }
+    }
 
     final draftDao = ref.read(draftLocalDaoProvider);
     final draft = await draftDao.read(

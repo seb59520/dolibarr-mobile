@@ -1,6 +1,7 @@
 import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:dolibarr_mobile/features/proposals/domain/entities/proposal.dart';
+import 'package:dolibarr_mobile/features/proposals/domain/entities/proposal_filters.dart';
 import 'package:dolibarr_mobile/features/proposals/presentation/providers/proposal_providers.dart';
 import 'package:dolibarr_mobile/features/proposals/presentation/widgets/proposal_card.dart';
 import 'package:dolibarr_mobile/shared/widgets/empty_state.dart';
@@ -8,6 +9,8 @@ import 'package:dolibarr_mobile/shared/widgets/error_state.dart';
 import 'package:dolibarr_mobile/shared/widgets/loading_skeleton.dart';
 import 'package:dolibarr_mobile/shared/widgets/network_banner.dart';
 import 'package:dolibarr_mobile/shared/widgets/search_field.dart';
+import 'package:dolibarr_mobile/shared/widgets/shell_menu_button.dart';
+import 'package:dolibarr_mobile/shared/widgets/sort_chips_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -93,6 +96,7 @@ class _ProposalsListPageState extends ConsumerState<ProposalsListPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: const ShellMenuButton(),
         title: const Text('Devis'),
         actions: [
           IconButton(
@@ -124,6 +128,14 @@ class _ProposalsListPageState extends ConsumerState<ProposalsListPage> {
               initialValue: filters.search,
             ),
           ),
+          SortChipsRow<ProposalSortBy>(
+            options: ProposalSortBy.values,
+            active: filters.sortBy,
+            descending: filters.sortDescending,
+            labelOf: (s) => s.label,
+            onSelected: notifier.setSort,
+          ),
+          const SizedBox(height: AppTokens.spaceXs),
           Expanded(
             child: RefreshIndicator(
               onRefresh: _refresh,

@@ -9,6 +9,7 @@ import 'package:dolibarr_mobile/shared/widgets/error_state.dart';
 import 'package:dolibarr_mobile/shared/widgets/loading_skeleton.dart';
 import 'package:dolibarr_mobile/shared/widgets/network_banner.dart';
 import 'package:dolibarr_mobile/shared/widgets/search_field.dart';
+import 'package:dolibarr_mobile/shared/widgets/shell_menu_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -100,6 +101,7 @@ class _ProjectsListPageState extends ConsumerState<ProjectsListPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: const ShellMenuButton(),
         title: const Text('Projets'),
         actions: [
           IconButton(

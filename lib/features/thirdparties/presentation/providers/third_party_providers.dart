@@ -129,3 +129,11 @@ final thirdPartyByIdProvider =
     StreamProvider.autoDispose.family<ThirdParty?, int>((ref, localId) {
   return ref.watch(thirdPartyRepositoryProvider).watchById(localId);
 });
+
+/// Lookup ponctuel d'un tiers via son `remoteId` Dolibarr — utilisé en
+/// fallback côté UI quand `socidLocal` n'a pas (encore) été résolu sur
+/// une entité enfant (facture, devis, contact) issue d'une sync push.
+final thirdPartyByRemoteIdProvider =
+    FutureProvider.autoDispose.family<ThirdParty?, int>((ref, remoteId) {
+  return ref.watch(thirdPartyLocalDaoProvider).findByRemoteId(remoteId);
+});

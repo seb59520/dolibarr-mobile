@@ -17,9 +17,21 @@ class InvoiceLocalDao extends DatabaseAccessor<AppDatabase>
   InvoiceLocalDao(super.attachedDatabase);
 
   Stream<List<Invoice>> watchFiltered(InvoiceFilters f) {
+    OrderingTerm primary($InvoicesTable t) {
+      final mode =
+          f.sortDescending ? OrderingMode.desc : OrderingMode.asc;
+      return switch (f.sortBy) {
+        InvoiceSortBy.dateInvoice =>
+          OrderingTerm(expression: t.dateInvoice, mode: mode),
+        InvoiceSortBy.dateDue =>
+          OrderingTerm(expression: t.dateDue, mode: mode),
+        InvoiceSortBy.ref => OrderingTerm(expression: t.ref, mode: mode),
+      };
+    }
+
     final query = select(invoices)
       ..orderBy([
-        (t) => OrderingTerm.desc(t.dateInvoice),
+        primary,
         (t) => OrderingTerm.desc(t.id),
       ]);
     return query.watch().map(
@@ -91,8 +103,25 @@ class InvoiceLocalDao extends DatabaseAccessor<AppDatabase>
     if (existing != null && existing.syncStatus != SyncStatus.synced) {
       return;
     }
+    // Résout le tiers local (`socidLocal`) depuis `socid`/`fk_soc` afin
+    // que les UIs qui s'appuient sur `socidLocal` (cartes factures,
+    // tuiles dashboard, fiche détail) affichent le nom du client sans
+    // attendre une seconde sync.
+    final socidRemote =
+        int.tryParse('${json['socid'] ?? json['fk_soc'] ?? ''}');
+    int? socidLocal;
+    if (socidRemote != null) {
+      final tp = await (select(thirdParties)
+            ..where((t) => t.remoteId.equals(socidRemote)))
+          .getSingleOrNull();
+      socidLocal = tp?.id;
+    }
     await transaction(() async {
-      final companion = _toCompanionFromJson(json, existing?.localId);
+      final companion = _toCompanionFromJson(
+        json,
+        existing?.localId,
+        socidLocal: socidLocal,
+      );
       await into(invoices).insertOnConflictUpdate(companion);
       // Récupère le localId résolu (upsert peut avoir alloué un id).
       final fresh = await findByRemoteId(remoteId);
@@ -454,8 +483,9 @@ class InvoiceLocalDao extends DatabaseAccessor<AppDatabase>
 
   InvoicesCompanion _toCompanionFromJson(
     Map<String, Object?> json,
-    int? localId,
-  ) {
+    int? localId, {
+    int? socidLocal,
+  }) {
     String? s(String key) {
       final v = json[key];
       if (v == null || v == '' || v == 'null') return null;
@@ -478,6 +508,8 @@ class InvoiceLocalDao extends DatabaseAccessor<AppDatabase>
       id: localId == null ? const Value.absent() : Value(localId),
       remoteId: Value(int.tryParse('${json['id'] ?? ''}')),
       socidRemote: Value(iN('socid') ?? iN('fk_soc')),
+      socidLocal:
+          socidLocal == null ? const Value.absent() : Value(socidLocal),
       ref: Value(s('ref')),
       refClient: Value(s('ref_client')),
       type: Value(i('type')),

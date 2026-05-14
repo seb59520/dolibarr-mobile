@@ -78,7 +78,18 @@ class _InvoiceFormPageState extends ConsumerState<InvoiceFormPage> {
     if (_initialized) return;
     _initialized = true;
     _existing = existing;
-    if (existing != null) _hydrateFrom(existing);
+    if (existing != null) {
+      _hydrateFrom(existing);
+      // Fallback : si la facture serveur n'a pas encore résolu son
+      // `socidLocal`, on tente la résolution via `socidRemote` pour
+      // pré-remplir le picker client.
+      if (_parentLocalId == null && existing.socidRemote != null) {
+        final tp = await ref
+            .read(thirdPartyLocalDaoProvider)
+            .findByRemoteId(existing.socidRemote!);
+        if (tp != null) _parentLocalId = tp.localId;
+      }
+    }
 
     final draftDao = ref.read(draftLocalDaoProvider);
     final draft = await draftDao.read(

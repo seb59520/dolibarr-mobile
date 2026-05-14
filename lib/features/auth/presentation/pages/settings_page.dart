@@ -3,6 +3,7 @@ import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:dolibarr_mobile/features/auth/domain/entities/auth_session.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_providers.dart';
 import 'package:dolibarr_mobile/features/sync/presentation/providers/sync_providers.dart';
+import 'package:dolibarr_mobile/shared/widgets/shell_menu_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +18,10 @@ class SettingsPage extends ConsumerWidget {
     final session = state is AuthAuthenticated ? state.session : null;
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Paramètres')),
+      appBar: AppBar(
+        leading: const ShellMenuButton(),
+        title: const Text('Paramètres'),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(AppTokens.spaceMd),
         children: [

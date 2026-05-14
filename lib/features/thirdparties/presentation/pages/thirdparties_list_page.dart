@@ -12,6 +12,7 @@ import 'package:dolibarr_mobile/shared/widgets/empty_state.dart';
 import 'package:dolibarr_mobile/shared/widgets/error_state.dart';
 import 'package:dolibarr_mobile/shared/widgets/loading_skeleton.dart';
 import 'package:dolibarr_mobile/shared/widgets/network_banner.dart';
+import 'package:dolibarr_mobile/shared/widgets/shell_menu_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -146,6 +147,7 @@ class _ThirdPartiesListPageState extends ConsumerState<ThirdPartiesListPage> {
                     '${items.length > 1 ? 's' : ''}',
                 orElse: () => null,
               ),
+              leading: const ShellMenuButton(),
               trailing: IconButton(
                 icon: Badge(
                   isLabelVisible: _hasActiveFilters(filters),
@@ -254,11 +256,13 @@ class _LargeTopBar extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.trailing,
+    this.leading,
   });
 
   final String title;
   final String? subtitle;
   final Widget? trailing;
+  final Widget? leading;
 
   @override
   Widget build(BuildContext context) {
@@ -268,10 +272,13 @@ class _LargeTopBar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (trailing != null)
-            Align(
-              alignment: Alignment.centerRight,
-              child: trailing,
+          if (leading != null || trailing != null)
+            Row(
+              children: [
+                if (leading != null) leading!,
+                const Spacer(),
+                if (trailing != null) trailing!,
+              ],
             ),
           Text(
             title,

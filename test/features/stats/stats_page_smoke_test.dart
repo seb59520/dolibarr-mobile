@@ -16,7 +16,9 @@ class _FakeRepo implements StatsRepository {
   _FakeRepo(this.snapshot);
   final StatsSnapshot snapshot;
   @override
-  Stream<StatsSnapshot> watchSnapshot({int monthWindow = 12}) =>
+  Stream<StatsSnapshot> watchSnapshot({
+    StatsPeriod period = StatsPeriod.rolling12,
+  }) =>
       Stream.value(snapshot);
 }
 

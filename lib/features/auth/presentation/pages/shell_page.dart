@@ -1,17 +1,19 @@
 import 'package:dolibarr_mobile/core/routing/route_paths.dart';
+import 'package:dolibarr_mobile/shared/widgets/shell_menu_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-class ShellPage extends StatefulWidget {
+class ShellPage extends ConsumerStatefulWidget {
   const ShellPage({required this.child, super.key});
   final Widget child;
 
   @override
-  State<ShellPage> createState() => _ShellPageState();
+  ConsumerState<ShellPage> createState() => _ShellPageState();
 }
 
-class _ShellPageState extends State<ShellPage> {
+class _ShellPageState extends ConsumerState<ShellPage> {
   static const _tabs = [
     _TabRoute(
       path: RoutePaths.dashboard,
@@ -58,11 +60,6 @@ class _ShellPageState extends State<ShellPage> {
     return i < 0 ? 0 : i;
   }
 
-  bool _isTopLevel(BuildContext context) {
-    final loc = GoRouterState.of(context).matchedLocation;
-    return _tabs.any((t) => t.path == loc);
-  }
-
   @override
   Widget build(BuildContext context) {
     final active = _activeIndex(context);
@@ -82,40 +79,14 @@ class _ShellPageState extends State<ShellPage> {
   }
 
   Widget _buildPhoneLayout(int active) {
-    final showHamburger = _isTopLevel(context);
     return Scaffold(
+      key: ref.watch(shellScaffoldKeyProvider),
       drawer: _AppDrawer(
         tabs: _tabs,
         selectedIndex: active,
         onSelected: (i) => context.go(_tabs[i].path),
       ),
-      body: Stack(
-        children: [
-          widget.child,
-          if (showHamburger)
-            Positioned(
-              top: 0,
-              left: 0,
-              child: SafeArea(
-                child: Builder(
-                  builder: (innerCtx) => Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Material(
-                      color: Theme.of(innerCtx).colorScheme.surface,
-                      shape: const CircleBorder(),
-                      elevation: 2,
-                      child: IconButton(
-                        icon: const Icon(LucideIcons.menu),
-                        tooltip: 'Ouvrir le menu',
-                        onPressed: () => Scaffold.of(innerCtx).openDrawer(),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
+      body: widget.child,
     );
   }
 

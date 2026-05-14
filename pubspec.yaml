@@ -44,6 +44,7 @@ dependencies:
   share_plus: ^10.1.2
   shared_preferences: ^2.3.2
   url_launcher: ^6.3.1
+  web: ^1.1.0
 
   # Persistance locale : Drift 2 (SQLite typé Dart). Décision tranchée
   # Étape 2 — voir docs/adr/0003-local-db.md. drift_flutter encapsule

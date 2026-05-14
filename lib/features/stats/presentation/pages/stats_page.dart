@@ -8,6 +8,7 @@ import 'package:dolibarr_mobile/features/stats/presentation/widgets/stats_bar_ch
 import 'package:dolibarr_mobile/shared/widgets/app_card.dart';
 import 'package:dolibarr_mobile/shared/widgets/kpi_card.dart';
 import 'package:dolibarr_mobile/shared/widgets/network_banner.dart';
+import 'package:dolibarr_mobile/shared/widgets/shell_menu_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -58,6 +59,7 @@ class _StatsPageState extends ConsumerState<StatsPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: const ShellMenuButton(),
         title: const Text('Statistiques'),
         actions: [
           IconButton(

@@ -1,6 +1,7 @@
 import 'package:dolibarr_mobile/core/utils/formatters.dart';
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_local_dao.dart';
 import 'package:dolibarr_mobile/features/contacts/domain/entities/contact_filters.dart';
+import 'package:dolibarr_mobile/features/dashboard/domain/entities/dashboard_details.dart';
 import 'package:dolibarr_mobile/features/dashboard/domain/entities/dashboard_metrics.dart';
 import 'package:dolibarr_mobile/features/dashboard/domain/repositories/dashboard_repository.dart';
 import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_local_dao.dart';
@@ -50,29 +51,58 @@ final class DashboardRepositoryImpl implements DashboardRepository {
     return Rx.combineLatest2<List<Invoice>, List<Proposal>, DashboardMetrics>(
       invoices,
       proposals,
-      _compute,
+      (i, p) => compute(invoices: i, proposals: p),
     );
   }
 
-  DashboardMetrics _compute(
-    List<Invoice> invoices,
-    List<Proposal> proposals,
-  ) {
-    final now = DateTime.now();
-    final firstOfMonth = DateTime(now.year, now.month);
+  /// Calcul pur — extrait en static pour testabilité.
+  ///
+  /// [now] permet d'injecter une référence temporelle dans les tests ;
+  /// défaut = `DateTime.now()`.
+  static DashboardMetrics compute({
+    required List<Invoice> invoices,
+    required List<Proposal> proposals,
+    DateTime? now,
+  }) {
+    final ref = now ?? DateTime.now();
+    final firstOfMonth = DateTime(ref.year, ref.month);
+    // Borne supérieure exclusive : 1er du mois suivant.
+    final firstOfNextMonth = DateTime(ref.year, ref.month + 1);
 
     var caMois = 0.0;
+    var facturesMoisCount = 0;
+    final clientsMois = <String>{};
+    var versementAttenduMontant = 0.0;
+    var versementAttenduCount = 0;
     var impayeesCount = 0;
     var impayeesMontant = 0.0;
 
     for (final i in invoices) {
+      final inMonth = i.dateInvoice != null &&
+          !i.dateInvoice!.isBefore(firstOfMonth) &&
+          i.dateInvoice!.isBefore(firstOfNextMonth);
+      final isBilled = i.status == InvoiceStatus.validated ||
+          i.status == InvoiceStatus.paid;
+
       // CA mois : facture validée OU payée, datée dans le mois courant.
-      if ((i.status == InvoiceStatus.validated ||
-              i.status == InvoiceStatus.paid) &&
-          i.dateInvoice != null &&
-          !i.dateInvoice!.isBefore(firstOfMonth)) {
+      if (isBilled && inMonth) {
         caMois += _toDouble(i.totalTtc);
+        facturesMoisCount += 1;
+        final clientKey = _clientKey(i);
+        if (clientKey != null) clientsMois.add(clientKey);
       }
+
+      // Versement attendu fin de mois : facture validée non payée,
+      // dont l'échéance tombe entre le 1er et le dernier jour du mois.
+      if (i.status == InvoiceStatus.validated &&
+          i.paye == 0 &&
+          i.dateDue != null &&
+          !i.dateDue!.isBefore(firstOfMonth) &&
+          i.dateDue!.isBefore(firstOfNextMonth)) {
+        versementAttenduMontant += _toDouble(i.totalTtc);
+        versementAttenduCount += 1;
+      }
+
       // Impayées : validée + paye=0 (pas brouillon, pas abandonnée).
       if (i.status == InvoiceStatus.validated && i.paye == 0) {
         impayeesCount += 1;
@@ -86,13 +116,125 @@ final class DashboardRepositoryImpl implements DashboardRepository {
 
     return DashboardMetrics(
       caMois: caMois,
+      facturesMoisCount: facturesMoisCount,
+      clientsMoisCount: clientsMois.length,
+      versementAttenduMontant: versementAttenduMontant,
+      versementAttenduCount: versementAttenduCount,
       devisEnAttenteCount: devisAttente,
       facturesImpayeesCount: impayeesCount,
       facturesImpayeesMontant: impayeesMontant,
     );
   }
 
-  double _toDouble(String? raw) {
+  @override
+  Stream<DashboardDetails> watchDetails() {
+    final invoices = _invoiceDao.watchFiltered(
+      InvoiceFilters(statuses: InvoiceStatus.values.toSet()),
+    );
+    return invoices.map((i) => computeDetails(invoices: i));
+  }
+
+  /// Calcul pur des détails — extrait pour testabilité.
+  static DashboardDetails computeDetails({
+    required List<Invoice> invoices,
+    DateTime? now,
+  }) {
+    final ref = now ?? DateTime.now();
+    final firstOfMonth = DateTime(ref.year, ref.month);
+    final firstOfNextMonth = DateTime(ref.year, ref.month + 1);
+    final firstOfPrevMonth = DateTime(ref.year, ref.month - 1);
+
+    var caMoisPrev = 0.0;
+    var facturesMoisPrevCount = 0;
+    final invoicesMois = <Invoice>[];
+    final invoicesDue = <Invoice>[];
+    final invoicesEnRetard = <Invoice>[];
+    var enRetardMontant = 0.0;
+    final weeklyMontant = [0.0, 0.0, 0.0, 0.0];
+    final weeklyCount = [0, 0, 0, 0];
+
+    for (final i in invoices) {
+      final isBilled = i.status == InvoiceStatus.validated ||
+          i.status == InvoiceStatus.paid;
+
+      if (isBilled && i.dateInvoice != null) {
+        final inCurrent = !i.dateInvoice!.isBefore(firstOfMonth) &&
+            i.dateInvoice!.isBefore(firstOfNextMonth);
+        final inPrev = !i.dateInvoice!.isBefore(firstOfPrevMonth) &&
+            i.dateInvoice!.isBefore(firstOfMonth);
+        if (inCurrent) {
+          invoicesMois.add(i);
+        } else if (inPrev) {
+          caMoisPrev += _toDouble(i.totalTtc);
+          facturesMoisPrevCount += 1;
+        }
+      }
+
+      if (i.status == InvoiceStatus.validated &&
+          i.paye == 0 &&
+          i.dateDue != null) {
+        if (!i.dateDue!.isBefore(firstOfMonth) &&
+            i.dateDue!.isBefore(firstOfNextMonth)) {
+          invoicesDue.add(i);
+          final bucket = _weekBucket(i.dateDue!.day);
+          weeklyMontant[bucket] += _toDouble(i.totalTtc);
+          weeklyCount[bucket] += 1;
+        } else if (i.dateDue!.isBefore(firstOfMonth)) {
+          invoicesEnRetard.add(i);
+          enRetardMontant += _toDouble(i.totalTtc);
+        }
+      }
+    }
+
+    invoicesMois.sort((a, b) {
+      final da = a.dateInvoice;
+      final db = b.dateInvoice;
+      if (da == null || db == null) return 0;
+      return db.compareTo(da);
+    });
+    invoicesDue.sort((a, b) {
+      final da = a.dateDue;
+      final db = b.dateDue;
+      if (da == null || db == null) return 0;
+      return da.compareTo(db);
+    });
+    invoicesEnRetard.sort((a, b) {
+      final da = a.dateDue;
+      final db = b.dateDue;
+      if (da == null || db == null) return 0;
+      return da.compareTo(db);
+    });
+
+    return DashboardDetails(
+      caMoisPrev: caMoisPrev,
+      facturesMoisPrevCount: facturesMoisPrevCount,
+      invoicesMois: List.unmodifiable(invoicesMois),
+      invoicesDueMois: List.unmodifiable(invoicesDue),
+      invoicesEnRetard: List.unmodifiable(invoicesEnRetard),
+      facturesEnRetardMontant: enRetardMontant,
+      weeklyDueMontant: List.unmodifiable(weeklyMontant),
+      weeklyDueCount: List.unmodifiable(weeklyCount),
+    );
+  }
+
+  /// Renvoie l'index 0..3 du bucket hebdomadaire pour un jour 1..31.
+  ///   S1 = 1..7, S2 = 8..14, S3 = 15..21, S4 = 22..fin.
+  static int _weekBucket(int day) {
+    if (day <= 7) return 0;
+    if (day <= 14) return 1;
+    if (day <= 21) return 2;
+    return 3;
+  }
+
+  /// Clé d'identification d'un client pour comptage distinct — préfère
+  /// l'id local si présent, sinon l'id distant.
+  static String? _clientKey(Invoice i) {
+    if (i.socidLocal != null) return 'L${i.socidLocal}';
+    if (i.socidRemote != null) return 'R${i.socidRemote}';
+    return null;
+  }
+
+  static double _toDouble(String? raw) {
     if (raw == null) return 0;
     return double.tryParse(raw.replaceAll(',', '.')) ?? 0;
   }

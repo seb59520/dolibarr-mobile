@@ -1,4 +1,5 @@
 import 'package:dolibarr_mobile/core/di/providers.dart';
+import 'package:dolibarr_mobile/core/preferences/tweaks.dart';
 import 'package:dolibarr_mobile/features/invoices/presentation/providers/invoice_providers.dart';
 import 'package:dolibarr_mobile/features/proposals/data/datasources/proposal_local_dao.dart';
 import 'package:dolibarr_mobile/features/proposals/data/datasources/proposal_remote_datasource.dart';
@@ -36,9 +37,24 @@ final proposalFiltersProvider =
   ProposalFiltersNotifier.new,
 );
 
+const _kProposalSortBy = 'proposals.sortBy';
+const _kProposalSortDesc = 'proposals.sortDescending';
+
 class ProposalFiltersNotifier extends Notifier<ProposalFilters> {
   @override
-  ProposalFilters build() => const ProposalFilters();
+  ProposalFilters build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    final sortByName = prefs.getString(_kProposalSortBy);
+    final sortBy = ProposalSortBy.values.firstWhere(
+      (v) => v.name == sortByName,
+      orElse: () => ProposalSortBy.dateProposal,
+    );
+    final sortDesc = prefs.getBool(_kProposalSortDesc) ?? true;
+    return ProposalFilters(
+      sortBy: sortBy,
+      sortDescending: sortDesc,
+    );
+  }
 
   void setSearch(String search) =>
       state = state.copyWith(search: search);
@@ -51,6 +67,20 @@ class ProposalFiltersNotifier extends Notifier<ProposalFilters> {
       next.add(s);
     }
     state = state.copyWith(statuses: next);
+  }
+
+  /// Active un critère de tri. Si déjà actif → inverse le sens.
+  Future<void> setSort(ProposalSortBy by) async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    if (state.sortBy == by) {
+      final next = !state.sortDescending;
+      state = state.copyWith(sortDescending: next);
+      await prefs.setBool(_kProposalSortDesc, next);
+    } else {
+      state = state.copyWith(sortBy: by, sortDescending: true);
+      await prefs.setString(_kProposalSortBy, by.name);
+      await prefs.setBool(_kProposalSortDesc, true);
+    }
   }
 
   void reset() => state = const ProposalFilters();

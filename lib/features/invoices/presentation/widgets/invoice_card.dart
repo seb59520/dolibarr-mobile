@@ -29,13 +29,20 @@ class InvoiceCard extends ConsumerWidget {
     final fields = ref.watch(
       tweaksProvider.select((t) => t.invoiceFields),
     );
-    final showClient =
-        fields.contains(InvoiceCardField.client) && i.socidLocal != null;
-    final clientName = showClient
-        ? ref
+    final showClient = fields.contains(InvoiceCardField.client) &&
+        (i.socidLocal != null || i.socidRemote != null);
+    String? clientName;
+    if (showClient) {
+      if (i.socidLocal != null) {
+        clientName = ref
             .watch(thirdPartyByIdProvider(i.socidLocal!))
-            .maybeWhen(data: (tp) => tp?.name, orElse: () => null)
-        : null;
+            .maybeWhen(data: (tp) => tp?.name, orElse: () => null);
+      } else if (i.socidRemote != null) {
+        clientName = ref
+            .watch(thirdPartyByRemoteIdProvider(i.socidRemote!))
+            .maybeWhen(data: (tp) => tp?.name, orElse: () => null);
+      }
+    }
     final showDueDate =
         fields.contains(InvoiceCardField.dueDate) && i.dateDue != null;
     final showHt =

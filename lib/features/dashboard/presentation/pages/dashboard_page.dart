@@ -3,8 +3,15 @@ import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:dolibarr_mobile/core/utils/formatters.dart';
 import 'package:dolibarr_mobile/features/dashboard/domain/entities/dashboard_metrics.dart';
 import 'package:dolibarr_mobile/features/dashboard/presentation/providers/dashboard_providers.dart';
-import 'package:dolibarr_mobile/shared/widgets/kpi_card.dart';
+import 'package:dolibarr_mobile/features/dashboard/presentation/widgets/dashboard_detail_sheets.dart';
+import 'package:dolibarr_mobile/features/dashboard/presentation/widgets/trend_combo_chart.dart';
+import 'package:dolibarr_mobile/features/stats/domain/entities/stats_snapshot.dart';
+import 'package:dolibarr_mobile/features/stats/domain/entities/yearly_stat.dart';
+import 'package:dolibarr_mobile/features/stats/domain/repositories/stats_repository.dart';
+import 'package:dolibarr_mobile/features/stats/presentation/providers/stats_providers.dart';
+import 'package:dolibarr_mobile/shared/widgets/app_card.dart';
 import 'package:dolibarr_mobile/shared/widgets/network_banner.dart';
+import 'package:dolibarr_mobile/shared/widgets/shell_menu_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,71 +22,36 @@ class DashboardPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final metricsAsync = ref.watch(dashboardMetricsProvider);
-    final activityAsync = ref.watch(dashboardRecentActivityProvider);
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Accueil'),
+        leading: const ShellMenuButton(),
+        title: const Text('Pilotage'),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
           ref
             ..invalidate(dashboardMetricsProvider)
-            ..invalidate(dashboardRecentActivityProvider);
+            ..invalidate(dashboardRecentActivityProvider)
+            ..invalidate(statsSnapshotForPeriodProvider);
           await Future<void>.delayed(const Duration(milliseconds: 200));
         },
         child: ListView(
-          padding: const EdgeInsets.all(AppTokens.spaceMd),
-          children: [
-            const NetworkBanner(),
-            const SizedBox(height: AppTokens.spaceMd),
-            metricsAsync.when(
-              data: (m) => _MetricsGrid(metrics: m),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Text(
-                'Indicateurs indisponibles : $e',
-                style: theme.textTheme.bodySmall,
-              ),
+          padding: const EdgeInsets.symmetric(vertical: AppTokens.spaceMd),
+          children: const [
+            NetworkBanner(),
+            SizedBox(height: AppTokens.spaceXs),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppTokens.spaceMd),
+              child: _PilotageCard(),
             ),
-            const SizedBox(height: AppTokens.spaceLg),
-            Text(
-              'Actions rapides',
-              style: theme.textTheme.titleMedium,
+            SizedBox(height: AppTokens.spaceLg),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppTokens.spaceMd),
+              child: _QuickActionsSection(),
             ),
-            const SizedBox(height: AppTokens.spaceXs),
-            const _QuickActions(),
-            const SizedBox(height: AppTokens.spaceLg),
-            Text(
-              'Activité récente',
-              style: theme.textTheme.titleMedium,
-            ),
-            const SizedBox(height: AppTokens.spaceXs),
-            activityAsync.when(
-              data: (items) {
-                if (items.isEmpty) {
-                  return Padding(
-                    padding: const EdgeInsets.all(AppTokens.spaceMd),
-                    child: Text(
-                      'Aucune activité — commence par synchroniser '
-                      'tes tiers ou créer un devis.',
-                      style: theme.textTheme.bodySmall,
-                    ),
-                  );
-                }
-                return Column(
-                  children: [
-                    for (final item in items) _ActivityTile(item: item),
-                  ],
-                );
-              },
-              loading: () => const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: LinearProgressIndicator(),
-              ),
-              error: (_, __) => const SizedBox.shrink(),
-            ),
+            SizedBox(height: AppTokens.spaceLg),
+            _RecentActivitySection(),
+            SizedBox(height: AppTokens.spaceLg),
           ],
         ),
       ),
@@ -87,105 +59,688 @@ class DashboardPage extends ConsumerWidget {
   }
 }
 
-class _MetricsGrid extends StatelessWidget {
-  const _MetricsGrid({required this.metrics});
+const List<String> _kFrenchMonths = [
+  'janvier',
+  'février',
+  'mars',
+  'avril',
+  'mai',
+  'juin',
+  'juillet',
+  'août',
+  'septembre',
+  'octobre',
+  'novembre',
+  'décembre',
+];
+
+String _monthLabel(DateTime now) =>
+    '${_kFrenchMonths[now.month - 1]} ${now.year}';
+
+String _activityCountLabel(int n) {
+  if (n == 0) return 'aucun mouvement';
+  return '$n ${n > 1 ? "éléments" : "élément"}';
+}
+
+/// Carte hero « Pilotage » :
+/// - sélecteur de période (12 mois / année civile / complet)
+/// - courbe combo facturé+perçu
+/// - 4 KPIs sur la période
+/// - 2 rangs temps réel : CA du mois en cours + versement attendu
+class _PilotageCard extends ConsumerWidget {
+  const _PilotageCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final c = DoliMobColors.of(context);
+    final period = ref.watch(dashboardPilotagePeriodProvider);
+    final snapshotAsync = ref.watch(dashboardPilotageSnapshotProvider);
+    final metricsAsync = ref.watch(dashboardMetricsProvider);
+
+    return AppCard(
+      margin: EdgeInsets.zero,
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 12, 10),
+            child: Row(
+              children: [
+                Icon(LucideIcons.gauge, size: 18, color: c.accent),
+                const SizedBox(width: 8),
+                Text(
+                  'PILOTAGE',
+                  style: TextStyle(
+                    color: c.ink3,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.6,
+                  ),
+                ),
+                const Spacer(),
+                Flexible(child: _PeriodChips(active: period)),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
+            child: _Legend(accent: c.accent, success: c.success),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 14, 10),
+            child: snapshotAsync.when(
+              loading: () => const SizedBox(
+                height: 240,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              error: (e, _) => SizedBox(
+                height: 240,
+                child: Center(
+                  child: Text(
+                    'Indicateurs indisponibles',
+                    style: TextStyle(color: c.ink2, fontSize: 12),
+                  ),
+                ),
+              ),
+              data: (snap) => TrendComboChart(
+                monthly: snap.monthly,
+                maxValue: snap.maxMonthlyValue,
+              ),
+            ),
+          ),
+          Container(height: 1, color: c.hairline2),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+            child: snapshotAsync.when(
+              loading: () => const SizedBox(
+                height: 96,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              error: (_, __) => const SizedBox(height: 8),
+              data: (snap) => _KpiRow(
+                stat: _aggregateForPeriod(snap, period),
+                periodLabel: _periodSubtitle(period, snap),
+              ),
+            ),
+          ),
+          Container(height: 1, color: c.hairline2),
+          metricsAsync.when(
+            data: (m) => _RealtimeRows(metrics: m),
+            loading: () => const Padding(
+              padding: EdgeInsets.symmetric(vertical: 18),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static YearlyStat _aggregateForPeriod(
+    StatsSnapshot snap,
+    StatsPeriod period,
+  ) {
+    if (period == StatsPeriod.currentYear) return snap.currentYear;
+    var ht = 0.0;
+    var ttc = 0.0;
+    var percu = 0.0;
+    for (final m in snap.monthly) {
+      ht += m.factureHt;
+      ttc += m.factureTtc;
+      percu += m.percu;
+    }
+    return YearlyStat(
+      year: DateTime.now().year,
+      factureHt: ht,
+      factureTtc: ttc,
+      percu: percu,
+    );
+  }
+
+  static String _periodSubtitle(StatsPeriod p, StatsSnapshot snap) {
+    switch (p) {
+      case StatsPeriod.rolling12:
+        return '12 derniers mois';
+      case StatsPeriod.currentYear:
+        return 'Année ${snap.currentYear.year}';
+      case StatsPeriod.allHistory:
+        if (snap.monthly.isEmpty) return 'Depuis le début';
+        final first = snap.monthly.first;
+        return 'Depuis ${_kFrenchMonths[first.month - 1]} ${first.year}';
+    }
+  }
+}
+
+class _PeriodChips extends ConsumerWidget {
+  const _PeriodChips({required this.active});
+  final StatsPeriod active;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      reverse: true,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _Chip(
+            label: '12 mois',
+            selected: active == StatsPeriod.rolling12,
+            onTap: () => ref
+                .read(dashboardPilotagePeriodProvider.notifier)
+                .state = StatsPeriod.rolling12,
+          ),
+          const SizedBox(width: 4),
+          _Chip(
+            label: 'Année',
+            selected: active == StatsPeriod.currentYear,
+            onTap: () => ref
+                .read(dashboardPilotagePeriodProvider.notifier)
+                .state = StatsPeriod.currentYear,
+          ),
+          const SizedBox(width: 4),
+          _Chip(
+            label: 'Complet',
+            selected: active == StatsPeriod.allHistory,
+            onTap: () => ref
+                .read(dashboardPilotagePeriodProvider.notifier)
+                .state = StatsPeriod.allHistory,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Chip extends StatelessWidget {
+  const _Chip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = DoliMobColors.of(context);
+    return Material(
+      color: selected ? c.accent : c.fill,
+      borderRadius: BorderRadius.circular(999),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(999),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: selected ? Colors.white : c.ink2,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Legend extends StatelessWidget {
+  const _Legend({required this.accent, required this.success});
+  final Color accent;
+  final Color success;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = DoliMobColors.of(context);
+    return Row(
+      children: [
+        _LegendDot(color: accent, label: 'Facturé', textColor: c.ink2),
+        const SizedBox(width: 12),
+        _LegendDot(color: success, label: 'Perçu', textColor: c.ink2),
+      ],
+    );
+  }
+}
+
+class _LegendDot extends StatelessWidget {
+  const _LegendDot({
+    required this.color,
+    required this.label,
+    required this.textColor,
+  });
+  final Color color;
+  final String label;
+  final Color textColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 5),
+        Text(label, style: TextStyle(color: textColor, fontSize: 12)),
+      ],
+    );
+  }
+}
+
+class _KpiRow extends StatelessWidget {
+  const _KpiRow({required this.stat, required this.periodLabel});
+  final YearlyStat stat;
+  final String periodLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = DoliMobColors.of(context);
+    final solde = stat.factureTtc - stat.percu;
+    final taux = stat.factureTtc <= 0
+        ? '—'
+        : '${(stat.percu / stat.factureTtc * 100).toStringAsFixed(0)} %';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          periodLabel.toUpperCase(),
+          style: TextStyle(
+            color: c.ink3,
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.6,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: _KpiCell(
+                label: 'Facturé',
+                value: formatMoney(stat.factureTtc),
+                tone: c.accent,
+                icon: LucideIcons.receipt,
+              ),
+            ),
+            Container(width: 1, height: 36, color: c.hairline2),
+            Expanded(
+              child: _KpiCell(
+                label: 'Perçu',
+                value: formatMoney(stat.percu),
+                tone: c.success,
+                icon: LucideIcons.banknote,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+              child: _KpiCell(
+                label: 'Reste',
+                value: formatMoney(solde),
+                tone: solde > 0 ? c.danger : c.ink2,
+                icon: LucideIcons.alertTriangle,
+              ),
+            ),
+            Container(width: 1, height: 36, color: c.hairline2),
+            Expanded(
+              child: _KpiCell(
+                label: 'Recouvrement',
+                value: taux,
+                tone: c.ink,
+                icon: LucideIcons.percent,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _KpiCell extends StatelessWidget {
+  const _KpiCell({
+    required this.label,
+    required this.value,
+    required this.tone,
+    required this.icon,
+  });
+  final String label;
+  final String value;
+  final Color tone;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = DoliMobColors.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 14, color: tone),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: TextStyle(color: c.ink2, fontSize: 11),
+              ),
+            ],
+          ),
+          const SizedBox(height: 2),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: tone,
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.4,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Deux lignes temps réel : CA du mois courant + versement attendu fin
+/// de mois. Tap → bottom sheet détail (réutilise les sheets existantes).
+class _RealtimeRows extends StatelessWidget {
+  const _RealtimeRows({required this.metrics});
   final DashboardMetrics metrics;
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      mainAxisSpacing: AppTokens.spaceXs,
-      crossAxisSpacing: AppTokens.spaceXs,
-      childAspectRatio: 1.6,
+    final c = DoliMobColors.of(context);
+    final now = DateTime.now();
+    final hasPending = metrics.versementAttenduCount > 0;
+    final pendingColor = hasPending ? c.accent : c.ink3;
+
+    return Column(
       children: [
-        KpiCard(
-          label: 'CA mois en cours',
-          value: formatMoney(metrics.caMois),
+        _RealtimeRow(
           icon: LucideIcons.trendingUp,
-          tone: KpiTone.success,
-          onTap: () => GoRouter.of(context).go(RoutePaths.invoices),
+          tone: c.success,
+          title: 'CA ${_monthLabel(now)}',
+          subtitle: _facturesLabel(metrics),
+          value: formatMoney(metrics.caMois),
+          onTap: () => showMonthRevenueDetailSheet(context, metrics: metrics),
         ),
-        KpiCard(
-          label: 'Devis en attente',
-          value: '${metrics.devisEnAttenteCount}',
-          hint: 'à signer',
-          icon: LucideIcons.fileText,
-          tone: KpiTone.accent,
-          onTap: () => GoRouter.of(context).go(RoutePaths.proposals),
-        ),
-        KpiCard(
-          label: 'Factures impayées',
-          value: '${metrics.facturesImpayeesCount}',
-          hint: formatMoney(metrics.facturesImpayeesMontant),
-          icon: LucideIcons.alertTriangle,
-          tone: KpiTone.danger,
-          onTap: () => GoRouter.of(context).go(RoutePaths.invoices),
-        ),
-        KpiCard(
-          label: 'Statistiques',
-          value: 'CA / Paiements',
-          hint: '12 mois + années',
-          icon: LucideIcons.barChart3,
-          tone: KpiTone.accent,
-          onTap: () => GoRouter.of(context).go(RoutePaths.stats),
+        Container(height: 1, color: c.hairline2),
+        _RealtimeRow(
+          icon: LucideIcons.calendarClock,
+          tone: pendingColor,
+          title: 'Versement attendu fin ${_kFrenchMonths[now.month - 1]}',
+          subtitle: hasPending
+              ? _pendingLabel(metrics.versementAttenduCount)
+              : 'aucune échéance ce mois',
+          value: hasPending
+              ? formatMoney(metrics.versementAttenduMontant)
+              : '—',
+          onTap: () => showMonthDueDetailSheet(context, metrics: metrics),
         ),
       ],
     );
   }
+
+  String _facturesLabel(DashboardMetrics m) {
+    final f = m.facturesMoisCount;
+    final cli = m.clientsMoisCount;
+    final factures = '$f ${f > 1 ? "factures" : "facture"}';
+    final clients = '$cli ${cli > 1 ? "clients" : "client"}';
+    return '$factures · $clients';
+  }
+
+  String _pendingLabel(int count) {
+    final noun = count > 1 ? 'factures' : 'facture';
+    return '$count $noun à échéance';
+  }
 }
 
-class _QuickActions extends StatelessWidget {
-  const _QuickActions();
+class _RealtimeRow extends StatelessWidget {
+  const _RealtimeRow({
+    required this.icon,
+    required this.tone,
+    required this.title,
+    required this.subtitle,
+    required this.value,
+    required this.onTap,
+  });
+  final IconData icon;
+  final Color tone;
+  final String title;
+  final String subtitle;
+  final String value;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: AppTokens.spaceXs,
-      runSpacing: AppTokens.spaceXs,
+    final c = DoliMobColors.of(context);
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 14, 12),
+        child: Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: tone.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              alignment: Alignment.center,
+              child: Icon(icon, size: 18, color: tone),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: c.ink,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: TextStyle(color: c.ink2, fontSize: 11),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              value,
+              style: TextStyle(
+                color: tone,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
+            ),
+            Icon(LucideIcons.chevronRight, size: 16, color: c.ink3),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _QuickActionsSection extends StatelessWidget {
+  const _QuickActionsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FilledButton.icon(
-          onPressed: () => context.go(RoutePaths.thirdpartyNew),
-          icon: const Icon(LucideIcons.userPlus, size: 16),
-          label: const Text('Tiers'),
-        ),
-        FilledButton.tonalIcon(
-          onPressed: () => context.go(RoutePaths.proposalNew),
-          icon: const Icon(LucideIcons.fileText, size: 16),
-          label: const Text('Devis'),
-        ),
-        FilledButton.tonalIcon(
-          onPressed: () => context.go(RoutePaths.invoiceNew),
-          icon: const Icon(LucideIcons.receipt, size: 16),
-          label: const Text('Facture'),
+        Text('Actions rapides', style: theme.textTheme.titleMedium),
+        const SizedBox(height: AppTokens.spaceXs),
+        Wrap(
+          spacing: AppTokens.spaceXs,
+          runSpacing: AppTokens.spaceXs,
+          children: [
+            FilledButton.icon(
+              onPressed: () => context.go(RoutePaths.thirdpartyNew),
+              icon: const Icon(LucideIcons.userPlus, size: 16),
+              label: const Text('Tiers'),
+            ),
+            FilledButton.tonalIcon(
+              onPressed: () => context.go(RoutePaths.proposalNew),
+              icon: const Icon(LucideIcons.fileText, size: 16),
+              label: const Text('Devis'),
+            ),
+            FilledButton.tonalIcon(
+              onPressed: () => context.go(RoutePaths.invoiceNew),
+              icon: const Icon(LucideIcons.receipt, size: 16),
+              label: const Text('Facture'),
+            ),
+          ],
         ),
       ],
     );
   }
 }
 
-class _ActivityTile extends StatelessWidget {
-  const _ActivityTile({required this.item});
+class _RecentActivitySection extends ConsumerWidget {
+  const _RecentActivitySection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activityAsync = ref.watch(dashboardRecentActivityProvider);
+    final c = DoliMobColors.of(context);
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppTokens.spaceMd),
+      child: AppCard(
+        margin: EdgeInsets.zero,
+        padding: EdgeInsets.zero,
+        child: Theme(
+          data: theme.copyWith(dividerColor: Colors.transparent),
+          child: ExpansionTile(
+            tilePadding: const EdgeInsets.fromLTRB(16, 4, 12, 4),
+            childrenPadding: EdgeInsets.zero,
+            leading: Icon(LucideIcons.history, size: 18, color: c.ink2),
+            title: Text(
+              'Activité récente',
+              style: theme.textTheme.titleSmall,
+            ),
+            subtitle: activityAsync.maybeWhen(
+              data: (items) => Text(
+                _activityCountLabel(items.length),
+                style: TextStyle(color: c.ink3, fontSize: 11),
+              ),
+              orElse: () => null,
+            ),
+            children: [
+              activityAsync.when(
+                data: (items) {
+                  if (items.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+                      child: Text(
+                        'Aucune activité — commence par synchroniser '
+                        'tes tiers ou créer un devis.',
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    );
+                  }
+                  return Column(
+                    children: [
+                      for (var i = 0; i < items.length; i++)
+                        _ActivityRow(
+                          item: items[i],
+                          isLast: i == items.length - 1,
+                        ),
+                    ],
+                  );
+                },
+                loading: () => const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: LinearProgressIndicator(),
+                ),
+                error: (_, __) => const SizedBox.shrink(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ActivityRow extends StatelessWidget {
+  const _ActivityRow({required this.item, required this.isLast});
   final RecentActivityItem item;
+  final bool isLast;
 
   @override
   Widget build(BuildContext context) {
+    final c = DoliMobColors.of(context);
     final (icon, route) = _resolveTarget(item);
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 2),
-      child: ListTile(
-        leading: Icon(icon),
-        title: Text(item.label),
-        subtitle: Text(
-          [
-            if (item.subtitle != null) item.subtitle!,
-            _relativeTime(item.updatedAt),
-          ].join(' · '),
+    return InkWell(
+      onTap: route == null ? null : () => context.go(route),
+      child: Container(
+        decoration: BoxDecoration(
+          border: isLast
+              ? null
+              : Border(bottom: BorderSide(color: c.hairline2)),
         ),
-        trailing: const Icon(LucideIcons.chevronRight),
-        onTap: route == null ? null : () => context.go(route),
+        padding: const EdgeInsets.fromLTRB(16, 10, 12, 10),
+        child: Row(
+          children: [
+            Icon(icon, size: 18, color: c.ink2),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    item.label,
+                    style: TextStyle(
+                      color: c.ink,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    [
+                      if (item.subtitle != null) item.subtitle!,
+                      _relativeTime(item.updatedAt),
+                    ].join(' · '),
+                    style: TextStyle(color: c.ink3, fontSize: 11),
+                  ),
+                ],
+              ),
+            ),
+            if (route != null)
+              Icon(LucideIcons.chevronRight, size: 16, color: c.ink3),
+          ],
+        ),
       ),
     );
   }

@@ -31,3 +31,11 @@ final statsSnapshotProvider =
     StreamProvider.autoDispose<StatsSnapshot>((ref) {
   return ref.watch(statsRepositoryProvider).watchSnapshot();
 });
+
+/// Snapshot paramétré par [StatsPeriod] — utilisé par le pilotage
+/// du dashboard pour basculer 12 mois / année / complet sans recréer
+/// un repository.
+final statsSnapshotForPeriodProvider = StreamProvider.autoDispose
+    .family<StatsSnapshot, StatsPeriod>((ref, period) {
+  return ref.watch(statsRepositoryProvider).watchSnapshot(period: period);
+});

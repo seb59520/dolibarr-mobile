@@ -1,8 +1,9 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:dolibarr_mobile/core/utils/formatters.dart';
+import 'package:dolibarr_mobile/core/utils/pdf_share.dart';
 import 'package:dolibarr_mobile/features/proposals/domain/entities/proposal.dart';
 import 'package:dolibarr_mobile/features/proposals/domain/entities/proposal_line.dart';
 import 'package:dolibarr_mobile/features/proposals/presentation/providers/proposal_providers.dart';
@@ -16,8 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 class ProposalDetailPage extends ConsumerWidget {
   const ProposalDetailPage({required this.localId, super.key});
@@ -210,12 +209,31 @@ class _ParentLink extends ConsumerWidget {
       );
     }
     if (p.socidRemote != null) {
-      return Card(
-        child: ListTile(
-          leading: const Icon(LucideIcons.briefcase),
-          title: Text('Client #${p.socidRemote}'),
-          subtitle: const Text('Client'),
-        ),
+      final async = ref.watch(thirdPartyByRemoteIdProvider(p.socidRemote!));
+      return async.maybeWhen(
+        data: (tp) {
+          if (tp != null) {
+            return Card(
+              child: ListTile(
+                leading: const Icon(LucideIcons.briefcase),
+                title: Text(tp.name),
+                subtitle: const Text('Client'),
+                trailing: const Icon(LucideIcons.chevronRight),
+                onTap: () => context.go(
+                  RoutePaths.thirdpartyDetailFor(tp.localId),
+                ),
+              ),
+            );
+          }
+          return Card(
+            child: ListTile(
+              leading: const Icon(LucideIcons.briefcase),
+              title: Text('Client #${p.socidRemote}'),
+              subtitle: const Text('Client'),
+            ),
+          );
+        },
+        orElse: () => const SizedBox.shrink(),
       );
     }
     return const SizedBox.shrink();
@@ -740,12 +758,9 @@ class _WorkflowActionsState extends ConsumerState<_WorkflowActions> {
     await r.fold(
       onSuccess: (data) async {
         try {
-          final dir = await getTemporaryDirectory();
-          final file = File('${dir.path}/${data.filename}');
-          await file.writeAsBytes(data.bytes);
-          await Share.shareXFiles(
-            [XFile(file.path, mimeType: 'application/pdf')],
-            subject: data.filename,
+          await sharePdfBytes(
+            Uint8List.fromList(data.bytes),
+            data.filename,
           );
         } catch (e) {
           _toast("Impossible d'ouvrir le PDF : $e");

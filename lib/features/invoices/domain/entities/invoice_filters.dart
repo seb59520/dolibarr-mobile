@@ -1,6 +1,18 @@
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice.dart';
 import 'package:equatable/equatable.dart';
 
+/// Critères de tri proposés à l'utilisateur sur la liste des factures.
+enum InvoiceSortBy {
+  dateInvoice('Émission'),
+  dateDue('Échéance'),
+  ref('Référence');
+
+  const InvoiceSortBy(this.label);
+
+  /// Libellé pour les chips de tri.
+  final String label;
+}
+
 /// Critères de recherche / filtrage de la liste des factures.
 final class InvoiceFilters extends Equatable {
   const InvoiceFilters({
@@ -14,6 +26,8 @@ final class InvoiceFilters extends Equatable {
     this.dateFrom,
     this.dateTo,
     this.unpaidOnly = false,
+    this.sortBy = InvoiceSortBy.dateInvoice,
+    this.sortDescending = true,
   });
 
   /// Recherche libre (ref, ref_client).
@@ -32,6 +46,12 @@ final class InvoiceFilters extends Equatable {
   /// Si vrai, ne montre que les factures non payées (paye=0).
   final bool unpaidOnly;
 
+  /// Critère de tri actif.
+  final InvoiceSortBy sortBy;
+
+  /// `true` = décroissant (plus récent en haut / plus grand en premier).
+  final bool sortDescending;
+
   InvoiceFilters copyWith({
     String? search,
     Set<InvoiceStatus>? statuses,
@@ -42,6 +62,8 @@ final class InvoiceFilters extends Equatable {
     DateTime? dateTo,
     bool clearDateTo = false,
     bool? unpaidOnly,
+    InvoiceSortBy? sortBy,
+    bool? sortDescending,
   }) =>
       InvoiceFilters(
         search: search ?? this.search,
@@ -52,6 +74,8 @@ final class InvoiceFilters extends Equatable {
         dateFrom: clearDateFrom ? null : (dateFrom ?? this.dateFrom),
         dateTo: clearDateTo ? null : (dateTo ?? this.dateTo),
         unpaidOnly: unpaidOnly ?? this.unpaidOnly,
+        sortBy: sortBy ?? this.sortBy,
+        sortDescending: sortDescending ?? this.sortDescending,
       );
 
   @override
@@ -62,5 +86,7 @@ final class InvoiceFilters extends Equatable {
         dateFrom,
         dateTo,
         unpaidOnly,
+        sortBy,
+        sortDescending,
       ];
 }

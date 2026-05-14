@@ -1,9 +1,10 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dolibarr_mobile/core/preferences/tweaks.dart';
 import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:dolibarr_mobile/core/utils/formatters.dart';
+import 'package:dolibarr_mobile/core/utils/pdf_share.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice.dart';
 import 'package:dolibarr_mobile/features/invoices/domain/entities/invoice_line.dart';
 import 'package:dolibarr_mobile/features/invoices/presentation/providers/invoice_providers.dart';
@@ -17,8 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 class InvoiceDetailPage extends ConsumerWidget {
   const InvoiceDetailPage({required this.localId, super.key});
@@ -99,13 +98,20 @@ class _Body extends ConsumerWidget {
 
     final fields =
         ref.watch(tweaksProvider.select((t) => t.invoiceFields));
-    final showClient =
-        fields.contains(InvoiceCardField.client) && i.socidLocal != null;
-    final clientName = showClient
-        ? ref
+    final showClient = fields.contains(InvoiceCardField.client) &&
+        (i.socidLocal != null || i.socidRemote != null);
+    String? clientName;
+    if (showClient) {
+      if (i.socidLocal != null) {
+        clientName = ref
             .watch(thirdPartyByIdProvider(i.socidLocal!))
-            .maybeWhen(data: (tp) => tp?.name, orElse: () => null)
-        : null;
+            .maybeWhen(data: (tp) => tp?.name, orElse: () => null);
+      } else if (i.socidRemote != null) {
+        clientName = ref
+            .watch(thirdPartyByRemoteIdProvider(i.socidRemote!))
+            .maybeWhen(data: (tp) => tp?.name, orElse: () => null);
+      }
+    }
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -236,12 +242,33 @@ class _ParentLink extends ConsumerWidget {
       );
     }
     if (i.socidRemote != null) {
-      return Card(
-        child: ListTile(
-          leading: const Icon(LucideIcons.briefcase),
-          title: Text('Client #${i.socidRemote}'),
-          subtitle: const Text('Client'),
-        ),
+      final async = ref.watch(thirdPartyByRemoteIdProvider(i.socidRemote!));
+      return async.maybeWhen(
+        data: (tp) {
+          if (tp != null) {
+            return Card(
+              child: ListTile(
+                leading: const Icon(LucideIcons.briefcase),
+                title: Text(tp.name),
+                subtitle: const Text('Client'),
+                trailing: const Icon(LucideIcons.chevronRight),
+                onTap: () => context.go(
+                  RoutePaths.thirdpartyDetailFor(tp.localId),
+                ),
+              ),
+            );
+          }
+          // Tiers pas encore en cache local : on garde l'affichage
+          // identifiant remote en attendant une sync des tiers.
+          return Card(
+            child: ListTile(
+              leading: const Icon(LucideIcons.briefcase),
+              title: Text('Client #${i.socidRemote}'),
+              subtitle: const Text('Client'),
+            ),
+          );
+        },
+        orElse: () => const SizedBox.shrink(),
       );
     }
     return const SizedBox.shrink();
@@ -716,12 +743,9 @@ class _WorkflowActionsState extends ConsumerState<_WorkflowActions> {
     await r.fold(
       onSuccess: (data) async {
         try {
-          final dir = await getTemporaryDirectory();
-          final file = File('${dir.path}/${data.filename}');
-          await file.writeAsBytes(data.bytes);
-          await Share.shareXFiles(
-            [XFile(file.path, mimeType: 'application/pdf')],
-            subject: data.filename,
+          await sharePdfBytes(
+            Uint8List.fromList(data.bytes),
+            data.filename,
           );
         } catch (e) {
           _toast("Impossible d'ouvrir le PDF : $e");
