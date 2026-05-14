@@ -68,10 +68,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       _testResult = null;
       _testError = null;
     });
-    final result =
-        await ref.read(authNotifierProvider.notifier).testConnection(
-              _buildCredentials(),
-            );
+    final result = await ref
+        .read(authNotifierProvider.notifier)
+        .testConnection(_buildCredentials());
     if (!mounted) return;
     setState(() {
       _busyTest = false;
@@ -85,9 +84,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Future<void> _onSubmit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _busySubmit = true);
-    final result = await ref.read(authNotifierProvider.notifier).login(
-          _buildCredentials(),
-        );
+    final result = await ref
+        .read(authNotifierProvider.notifier)
+        .login(_buildCredentials());
     if (!mounted) return;
     setState(() => _busySubmit = false);
     result.fold(
@@ -107,161 +106,171 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   String _humanize(Failure f) => switch (f) {
-        UnauthorizedFailure() =>
-          'Identifiants ou clé API invalides. Vérifiez et réessayez.',
-        NetworkFailure() =>
-          'Impossible de joindre l’instance. Vérifiez l’URL et la connexion.',
-        ServerFailure(:final statusCode) =>
-          'Erreur serveur ($statusCode). Réessayez plus tard.',
-        ValidationFailure() => 'Requête invalide.',
-        _ => 'Erreur inattendue. Réessayez.',
-      };
+    UnauthorizedFailure() =>
+      'Identifiants ou clé API invalides. Vérifiez et réessayez.',
+    NetworkFailure() =>
+      'Impossible de joindre l’instance. Vérifiez l’URL et la connexion.',
+    ServerFailure(:final statusCode) =>
+      'Erreur serveur ($statusCode). Réessayez plus tard.',
+    ValidationFailure() => 'Requête invalide.',
+    _ => 'Erreur inattendue. Réessayez.',
+  };
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppTokens.spaceLg),
-          child: Form(
-            key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: AppTokens.spaceLg),
-                Icon(
-                  Icons.business_center_outlined,
-                  size: 72,
-                  color: theme.colorScheme.primary,
+      body: Stack(
+        children: [
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(AppTokens.spaceLg),
+              child: Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: AppTokens.spaceLg),
+                    Icon(
+                      Icons.business_center_outlined,
+                      size: 72,
+                      color: theme.colorScheme.primary,
+                    ),
+                    const SizedBox(height: AppTokens.spaceMd),
+                    Text(
+                      'Connexion à votre instance',
+                      style: theme.textTheme.headlineSmall,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: AppTokens.spaceXl),
+                    TextFormField(
+                      controller: _urlCtrl,
+                      keyboardType: TextInputType.url,
+                      textInputAction: TextInputAction.next,
+                      decoration: const InputDecoration(
+                        labelText: 'URL de l’instance',
+                        hintText: 'https://erp.exemple.com',
+                        prefixIcon: Icon(LucideIcons.link),
+                      ),
+                      validator: (v) {
+                        final value = v?.trim() ?? '';
+                        if (value.isEmpty) return 'Champ requis';
+                        if (!value.startsWith('http')) {
+                          return 'URL invalide (http:// ou https://)';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: AppTokens.spaceLg),
+                    _ModeSelector(
+                      mode: _mode,
+                      onChanged: (m) => setState(() => _mode = m),
+                    ),
+                    const SizedBox(height: AppTokens.spaceMd),
+                    if (_mode == AuthMode.apiKeyDirect)
+                      _apiKeyField(theme)
+                    else
+                      _loginPasswordFields(theme),
+                    if (_testResult != null) ...[
+                      const SizedBox(height: AppTokens.spaceMd),
+                      _ResultBanner(message: _testResult!, isError: false),
+                    ],
+                    if (_testError != null) ...[
+                      const SizedBox(height: AppTokens.spaceMd),
+                      _ResultBanner(message: _testError!, isError: true),
+                    ],
+                    const SizedBox(height: AppTokens.spaceLg),
+                    OutlinedButton.icon(
+                      onPressed: _busyTest || _busySubmit ? null : _onTest,
+                      icon: _busyTest
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(LucideIcons.checkCircle),
+                      label: const Text('Tester la connexion'),
+                    ),
+                    const SizedBox(height: AppTokens.spaceMd),
+                    FilledButton(
+                      onPressed: _busySubmit || _busyTest ? null : _onSubmit,
+                      child: _busySubmit
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Text('Se connecter'),
+                    ),
+                    const SizedBox(height: AppTokens.spaceLg),
+                  ],
                 ),
-                const SizedBox(height: AppTokens.spaceMd),
-                Text(
-                  'Connexion à votre instance',
-                  style: theme.textTheme.headlineSmall,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: AppTokens.spaceXl),
-                TextFormField(
-                  controller: _urlCtrl,
-                  keyboardType: TextInputType.url,
-                  textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(
-                    labelText: 'URL de l’instance',
-                    hintText: 'https://erp.exemple.com',
-                    prefixIcon: Icon(LucideIcons.link),
-                  ),
-                  validator: (v) {
-                    final value = v?.trim() ?? '';
-                    if (value.isEmpty) return 'Champ requis';
-                    if (!value.startsWith('http')) {
-                      return 'URL invalide (http:// ou https://)';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: AppTokens.spaceLg),
-                _ModeSelector(
-                  mode: _mode,
-                  onChanged: (m) => setState(() => _mode = m),
-                ),
-                const SizedBox(height: AppTokens.spaceMd),
-                if (_mode == AuthMode.apiKeyDirect)
-                  _apiKeyField(theme)
-                else
-                  _loginPasswordFields(theme),
-                if (_testResult != null) ...[
-                  const SizedBox(height: AppTokens.spaceMd),
-                  _ResultBanner(message: _testResult!, isError: false),
-                ],
-                if (_testError != null) ...[
-                  const SizedBox(height: AppTokens.spaceMd),
-                  _ResultBanner(message: _testError!, isError: true),
-                ],
-                const SizedBox(height: AppTokens.spaceLg),
-                OutlinedButton.icon(
-                  onPressed: _busyTest || _busySubmit ? null : _onTest,
-                  icon: _busyTest
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(LucideIcons.checkCircle),
-                  label: const Text('Tester la connexion'),
-                ),
-                const SizedBox(height: AppTokens.spaceMd),
-                FilledButton(
-                  onPressed: _busySubmit || _busyTest ? null : _onSubmit,
-                  child: _busySubmit
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Se connecter'),
-                ),
-                const SizedBox(height: AppTokens.spaceLg),
-              ],
+              ),
             ),
           ),
-        ),
+          Positioned(
+            top: 0,
+            right: 0,
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(AppTokens.spaceXs),
+                child: IconButton(
+                  icon: const Icon(LucideIcons.helpCircle),
+                  tooltip: 'Aide à la connexion',
+                  onPressed: () => context.push(RoutePaths.loginHelp),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _apiKeyField(ThemeData theme) => TextFormField(
-        controller: _apiKeyCtrl,
-        obscureText: !_apiKeyVisible,
-        decoration: InputDecoration(
-          labelText: 'Clé API',
-          helperText: 'Recommandé — créez-la dans votre profil Dolibarr',
-          prefixIcon: const Icon(LucideIcons.key),
-          suffixIcon: IconButton(
-            icon: Icon(_apiKeyVisible
-                ? LucideIcons.eyeOff
-                : LucideIcons.eye),
-            onPressed: () =>
-                setState(() => _apiKeyVisible = !_apiKeyVisible),
-          ),
-        ),
-        validator: (v) =>
-            (v?.trim().isEmpty ?? true) ? 'Champ requis' : null,
-      );
+    controller: _apiKeyCtrl,
+    obscureText: !_apiKeyVisible,
+    decoration: InputDecoration(
+      labelText: 'Clé API',
+      helperText: 'Recommandé — créez-la dans votre profil Dolibarr',
+      prefixIcon: const Icon(LucideIcons.key),
+      suffixIcon: IconButton(
+        icon: Icon(_apiKeyVisible ? LucideIcons.eyeOff : LucideIcons.eye),
+        onPressed: () => setState(() => _apiKeyVisible = !_apiKeyVisible),
+      ),
+    ),
+    validator: (v) => (v?.trim().isEmpty ?? true) ? 'Champ requis' : null,
+  );
 
   Widget _loginPasswordFields(ThemeData theme) => Column(
-        children: [
-          TextFormField(
-            controller: _loginCtrl,
-            textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-              labelText: 'Identifiant',
-              prefixIcon: Icon(LucideIcons.user),
-            ),
-            validator: (v) =>
-                (v?.trim().isEmpty ?? true) ? 'Champ requis' : null,
+    children: [
+      TextFormField(
+        controller: _loginCtrl,
+        textInputAction: TextInputAction.next,
+        decoration: const InputDecoration(
+          labelText: 'Identifiant',
+          prefixIcon: Icon(LucideIcons.user),
+        ),
+        validator: (v) => (v?.trim().isEmpty ?? true) ? 'Champ requis' : null,
+      ),
+      const SizedBox(height: AppTokens.spaceMd),
+      TextFormField(
+        controller: _passwordCtrl,
+        obscureText: !_passwordVisible,
+        decoration: InputDecoration(
+          labelText: 'Mot de passe',
+          prefixIcon: const Icon(LucideIcons.lock),
+          suffixIcon: IconButton(
+            icon: Icon(_passwordVisible ? LucideIcons.eyeOff : LucideIcons.eye),
+            onPressed: () =>
+                setState(() => _passwordVisible = !_passwordVisible),
           ),
-          const SizedBox(height: AppTokens.spaceMd),
-          TextFormField(
-            controller: _passwordCtrl,
-            obscureText: !_passwordVisible,
-            decoration: InputDecoration(
-              labelText: 'Mot de passe',
-              prefixIcon: const Icon(LucideIcons.lock),
-              suffixIcon: IconButton(
-                icon: Icon(_passwordVisible
-                    ? LucideIcons.eyeOff
-                    : LucideIcons.eye),
-                onPressed: () =>
-                    setState(() => _passwordVisible = !_passwordVisible),
-              ),
-            ),
-            validator: (v) =>
-                (v?.isEmpty ?? true) ? 'Champ requis' : null,
-          ),
-        ],
-      );
+        ),
+        validator: (v) => (v?.isEmpty ?? true) ? 'Champ requis' : null,
+      ),
+    ],
+  );
 }
 
 class _ModeSelector extends StatelessWidget {

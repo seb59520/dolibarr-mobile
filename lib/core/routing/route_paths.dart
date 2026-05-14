@@ -6,6 +6,7 @@ abstract final class RoutePaths {
   static const String splash = '/';
   static const String onboarding = '/onboarding';
   static const String login = '/login';
+  static const String loginHelp = '/login/help';
   static const String shell = '/app';
   static const String dashboard = '/app/dashboard';
   static const String thirdparties = '/app/thirdparties';

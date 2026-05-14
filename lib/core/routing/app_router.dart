@@ -1,4 +1,5 @@
 import 'package:dolibarr_mobile/core/routing/route_paths.dart';
+import 'package:dolibarr_mobile/features/auth/presentation/pages/login_help_page.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/pages/login_page.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/pages/onboarding_page.dart';
 import 'package:dolibarr_mobile/features/auth/presentation/pages/settings_page.dart';
@@ -74,6 +75,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.login,
         builder: (_, __) => const LoginPage(),
+      ),
+      GoRoute(
+        path: RoutePaths.loginHelp,
+        builder: (_, __) => const LoginHelpPage(),
       ),
       ShellRoute(
         navigatorKey: shellKey,
