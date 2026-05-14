@@ -58,8 +58,12 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-        beta_groups:
-          - Internal testers
+        # Pas de beta_groups : les members du team Apple Developer sont
+        # automatiquement éligibles pour Internal Testing dans TestFlight
+        # dès que submit_to_testflight passe. Pour ajouter un groupe
+        # External plus tard, créer le groupe dans ASC + remplir les
+        # infos Beta App Review (feedback email, contact) sinon Apple
+        # refuse la soumission.
         submit_to_app_store: false
 
   android-release:
