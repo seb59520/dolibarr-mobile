@@ -23,6 +23,13 @@ jobs:
     timeout-minutes: 30
 
     steps:
+      - name: Pre-checkout — chown workspace to runner
+        # Le container flutter-ci tourne en root et génère .dart_tool/, build/,
+        # ios/Flutter/ephemeral/ avec ownership root → actions/checkout (qui
+        # tourne en gh-runner) ne peut pas les nettoyer. On force le chown
+        # avant le checkout pour que le nettoyage passe.
+        run: docker exec flutter-ci chown -R "$(id -u):$(id -g)" /workspace 2>/dev/null || true
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -47,6 +54,12 @@ jobs:
             /opt/actions-runner-dolibarr-mobile/_work/dolibarr-mobile/dolibarr-mobile/build/web/ \
             /opt/docker/dolibarr-mobile-web/html/
           echo "Deployed at $(date --iso-8601=seconds)"
+
+      - name: Post-run — chown workspace back to runner
+        # Double sécurité : même si la build a planté, on remet l'ownership
+        # pour ne pas bloquer le prochain checkout.
+        if: always()
+        run: docker exec flutter-ci chown -R "$(id -u):$(id -g)" /workspace 2>/dev/null || true
 
       - name: Summary
         if: always()
