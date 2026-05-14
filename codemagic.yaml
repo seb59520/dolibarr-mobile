@@ -16,10 +16,14 @@ workflows:
         script: keychain initialize
       - name: Create cert + profile from scratch
         script: |
+          # Décode la clé RSA depuis la variable base64 (stockée single-line
+          # pour éviter les soucis de newlines dans l'UI Codemagic).
+          echo "$CERTIFICATE_PRIVATE_KEY_B64" | base64 -d > /tmp/cert_key.pem
+          chmod 600 /tmp/cert_key.pem
           app-store-connect fetch-signing-files \
             "cloud.scinnova.dolibarrMobile" \
             --type IOS_APP_STORE \
-            --certificate-key="@env:CERTIFICATE_PRIVATE_KEY" \
+            --certificate-key=@file:/tmp/cert_key.pem \
             --create
       - name: Add certificates to keychain
         script: keychain add-certificates
