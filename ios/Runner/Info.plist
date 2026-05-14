@@ -26,6 +26,10 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSContactsUsageDescription</key>
+	<string>Dolibarr Mobile accède à vos contacts pour synchroniser ceux de votre appareil avec votre instance Dolibarr.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Dolibarr Mobile utilise Face ID pour déverrouiller rapidement l'application en préservant la confidentialité de vos données.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
