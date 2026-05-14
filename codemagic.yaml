@@ -6,6 +6,8 @@ workflows:
     integrations:
       app_store_connect: dolibarr-mobile-asc
     environment:
+      groups:
+        - ios_signing
       flutter: 3.41.9
       xcode: latest
       cocoapods: default
@@ -17,6 +19,7 @@ workflows:
           app-store-connect fetch-signing-files \
             "cloud.scinnova.dolibarrMobile" \
             --type IOS_APP_STORE \
+            --certificate-key="@env:CERTIFICATE_PRIVATE_KEY" \
             --create
       - name: Add certificates to keychain
         script: keychain add-certificates
