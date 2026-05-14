@@ -31,7 +31,12 @@ workflows:
         script: xcode-project use-profiles
       - name: Set build number
         script: |
-          BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APP_ID" 2>/dev/null || echo 0) + 1))
+          # Utiliser le nombre de commits depuis HEAD : strictement
+          # croissant à chaque push, jamais en collision avec un build
+          # déjà uploadé chez Apple (le calcul ASC+1 retombait sur des
+          # numéros déjà pris quand un build précédent était en état
+          # rejeté/processing et masqué par get-latest-app-store-build-number).
+          BUILD_NUMBER=$(git rev-list --count HEAD)
           echo "Build number: $BUILD_NUMBER"
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
       - name: Flutter pub get
