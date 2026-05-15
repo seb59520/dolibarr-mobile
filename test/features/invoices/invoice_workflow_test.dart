@@ -172,7 +172,9 @@ void main() {
         expect(payload['datepaye'], date.millisecondsSinceEpoch ~/ 1000);
         expect(payload['accountid'], 1);
         expect(payload['closepaidinvoices'], 'yes');
-        expect(payload['paymentid'], 'VIR');
+        // Le repo résout VIR → 2 (ID Dolibarr c_paiement) car
+        // l'endpoint exige un int.
+        expect(payload['paymentid'], 2);
         expect(payload['comment'], 'OK');
         expect(payload.containsKey('amount'), isFalse);
       },

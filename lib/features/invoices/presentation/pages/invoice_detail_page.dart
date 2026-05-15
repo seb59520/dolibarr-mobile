@@ -776,16 +776,25 @@ class _PaymentEntryDialog extends StatefulWidget {
   State<_PaymentEntryDialog> createState() => _PaymentEntryDialogState();
 }
 
+/// Modes de paiement connus de Dolibarr (codes `c_paiement`).
+/// Le mapping vers les IDs int Dolibarr est fait côté repository.
+const Map<String, String> _kPaymentModes = {
+  'VIR': 'Virement',
+  'CB': 'Carte bancaire',
+  'CHQ': 'Chèque',
+  'LIQ': 'Espèces',
+  'PRE': 'Prélèvement',
+};
+
 class _PaymentEntryDialogState extends State<_PaymentEntryDialog> {
   final _formKey = GlobalKey<FormState>();
-  final _typeCtrl = TextEditingController(text: 'VIR');
+  String _typeCode = 'VIR';
   final _numCtrl = TextEditingController();
   final _noteCtrl = TextEditingController();
   DateTime _date = DateTime.now();
 
   @override
   void dispose() {
-    _typeCtrl.dispose();
     _numCtrl.dispose();
     _noteCtrl.dispose();
     super.dispose();
@@ -861,12 +870,19 @@ class _PaymentEntryDialogState extends State<_PaymentEntryDialog> {
                 ),
               ),
               const SizedBox(height: AppTokens.spaceMd),
-              TextFormField(
-                controller: _typeCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Mode (code)',
-                  helperText: 'VIR / CHQ / CB / LIQ / PRE',
-                ),
+              DropdownButtonFormField<String>(
+                initialValue: _typeCode,
+                decoration: const InputDecoration(labelText: 'Mode'),
+                items: [
+                  for (final e in _kPaymentModes.entries)
+                    DropdownMenuItem(
+                      value: e.key,
+                      child: Text('${e.value} (${e.key})'),
+                    ),
+                ],
+                onChanged: (v) {
+                  if (v != null) setState(() => _typeCode = v);
+                },
               ),
               const SizedBox(height: AppTokens.spaceMd),
               TextFormField(
@@ -898,7 +914,7 @@ class _PaymentEntryDialogState extends State<_PaymentEntryDialog> {
             Navigator.of(context).pop(
               _PaymentEntry(
                 date: _date,
-                typeCode: notEmpty(_typeCtrl.text),
+                typeCode: _typeCode,
                 num: notEmpty(_numCtrl.text),
                 note: notEmpty(_noteCtrl.text),
               ),

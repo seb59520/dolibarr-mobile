@@ -17,6 +17,20 @@ import 'package:dolibarr_mobile/features/thirdparties/data/datasources/draft_loc
 
 const _draftEntityType = 'invoice';
 
+/// Mapping code → ID Dolibarr (table `llx_c_paiement`).
+///
+/// L'endpoint `/invoices/{id}/payments` valide `paymentid` comme
+/// `@param int {@min 1}` — il rejette le code string "VIR" avant
+/// d'atteindre la méthode PHP. On résout localement ; ces IDs sont
+/// stables sur les installations Dolibarr "stock" et sur SCINNOVA.
+const Map<String, int> _kPaymentCodeToId = {
+  'VIR': 2,
+  'PRE': 3,
+  'LIQ': 4,
+  'CB': 6,
+  'CHQ': 7,
+};
+
 final class InvoiceRepositoryImpl implements InvoiceRepository {
   InvoiceRepositoryImpl({
     required InvoiceRemoteDataSource remote,
@@ -379,12 +393,21 @@ final class InvoiceRepositoryImpl implements InvoiceRepository {
       // Dolibarr /invoices/{id}/payments :
       //  - encaisse systématiquement le solde restant (pas de partiel),
       //  - exige `accountid` quand le module Banque est actif,
-      //  - exige `paymentid` (mode de règlement) + `closepaidinvoices`.
+      //  - exige `paymentid` (ID int du mode de règlement, pas le code)
+      //    + `closepaidinvoices`.
+      final paymentId = paymentTypeCode == null
+          ? null
+          : _kPaymentCodeToId[paymentTypeCode.toUpperCase()];
+      if (paymentTypeCode != null && paymentId == null) {
+        throw ValidationException(
+          message: 'Mode de paiement inconnu : $paymentTypeCode',
+        );
+      }
       final payload = <String, Object?>{
         'datepaye': date.millisecondsSinceEpoch ~/ 1000,
         'accountid': accountId,
         'closepaidinvoices': closePaidInvoices ? 'yes' : 'no',
-        if (paymentTypeCode != null) 'paymentid': paymentTypeCode,
+        if (paymentId != null) 'paymentid': paymentId,
         if (num != null) 'num_payment': num,
         if (note != null) 'comment': note,
       };
