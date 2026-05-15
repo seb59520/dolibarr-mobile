@@ -43,7 +43,7 @@ abstract final class ApiPaths {
       '/invoices/$invoiceId/lines/$lineId';
   static String invoiceValidate(int id) => '/invoices/$id/validate';
   static String invoicePayments(int id) => '/invoices/$id/payments';
-  static String invoiceMarkPaid(int id) => '/invoices/$id/markaspaid';
+  static String invoiceMarkPaid(int id) => '/invoices/$id/settopaid';
 
   // Produits / services
   static const String products = '/products';

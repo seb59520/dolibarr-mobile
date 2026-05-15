@@ -58,14 +58,19 @@ abstract interface class InvoiceRepository {
   /// Liste les paiements (online).
   Future<Result<List<InvoicePayment>>> fetchPayments(int localId);
 
-  /// Crée un paiement (online).
+  /// Crée un paiement (online). Encaisse le **solde restant** de la
+  /// facture côté Dolibarr — le module Banque exige `accountId`
+  /// (compte bancaire) et `closePaidInvoices` (clôture auto une fois
+  /// le total atteint). Pour les paiements partiels multi-factures,
+  /// passer plus tard par /paymentsdistributed.
   Future<Result<int>> createPayment({
     required int localId,
-    required String amount,
     required DateTime date,
+    required int accountId,
     String? paymentTypeCode,
     String? num,
     String? note,
+    bool closePaidInvoices = true,
   });
 
   /// Télécharge le PDF de la facture et retourne (bytes, filename).

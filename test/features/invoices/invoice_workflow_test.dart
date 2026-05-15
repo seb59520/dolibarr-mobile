@@ -145,33 +145,37 @@ void main() {
   });
 
   group('createPayment', () {
-    test('appelle remote.createPayment avec timestamp seconds + amount',
-        () async {
-      when(() => dao.watchById(5)).thenAnswer(
-        (_) => Stream.value(_entity(status: InvoiceStatus.validated)),
-      );
-      when(() => remote.createPayment(any(), any()))
-          .thenAnswer((_) async => 42);
-      when(() => remote.fetchById(any())).thenAnswer((_) async => {});
-      when(() => dao.upsertFromServer(any())).thenAnswer((_) async {});
+    test(
+      'envoie datepaye seconds + accountid + closepaidinvoices=yes',
+      () async {
+        when(() => dao.watchById(5)).thenAnswer(
+          (_) => Stream.value(_entity(status: InvoiceStatus.validated)),
+        );
+        when(() => remote.createPayment(any(), any()))
+            .thenAnswer((_) async => 42);
+        when(() => remote.fetchById(any())).thenAnswer((_) async => {});
+        when(() => dao.upsertFromServer(any())).thenAnswer((_) async {});
 
-      final date = DateTime(2026, 5, 10);
-      final result = await repo.createPayment(
-        localId: 5,
-        amount: '120.00',
-        date: date,
-        paymentTypeCode: 'VIR',
-        note: 'OK',
-      );
-      expect((result as Success<int>).value, 42);
-      final captured = verify(
-        () => remote.createPayment(100, captureAny()),
-      ).captured;
-      final payload = captured.first as Map<String, Object?>;
-      expect(payload['amount'], '120.00');
-      expect(payload['datepaye'], date.millisecondsSinceEpoch ~/ 1000);
-      expect(payload['paymentid'], 'VIR');
-      expect(payload['comment'], 'OK');
-    });
+        final date = DateTime(2026, 5, 10);
+        final result = await repo.createPayment(
+          localId: 5,
+          date: date,
+          accountId: 1,
+          paymentTypeCode: 'VIR',
+          note: 'OK',
+        );
+        expect((result as Success<int>).value, 42);
+        final captured = verify(
+          () => remote.createPayment(100, captureAny()),
+        ).captured;
+        final payload = captured.first as Map<String, Object?>;
+        expect(payload['datepaye'], date.millisecondsSinceEpoch ~/ 1000);
+        expect(payload['accountid'], 1);
+        expect(payload['closepaidinvoices'], 'yes');
+        expect(payload['paymentid'], 'VIR');
+        expect(payload['comment'], 'OK');
+        expect(payload.containsKey('amount'), isFalse);
+      },
+    );
   });
 }

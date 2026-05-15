@@ -19,6 +19,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
+/// Compte bancaire SCINNOVA (Shine) — seul compte actif côté Dolibarr.
+/// Exigé par /invoices/{id}/payments quand le module Banque est actif.
+/// Si plusieurs comptes existent un jour, exposer un sélecteur dans la
+/// sheet d'encaissement.
+const int _kDefaultBankAccountId = 1;
+
 class InvoiceDetailPage extends ConsumerWidget {
   const InvoiceDetailPage({required this.localId, super.key});
 
@@ -636,8 +642,7 @@ class _WorkflowActionsState extends ConsumerState<_WorkflowActions> {
     final i = widget.invoice;
     final actions = <Widget>[];
     final canValidate = i.isDraft && i.remoteId != null;
-    final canMarkPaid = !i.isDraft && i.paye == 0 && i.remoteId != null;
-    final canAddPayment = canMarkPaid;
+    final canAddPayment = !i.isDraft && i.paye == 0 && i.remoteId != null;
     final canDownloadPdf = !i.isDraft && i.remoteId != null;
 
     if (canValidate) {
@@ -649,21 +654,12 @@ class _WorkflowActionsState extends ConsumerState<_WorkflowActions> {
         ),
       );
     }
-    if (canMarkPaid) {
-      actions.add(
-        FilledButton.tonalIcon(
-          onPressed: _busy ? null : _markPaid,
-          icon: const Icon(LucideIcons.banknote, size: 16),
-          label: const Text('Marquer payée'),
-        ),
-      );
-    }
     if (canAddPayment) {
       actions.add(
-        OutlinedButton.icon(
+        FilledButton.tonalIcon(
           onPressed: _busy ? null : _addPayment,
-          icon: const Icon(LucideIcons.plus, size: 16),
-          label: const Text('Paiement'),
+          icon: const Icon(LucideIcons.banknote, size: 16),
+          label: const Text('Encaisser'),
         ),
       );
     }
@@ -697,30 +693,17 @@ class _WorkflowActionsState extends ConsumerState<_WorkflowActions> {
     );
   }
 
-  Future<void> _markPaid() async {
-    setState(() => _busy = true);
-    final r = await ref
-        .read(invoiceRepositoryProvider)
-        .markAsPaid(widget.invoice.localId);
-    if (!mounted) return;
-    setState(() => _busy = false);
-    r.fold(
-      onSuccess: (_) => _toast('Facture marquée payée.'),
-      onFailure: (f) => _toast('Échec : $f'),
-    );
-  }
-
   Future<void> _addPayment() async {
     final entry = await _PaymentEntryDialog.show(
       context,
-      defaultAmount: widget.invoice.totalTtc,
+      invoiceTotal: widget.invoice.totalTtc,
     );
     if (entry == null || !mounted) return;
     setState(() => _busy = true);
     final r = await ref.read(invoiceRepositoryProvider).createPayment(
           localId: widget.invoice.localId,
-          amount: entry.amount,
           date: entry.date,
+          accountId: _kDefaultBankAccountId,
           paymentTypeCode: entry.typeCode,
           num: entry.num,
           note: entry.note,
@@ -764,13 +747,11 @@ class _WorkflowActionsState extends ConsumerState<_WorkflowActions> {
 
 class _PaymentEntry {
   const _PaymentEntry({
-    required this.amount,
     required this.date,
     this.typeCode,
     this.num,
     this.note,
   });
-  final String amount;
   final DateTime date;
   final String? typeCode;
   final String? num;
@@ -778,16 +759,16 @@ class _PaymentEntry {
 }
 
 class _PaymentEntryDialog extends StatefulWidget {
-  const _PaymentEntryDialog({this.defaultAmount});
-  final String? defaultAmount;
+  const _PaymentEntryDialog({this.invoiceTotal});
+  final String? invoiceTotal;
 
   static Future<_PaymentEntry?> show(
     BuildContext context, {
-    String? defaultAmount,
+    String? invoiceTotal,
   }) {
     return showDialog<_PaymentEntry>(
       context: context,
-      builder: (_) => _PaymentEntryDialog(defaultAmount: defaultAmount),
+      builder: (_) => _PaymentEntryDialog(invoiceTotal: invoiceTotal),
     );
   }
 
@@ -797,21 +778,13 @@ class _PaymentEntryDialog extends StatefulWidget {
 
 class _PaymentEntryDialogState extends State<_PaymentEntryDialog> {
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _amountCtrl;
   final _typeCtrl = TextEditingController(text: 'VIR');
   final _numCtrl = TextEditingController();
   final _noteCtrl = TextEditingController();
   DateTime _date = DateTime.now();
 
   @override
-  void initState() {
-    super.initState();
-    _amountCtrl = TextEditingController(text: widget.defaultAmount ?? '');
-  }
-
-  @override
   void dispose() {
-    _amountCtrl.dispose();
     _typeCtrl.dispose();
     _numCtrl.dispose();
     _noteCtrl.dispose();
@@ -820,10 +793,14 @@ class _PaymentEntryDialogState extends State<_PaymentEntryDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final fmt = '${_date.day.toString().padLeft(2, '0')}/'
         '${_date.month.toString().padLeft(2, '0')}/${_date.year}';
+    final totalLabel = widget.invoiceTotal != null
+        ? formatMoney(widget.invoiceTotal)
+        : null;
     return AlertDialog(
-      title: const Text('Nouveau paiement'),
+      title: const Text('Encaisser le solde'),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -831,19 +808,41 @@ class _PaymentEntryDialogState extends State<_PaymentEntryDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextFormField(
-                controller: _amountCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Montant *',
-                  suffixText: '€',
+              if (totalLabel != null)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        LucideIcons.banknote,
+                        size: 18,
+                        color: theme.colorScheme.primary,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Montant facture : $totalLabel',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                validator: (v) {
-                  final s = v?.trim().replaceAll(',', '.') ?? '';
-                  if (s.isEmpty) return 'Champ requis';
-                  return double.tryParse(s) == null ? 'Nombre invalide' : null;
-                },
+              if (totalLabel != null)
+                const SizedBox(height: AppTokens.spaceXs),
+              Text(
+                'Dolibarr encaisse le solde restant. Pour un paiement '
+                'partiel, passe par l’interface web.',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
               const SizedBox(height: AppTokens.spaceMd),
               InkWell(
@@ -898,8 +897,6 @@ class _PaymentEntryDialogState extends State<_PaymentEntryDialog> {
                 s.trim().isEmpty ? null : s.trim();
             Navigator.of(context).pop(
               _PaymentEntry(
-                amount:
-                    _amountCtrl.text.trim().replaceAll(',', '.'),
                 date: _date,
                 typeCode: notEmpty(_typeCtrl.text),
                 num: notEmpty(_numCtrl.text),
@@ -907,7 +904,7 @@ class _PaymentEntryDialogState extends State<_PaymentEntryDialog> {
               ),
             );
           },
-          child: const Text('Enregistrer'),
+          child: const Text('Encaisser'),
         ),
       ],
     );

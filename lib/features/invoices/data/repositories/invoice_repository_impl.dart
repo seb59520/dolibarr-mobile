@@ -361,11 +361,12 @@ final class InvoiceRepositoryImpl implements InvoiceRepository {
   @override
   Future<Result<int>> createPayment({
     required int localId,
-    required String amount,
     required DateTime date,
+    required int accountId,
     String? paymentTypeCode,
     String? num,
     String? note,
+    bool closePaidInvoices = true,
   }) async {
     try {
       final invoice = await _dao.watchById(localId).first;
@@ -375,9 +376,14 @@ final class InvoiceRepositoryImpl implements InvoiceRepository {
               'paiement impossible offline.',
         );
       }
+      // Dolibarr /invoices/{id}/payments :
+      //  - encaisse systématiquement le solde restant (pas de partiel),
+      //  - exige `accountid` quand le module Banque est actif,
+      //  - exige `paymentid` (mode de règlement) + `closepaidinvoices`.
       final payload = <String, Object?>{
         'datepaye': date.millisecondsSinceEpoch ~/ 1000,
-        'amount': amount,
+        'accountid': accountId,
+        'closepaidinvoices': closePaidInvoices ? 'yes' : 'no',
         if (paymentTypeCode != null) 'paymentid': paymentTypeCode,
         if (num != null) 'num_payment': num,
         if (note != null) 'comment': note,
