@@ -152,7 +152,8 @@ class _ReadOnlyBanner extends StatelessWidget {
           const SizedBox(width: AppTokens.spaceXs),
           Expanded(
             child: Text(
-              'Lecture seule — pour ajouter une ligne, scanne un ticket depuis l’onglet Frais.',
+              'Lecture seule — pour ajouter une ligne, scanne un ticket '
+              'depuis l’onglet Frais.',
               style: TextStyle(color: c.ink2, fontSize: 13),
             ),
           ),
