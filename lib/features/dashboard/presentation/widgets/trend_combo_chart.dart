@@ -164,7 +164,7 @@ class TrendComboChart extends StatelessWidget {
                   painter: _PercuLinePainter(
                     monthly: monthly,
                     maxY: upper,
-                    color: c.success,
+                    color: c.revenue,
                   ),
                 ),
               ),

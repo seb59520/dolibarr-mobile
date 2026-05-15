@@ -17,24 +17,90 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-class DashboardPage extends ConsumerWidget {
+class DashboardPage extends ConsumerStatefulWidget {
   const DashboardPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends ConsumerState<DashboardPage> {
+  bool _syncing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Première ouverture : on tente de pré-charger les paiements
+    // depuis Dolibarr pour que la courbe « perçu » se peuple sans
+    // que l'utilisateur ait à tirer pour rafraîchir.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _syncPayments(silent: true);
+    });
+  }
+
+  Future<void> _syncPayments({bool silent = false}) async {
+    if (_syncing) return;
+    setState(() => _syncing = true);
+    try {
+      final res = await ref.read(paymentSyncServiceProvider).syncRecent();
+      if (!mounted) return;
+      ref
+        ..invalidate(dashboardMetricsProvider)
+        ..invalidate(dashboardRecentActivityProvider)
+        ..invalidate(statsSnapshotForPeriodProvider);
+      if (!silent) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 3),
+            content: Text(
+              res.hasErrors
+                  ? '${res.paymentsUpserted} paiements synchronisés — '
+                      '${res.errors.first}'
+                  : '${res.paymentsUpserted} paiements synchronisés sur '
+                      '${res.invoicesScanned} factures',
+            ),
+          ),
+        );
+      }
+    } on Exception catch (e) {
+      if (!mounted || silent) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Échec sync paiements : $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _syncing = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: const ShellMenuButton(),
-        title: const Text('Pilotage'),
+        title: const Text(
+          'Pilotage',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.4,
+          ),
+        ),
+        actions: [
+          IconButton(
+            tooltip: 'Synchroniser les paiements Dolibarr',
+            onPressed: _syncing ? null : _syncPayments,
+            icon: _syncing
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(LucideIcons.refreshCcw, size: 18),
+          ),
+        ],
       ),
       body: RefreshIndicator(
-        onRefresh: () async {
-          ref
-            ..invalidate(dashboardMetricsProvider)
-            ..invalidate(dashboardRecentActivityProvider)
-            ..invalidate(statsSnapshotForPeriodProvider);
-          await Future<void>.delayed(const Duration(milliseconds: 200));
-        },
+        onRefresh: () async => _syncPayments(),
         child: ListView(
           padding: const EdgeInsets.symmetric(vertical: AppTokens.spaceMd),
           children: const [
@@ -104,7 +170,7 @@ class _PilotageCard extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 14, 12, 10),
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
             child: Row(
               children: [
                 Icon(LucideIcons.gauge, size: 18, color: c.accent),
@@ -118,14 +184,16 @@ class _PilotageCard extends ConsumerWidget {
                     letterSpacing: 0.6,
                   ),
                 ),
-                const Spacer(),
-                Flexible(child: _PeriodChips(active: period)),
               ],
             ),
           ),
           Padding(
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+            child: _PeriodChips(active: period),
+          ),
+          Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
-            child: _Legend(accent: c.accent, success: c.success),
+            child: _Legend(accent: c.accent, percu: c.revenue),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 14, 10),
@@ -158,10 +226,22 @@ class _PilotageCard extends ConsumerWidget {
                 child: Center(child: CircularProgressIndicator()),
               ),
               error: (_, __) => const SizedBox(height: 8),
-              data: (snap) => _KpiRow(
-                stat: _aggregateForPeriod(snap, period),
-                periodLabel: _periodSubtitle(period, snap),
-              ),
+              data: (snap) {
+                final agg = _aggregateForPeriod(snap, period);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _KpiRow(
+                      stat: agg,
+                      periodLabel: _periodSubtitle(period, snap),
+                    ),
+                    if (agg.factureTtc > 0 && agg.percu == 0) ...[
+                      const SizedBox(height: 10),
+                      _PercuHint(),
+                    ],
+                  ],
+                );
+              },
             ),
           ),
           Container(height: 1, color: c.hairline2),
@@ -219,37 +299,38 @@ class _PeriodChips extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      reverse: true,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _Chip(
+    return Row(
+      children: [
+        Expanded(
+          child: _Chip(
             label: '12 mois',
             selected: active == StatsPeriod.rolling12,
             onTap: () => ref
                 .read(dashboardPilotagePeriodProvider.notifier)
                 .state = StatsPeriod.rolling12,
           ),
-          const SizedBox(width: 4),
-          _Chip(
+        ),
+        const SizedBox(width: 6),
+        Expanded(
+          child: _Chip(
             label: 'Année',
             selected: active == StatsPeriod.currentYear,
             onTap: () => ref
                 .read(dashboardPilotagePeriodProvider.notifier)
                 .state = StatsPeriod.currentYear,
           ),
-          const SizedBox(width: 4),
-          _Chip(
+        ),
+        const SizedBox(width: 6),
+        Expanded(
+          child: _Chip(
             label: 'Complet',
             selected: active == StatsPeriod.allHistory,
             onTap: () => ref
                 .read(dashboardPilotagePeriodProvider.notifier)
                 .state = StatsPeriod.allHistory,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -274,12 +355,13 @@ class _Chip extends StatelessWidget {
         borderRadius: BorderRadius.circular(999),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Text(
             label,
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: selected ? Colors.white : c.ink2,
-              fontSize: 12,
+              fontSize: 13,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -290,9 +372,9 @@ class _Chip extends StatelessWidget {
 }
 
 class _Legend extends StatelessWidget {
-  const _Legend({required this.accent, required this.success});
+  const _Legend({required this.accent, required this.percu});
   final Color accent;
-  final Color success;
+  final Color percu;
 
   @override
   Widget build(BuildContext context) {
@@ -301,7 +383,7 @@ class _Legend extends StatelessWidget {
       children: [
         _LegendDot(color: accent, label: 'Facturé', textColor: c.ink2),
         const SizedBox(width: 12),
-        _LegendDot(color: success, label: 'Perçu', textColor: c.ink2),
+        _LegendDot(color: percu, label: 'Perçu', textColor: c.ink2),
       ],
     );
   }
@@ -333,6 +415,37 @@ class _LegendDot extends StatelessWidget {
         const SizedBox(width: 5),
         Text(label, style: TextStyle(color: textColor, fontSize: 12)),
       ],
+    );
+  }
+}
+
+/// Bandeau d'aide quand le perçu reste à zéro alors qu'il y a du
+/// facturé : invite à tirer pour synchroniser les paiements depuis
+/// Dolibarr (la sync se déclenche dans le RefreshIndicator).
+class _PercuHint extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final c = DoliMobColors.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: c.warning.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: c.warning.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        children: [
+          Icon(LucideIcons.refreshCw, size: 14, color: c.warning),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'Perçu à 0 — appuie sur ⟳ en haut pour synchroniser '
+              'les paiements depuis Dolibarr.',
+              style: TextStyle(color: c.ink2, fontSize: 11.5),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -377,7 +490,7 @@ class _KpiRow extends StatelessWidget {
               child: _KpiCell(
                 label: 'Perçu',
                 value: formatMoney(stat.percu),
-                tone: c.success,
+                tone: c.revenue,
                 icon: LucideIcons.banknote,
               ),
             ),
@@ -460,24 +573,35 @@ class _KpiCell extends StatelessWidget {
   }
 }
 
-/// Deux lignes temps réel : CA du mois courant + versement attendu fin
-/// de mois. Tap → bottom sheet détail (réutilise les sheets existantes).
-class _RealtimeRows extends StatelessWidget {
+/// Trois lignes temps réel : CA du mois courant + versement attendu fin
+/// de mois + factures en retard. Tap → bottom sheet détail.
+class _RealtimeRows extends ConsumerWidget {
   const _RealtimeRows({required this.metrics});
   final DashboardMetrics metrics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final c = DoliMobColors.of(context);
     final now = DateTime.now();
     final hasPending = metrics.versementAttenduCount > 0;
     final pendingColor = hasPending ? c.accent : c.ink3;
+    final detailsAsync = ref.watch(dashboardDetailsProvider);
+    final overdueCount = detailsAsync.maybeWhen(
+      data: (d) => d.facturesEnRetardCount,
+      orElse: () => 0,
+    );
+    final overdueMontant = detailsAsync.maybeWhen(
+      data: (d) => d.facturesEnRetardMontant,
+      orElse: () => 0.0,
+    );
+    final hasOverdue = overdueCount > 0;
+    final overdueColor = hasOverdue ? c.danger : c.ink3;
 
     return Column(
       children: [
         _RealtimeRow(
           icon: LucideIcons.trendingUp,
-          tone: c.success,
+          tone: c.accent,
           title: 'CA ${_monthLabel(now)}',
           subtitle: _facturesLabel(metrics),
           value: formatMoney(metrics.caMois),
@@ -496,6 +620,17 @@ class _RealtimeRows extends StatelessWidget {
               : '—',
           onTap: () => showMonthDueDetailSheet(context, metrics: metrics),
         ),
+        Container(height: 1, color: c.hairline2),
+        _RealtimeRow(
+          icon: LucideIcons.alertTriangle,
+          tone: overdueColor,
+          title: 'Factures en retard',
+          subtitle: hasOverdue
+              ? _overdueLabel(overdueCount)
+              : 'aucun impayé en retard',
+          value: hasOverdue ? formatMoney(overdueMontant) : '—',
+          onTap: () => showOverdueDetailSheet(context),
+        ),
       ],
     );
   }
@@ -511,6 +646,11 @@ class _RealtimeRows extends StatelessWidget {
   String _pendingLabel(int count) {
     final noun = count > 1 ? 'factures' : 'facture';
     return '$count $noun à échéance';
+  }
+
+  String _overdueLabel(int count) {
+    final noun = count > 1 ? 'factures échues' : 'facture échue';
+    return '$count $noun';
   }
 }
 
@@ -599,24 +739,42 @@ class _QuickActionsSection extends StatelessWidget {
       children: [
         Text('Actions rapides', style: theme.textTheme.titleMedium),
         const SizedBox(height: AppTokens.spaceXs),
-        Wrap(
-          spacing: AppTokens.spaceXs,
-          runSpacing: AppTokens.spaceXs,
+        Row(
           children: [
-            FilledButton.icon(
-              onPressed: () => context.go(RoutePaths.thirdpartyNew),
-              icon: const Icon(LucideIcons.userPlus, size: 16),
-              label: const Text('Tiers'),
+            Expanded(
+              child: FilledButton.icon(
+                onPressed: () => context.go(RoutePaths.thirdpartyNew),
+                icon: const Icon(LucideIcons.userPlus, size: 16),
+                label: const Text('Tiers'),
+              ),
             ),
-            FilledButton.tonalIcon(
-              onPressed: () => context.go(RoutePaths.proposalNew),
-              icon: const Icon(LucideIcons.fileText, size: 16),
-              label: const Text('Devis'),
+            const SizedBox(width: AppTokens.spaceXs),
+            Expanded(
+              child: FilledButton.tonalIcon(
+                onPressed: () => context.go(RoutePaths.proposalNew),
+                icon: const Icon(LucideIcons.fileText, size: 16),
+                label: const Text('Devis'),
+              ),
             ),
-            FilledButton.tonalIcon(
-              onPressed: () => context.go(RoutePaths.invoiceNew),
-              icon: const Icon(LucideIcons.receipt, size: 16),
-              label: const Text('Facture'),
+          ],
+        ),
+        const SizedBox(height: AppTokens.spaceXs),
+        Row(
+          children: [
+            Expanded(
+              child: FilledButton.tonalIcon(
+                onPressed: () => context.go(RoutePaths.invoiceNew),
+                icon: const Icon(LucideIcons.receipt, size: 16),
+                label: const Text('Facture'),
+              ),
+            ),
+            const SizedBox(width: AppTokens.spaceXs),
+            Expanded(
+              child: FilledButton.tonalIcon(
+                onPressed: () => context.go(RoutePaths.projectNew),
+                icon: const Icon(LucideIcons.folderPlus, size: 16),
+                label: const Text('Projet'),
+              ),
             ),
           ],
         ),

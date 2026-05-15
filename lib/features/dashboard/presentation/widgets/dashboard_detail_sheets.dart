@@ -62,6 +62,19 @@ Future<void> showMonthDueDetailSheet(
   );
 }
 
+Future<void> showOverdueDetailSheet(BuildContext context) {
+  return showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    showDragHandle: true,
+    useSafeArea: true,
+    builder: (ctx) => _sheetFrame(
+      ctx,
+      child: const OverdueDetailSheet(),
+    ),
+  );
+}
+
 /// Conteneur à hauteur fixe (88% écran) pour les bottom-sheets, avec
 /// padding clavier — donne au ListView interne une hauteur bornée donc
 /// scrollable de manière prévisible.
@@ -298,6 +311,163 @@ class MonthDueDetailSheet extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Bottom sheet du détail « Factures en retard » — total impayé + liste
+/// des factures dont l'échéance est strictement antérieure au 1er du mois.
+class OverdueDetailSheet extends ConsumerWidget {
+  const OverdueDetailSheet({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final c = DoliMobColors.of(context);
+    final theme = Theme.of(context);
+    final detailsAsync = ref.watch(dashboardDetailsProvider);
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
+          child: Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: c.danger.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                alignment: Alignment.center,
+                child: Icon(
+                  LucideIcons.alertTriangle,
+                  size: 18,
+                  color: c.danger,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Factures en retard',
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    Text(
+                      'échéances dépassées',
+                      style: TextStyle(color: c.ink2, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: detailsAsync.when(
+            data: (d) => ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              children: [
+                _OverdueHeroBlock(
+                  count: d.facturesEnRetardCount,
+                  montant: d.facturesEnRetardMontant,
+                ),
+                const SizedBox(height: 20),
+                _SectionLabel(
+                  label: 'Factures échues (${d.invoicesEnRetard.length})',
+                ),
+                const SizedBox(height: 8),
+                if (d.invoicesEnRetard.isEmpty)
+                  const _EmptyHint(
+                    text: 'Aucune facture en retard. Bravo !',
+                  )
+                else
+                  for (final inv in d.invoicesEnRetard)
+                    _InvoiceRow(invoice: inv, mode: _RowMode.dueDate),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: FilledButton.tonalIcon(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      GoRouter.of(context).go(RoutePaths.invoices);
+                    },
+                    icon: const Icon(LucideIcons.receipt, size: 16),
+                    label: const Text('Voir toutes les factures'),
+                  ),
+                ),
+              ],
+            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (e, _) => Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                'Détail indisponible : $e',
+                style: theme.textTheme.bodySmall,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _OverdueHeroBlock extends StatelessWidget {
+  const _OverdueHeroBlock({required this.count, required this.montant});
+  final int count;
+  final double montant;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = DoliMobColors.of(context);
+    final hasOverdue = count > 0;
+    return Container(
+      decoration: BoxDecoration(
+        color: hasOverdue ? c.danger.withValues(alpha: 0.06) : c.fill,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: hasOverdue
+              ? c.danger.withValues(alpha: 0.22)
+              : c.hairline,
+        ),
+      ),
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'MONTANT EN RETARD',
+            style: TextStyle(
+              color: c.ink3,
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.6,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            hasOverdue ? formatMoney(montant) : '—',
+            style: TextStyle(
+              color: hasOverdue ? c.danger : c.ink3,
+              fontSize: 30,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.6,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            hasOverdue
+                ? '$count ${count > 1 ? "factures échues" : "facture échue"} '
+                    'avant ce mois'
+                : 'aucun impayé en retard',
+            style: TextStyle(color: c.ink2, fontSize: 12),
+          ),
+        ],
+      ),
     );
   }
 }

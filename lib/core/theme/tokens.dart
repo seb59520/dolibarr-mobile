@@ -96,6 +96,7 @@ class DoliMobColors extends ThemeExtension<DoliMobColors> {
     required this.info,
     required this.warning,
     required this.danger,
+    required this.revenue,
     required this.dark,
   });
 
@@ -116,6 +117,9 @@ class DoliMobColors extends ThemeExtension<DoliMobColors> {
         info: const Color(0xFF2563EB),
         warning: const Color(0xFFB4530A),
         danger: const Color(0xFFC0271C),
+        // Vert distinct de l'accent teal : utilisé pour différencier les
+        // séries « perçu » (cf. chart pilotage) du facturé (couleur accent).
+        revenue: const Color(0xFF10B981),
         dark: false,
       );
 
@@ -136,6 +140,7 @@ class DoliMobColors extends ThemeExtension<DoliMobColors> {
         info: const Color(0xFF5C8DFA),
         warning: const Color(0xFFF2B36B),
         danger: const Color(0xFFF47A6E),
+        revenue: const Color(0xFF34D399),
         dark: true,
       );
 
@@ -154,6 +159,7 @@ class DoliMobColors extends ThemeExtension<DoliMobColors> {
   final Color info;
   final Color warning;
   final Color danger;
+  final Color revenue;
   final bool dark;
 
   /// Helper pour récupérer la palette depuis le contexte.
@@ -177,6 +183,7 @@ class DoliMobColors extends ThemeExtension<DoliMobColors> {
     Color? info,
     Color? warning,
     Color? danger,
+    Color? revenue,
     bool? dark,
   }) =>
       DoliMobColors(
@@ -195,6 +202,7 @@ class DoliMobColors extends ThemeExtension<DoliMobColors> {
         info: info ?? this.info,
         warning: warning ?? this.warning,
         danger: danger ?? this.danger,
+        revenue: revenue ?? this.revenue,
         dark: dark ?? this.dark,
       );
 
@@ -217,6 +225,7 @@ class DoliMobColors extends ThemeExtension<DoliMobColors> {
       info: Color.lerp(info, other.info, t)!,
       warning: Color.lerp(warning, other.warning, t)!,
       danger: Color.lerp(danger, other.danger, t)!,
+      revenue: Color.lerp(revenue, other.revenue, t)!,
       dark: t < 0.5 ? dark : other.dark,
     );
   }
