@@ -25,6 +25,17 @@ abstract interface class SecureStorage {
   Future<void> writeOnboardingCompleted();
   Future<bool> readOnboardingCompleted();
 
+  /// Endpoint backend OCR (URL racine, sans `/api/extract_ticket`).
+  /// Stocké en clair (URL publique) mais via le secure storage pour
+  /// rester cohérent avec le couple endpoint + bearer.
+  Future<void> writeOcrEndpoint(String url);
+  Future<String?> readOcrEndpoint();
+
+  /// Bearer token OCR — sensible (donne accès au modèle Qwen2.5-VL).
+  Future<void> writeOcrBearer(String token);
+  Future<String?> readOcrBearer();
+  Future<void> deleteOcrBearer();
+
   Future<void> clear();
 }
 
@@ -46,6 +57,8 @@ final class SecureStorageImpl implements SecureStorage {
   static const _kApiKey = 'dolibarr.apiKey';
   static const _kBaseUrl = 'dolibarr.baseUrl';
   static const _kOnboarding = 'dolibarr.onboardingCompleted';
+  static const _kOcrEndpoint = 'dolibarr.ocrEndpoint';
+  static const _kOcrBearer = 'dolibarr.ocrBearer';
 
   final FlutterSecureStorage _storage;
 
@@ -118,6 +131,45 @@ final class SecureStorageImpl implements SecureStorage {
   }
 
   @override
+  Future<String?> readOcrEndpoint() async {
+    if (_useWebPrefs) return _webPrefs!.getString(_kOcrEndpoint);
+    return _storage.read(key: _kOcrEndpoint);
+  }
+
+  @override
+  Future<void> writeOcrEndpoint(String url) async {
+    if (_useWebPrefs) {
+      await _webPrefs!.setString(_kOcrEndpoint, url);
+      return;
+    }
+    await _storage.write(key: _kOcrEndpoint, value: url);
+  }
+
+  @override
+  Future<String?> readOcrBearer() async {
+    if (_useWebPrefs) return _webPrefs!.getString(_kOcrBearer);
+    return _storage.read(key: _kOcrBearer);
+  }
+
+  @override
+  Future<void> writeOcrBearer(String token) async {
+    if (_useWebPrefs) {
+      await _webPrefs!.setString(_kOcrBearer, token);
+      return;
+    }
+    await _storage.write(key: _kOcrBearer, value: token);
+  }
+
+  @override
+  Future<void> deleteOcrBearer() async {
+    if (_useWebPrefs) {
+      await _webPrefs!.remove(_kOcrBearer);
+      return;
+    }
+    await _storage.delete(key: _kOcrBearer);
+  }
+
+  @override
   Future<void> clear() async {
     final prefs = _webPrefs;
     if (_useWebPrefs && prefs != null) {
@@ -125,6 +177,8 @@ final class SecureStorageImpl implements SecureStorage {
         prefs.remove(_kApiKey),
         prefs.remove(_kBaseUrl),
         prefs.remove(_kOnboarding),
+        prefs.remove(_kOcrEndpoint),
+        prefs.remove(_kOcrBearer),
       ]);
       return;
     }

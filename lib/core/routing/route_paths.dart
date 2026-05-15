@@ -34,6 +34,8 @@ abstract final class RoutePaths {
   static const String proposalEdit = '/app/proposals/:id/edit';
   static const String expenses = '/app/expenses';
   static const String expenseDetail = '/app/expenses/:id';
+  static const String expenseScan = '/app/expenses/scan';
+  static const String expenseScanEdit = '/app/expenses/scan/edit';
   static const String settings = '/app/settings';
   static const String stats = '/app/stats';
   static const String tweaks = '/app/tweaks';

@@ -32,6 +32,16 @@ class _NoopStorage implements SecureStorage {
   @override
   Future<bool> readOnboardingCompleted() async => true;
   @override
+  Future<void> writeOcrEndpoint(String url) async {}
+  @override
+  Future<String?> readOcrEndpoint() async => null;
+  @override
+  Future<void> writeOcrBearer(String token) async {}
+  @override
+  Future<String?> readOcrBearer() async => null;
+  @override
+  Future<void> deleteOcrBearer() async {}
+  @override
   Future<void> clear() async {}
 }
 

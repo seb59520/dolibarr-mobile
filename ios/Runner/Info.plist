@@ -26,10 +26,14 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Dolibarr Mobile utilise l'appareil photo pour scanner vos tickets de caisse et générer automatiquement vos notes de frais.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Dolibarr Mobile accède à vos contacts pour synchroniser ceux de votre appareil avec votre instance Dolibarr.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Dolibarr Mobile utilise Face ID pour déverrouiller rapidement l'application en préservant la confidentialité de vos données.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Dolibarr Mobile accède à votre photothèque pour importer des tickets de caisse à analyser.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

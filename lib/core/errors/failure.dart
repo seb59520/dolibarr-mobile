@@ -125,3 +125,15 @@ final class UnknownFailure extends Failure {
   @override
   String get kind => 'Erreur inattendue';
 }
+
+/// Échec spécifique de la pipeline OCR (extraction d'un ticket).
+///
+/// Sortie du backend `/api/extract_ticket` ou d'un de ses fronts
+/// (auth, timeout, payload trop gros). Distinct d'une [ServerFailure]
+/// pour rester pattern-matchable côté UI quand on veut afficher un
+/// fallback "Saisir manuellement".
+final class OcrFailure extends Failure {
+  const OcrFailure({super.message, super.cause});
+  @override
+  String get kind => 'OCR ticket';
+}

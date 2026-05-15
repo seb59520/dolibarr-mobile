@@ -1,12 +1,15 @@
 import 'package:dolibarr_mobile/core/di/providers.dart';
+import 'package:dolibarr_mobile/features/auth/presentation/providers/auth_providers.dart';
 import 'package:dolibarr_mobile/features/expenses/data/datasources/expense_local_dao.dart';
 import 'package:dolibarr_mobile/features/expenses/data/datasources/expense_remote_datasource.dart';
+import 'package:dolibarr_mobile/features/expenses/data/expense_ticket_pipeline.dart';
 import 'package:dolibarr_mobile/features/expenses/data/repositories/expense_repository_impl.dart';
 import 'package:dolibarr_mobile/features/expenses/domain/entities/expense_filters.dart';
 import 'package:dolibarr_mobile/features/expenses/domain/entities/expense_line.dart';
 import 'package:dolibarr_mobile/features/expenses/domain/entities/expense_report.dart';
 import 'package:dolibarr_mobile/features/expenses/domain/entities/expense_type.dart';
 import 'package:dolibarr_mobile/features/expenses/domain/repositories/expense_repository.dart';
+import 'package:dolibarr_mobile/features/expenses/presentation/providers/ocr_providers.dart';
 import 'package:dolibarr_mobile/features/thirdparties/presentation/providers/third_party_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -96,4 +99,23 @@ final expenseTypesProvider =
     // ignore: unawaited_futures
     ..refreshTypes();
   return repo.watchTypes();
+});
+
+/// Pipeline scan → OCR → push (étape 29).
+final expenseTicketPipelineProvider = Provider<ExpenseTicketPipeline>((ref) {
+  return ExpenseTicketPipeline(
+    ocr: ref.watch(ocrRemoteDataSourceProvider),
+    remote: ref.watch(expenseRemoteDataSourceProvider),
+    network: ref.watch(networkInfoProvider),
+    currentUserId: () {
+      final auth = ref.read(authNotifierProvider);
+      if (auth is AuthAuthenticated) return auth.session.userId;
+      throw StateError(
+        'Aucun utilisateur connecté — '
+        'impossible de pousser une note de frais.',
+      );
+    },
+    resolveFeeType: (code) =>
+        ref.read(expenseLocalDaoProvider).resolveTypeIdByCode(code),
+  );
 });

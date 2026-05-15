@@ -2,6 +2,7 @@ import 'package:dolibarr_mobile/core/routing/route_paths.dart';
 import 'package:dolibarr_mobile/core/theme/tokens.dart';
 import 'package:dolibarr_mobile/features/expenses/domain/entities/expense_report.dart';
 import 'package:dolibarr_mobile/features/expenses/presentation/providers/expense_providers.dart';
+import 'package:dolibarr_mobile/features/expenses/presentation/providers/ocr_providers.dart';
 import 'package:dolibarr_mobile/features/expenses/presentation/widgets/expense_card.dart';
 import 'package:dolibarr_mobile/shared/widgets/empty_state.dart';
 import 'package:dolibarr_mobile/shared/widgets/error_state.dart';
@@ -94,10 +95,26 @@ class _ExpenseListPageState extends ConsumerState<ExpenseListPage> {
   Widget build(BuildContext context) {
     final filters = ref.watch(expenseFiltersProvider);
     final listAsync = ref.watch(expenseListProvider);
+    final ocrConfigured = ref.watch(ocrConfiguredProvider);
     final c = DoliMobColors.of(context);
 
     return Scaffold(
       backgroundColor: c.bg,
+      floatingActionButton: Tooltip(
+        message: ocrConfigured
+            ? 'Scanner un ticket'
+            : 'Configure l’endpoint et le jeton OCR dans Paramètres '
+                'pour activer le scan.',
+        child: FloatingActionButton.extended(
+          onPressed: ocrConfigured
+              ? () => context.go(RoutePaths.expenseScan)
+              : null,
+          backgroundColor: ocrConfigured ? null : c.fill,
+          foregroundColor: ocrConfigured ? null : c.ink3,
+          icon: const Icon(LucideIcons.camera),
+          label: const Text('Scanner'),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [

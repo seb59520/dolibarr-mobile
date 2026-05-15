@@ -12,7 +12,9 @@ import 'package:dolibarr_mobile/features/contacts/presentation/pages/contact_for
 import 'package:dolibarr_mobile/features/contacts/presentation/pages/contacts_list_page.dart';
 import 'package:dolibarr_mobile/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:dolibarr_mobile/features/expenses/presentation/pages/expense_detail_page.dart';
+import 'package:dolibarr_mobile/features/expenses/presentation/pages/expense_line_form_page.dart';
 import 'package:dolibarr_mobile/features/expenses/presentation/pages/expense_list_page.dart';
+import 'package:dolibarr_mobile/features/expenses/presentation/pages/expense_scan_page.dart';
 import 'package:dolibarr_mobile/features/invoices/presentation/pages/invoice_detail_page.dart';
 import 'package:dolibarr_mobile/features/invoices/presentation/pages/invoice_form_page.dart';
 import 'package:dolibarr_mobile/features/invoices/presentation/pages/invoices_list_page.dart';
@@ -244,6 +246,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: RoutePaths.expenses,
             builder: (_, __) => const ExpenseListPage(),
             routes: [
+              // Déclaré avant `:id` pour éviter que "scan" ne soit
+              // capturé par le wildcard détail.
+              GoRoute(
+                path: 'scan',
+                builder: (_, __) => const ExpenseScanPage(),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    builder: (_, __) => const ExpenseLineFormPage(),
+                  ),
+                ],
+              ),
               GoRoute(
                 path: ':id',
                 builder: (_, state) => ExpenseDetailPage(
