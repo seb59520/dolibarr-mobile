@@ -1,7 +1,7 @@
 name: dolibarr_mobile
 description: "Application mobile Dolibarr ERP/CRM — Tiers, contacts, projets, tâches et factures."
 publish_to: 'none'
-version: 1.2.0+3
+version: 1.3.0+4
 
 environment:
   sdk: ^3.11.5
