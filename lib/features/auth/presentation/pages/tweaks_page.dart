@@ -97,6 +97,20 @@ class TweaksPage extends ConsumerWidget {
             },
             onToggled: notifier.toggleInvoiceField,
           ),
+          const SizedBox(height: 18),
+          const _SectionHeader(text: 'Affichage des notes de frais'),
+          _MultiToggleRow<ExpenseCardField>(
+            values: tweaks.expenseFields,
+            options: ExpenseCardField.values,
+            labelOf: (f) => switch (f) {
+              ExpenseCardField.date => 'Date',
+              ExpenseCardField.totalTtc => 'Montant TTC',
+              ExpenseCardField.status => 'Statut',
+              ExpenseCardField.period => 'Période',
+              ExpenseCardField.lineCount => 'Nombre de lignes',
+            },
+            onToggled: notifier.toggleExpenseField,
+          ),
         ],
       ),
     );

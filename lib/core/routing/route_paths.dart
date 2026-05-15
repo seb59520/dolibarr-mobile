@@ -32,6 +32,8 @@ abstract final class RoutePaths {
   static const String proposalNew = '/app/proposals/new';
   static const String proposalDetail = '/app/proposals/:id';
   static const String proposalEdit = '/app/proposals/:id/edit';
+  static const String expenses = '/app/expenses';
+  static const String expenseDetail = '/app/expenses/:id';
   static const String settings = '/app/settings';
   static const String stats = '/app/stats';
   static const String tweaks = '/app/tweaks';
@@ -93,4 +95,7 @@ abstract final class RoutePaths {
   /// parent (client) par sa PK locale.
   static String proposalNewForParent(int parentLocalId) =>
       '/app/proposals/new?parent=$parentLocalId';
+
+  static String expenseDetailFor(int localId) =>
+      '/app/expenses/$localId';
 }

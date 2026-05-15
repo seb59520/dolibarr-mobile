@@ -14,6 +14,23 @@ enum InvoiceCardField {
 
 const _kDefaultInvoiceFields = <InvoiceCardField>{InvoiceCardField.client};
 
+/// Champs affichables sur une carte note de frais (liste) et en
+/// sous-titre du détail. `date`, `totalTtc` et `status` sont actifs par
+/// défaut, `period` (date début/fin) et `lineCount` sont en option.
+enum ExpenseCardField {
+  date,
+  totalTtc,
+  status,
+  period,
+  lineCount;
+}
+
+const _kDefaultExpenseFields = <ExpenseCardField>{
+  ExpenseCardField.date,
+  ExpenseCardField.totalTtc,
+  ExpenseCardField.status,
+};
+
 /// Snapshot des préférences visuelles éditables depuis la page Tweaks.
 ///
 /// Persistées via `SharedPreferences` (non sensibles, indépendantes du
@@ -28,6 +45,7 @@ class Tweaks extends Equatable {
     this.cardStyle = CardStyleChoice.flat,
     this.fabPosition = FabPosition.right,
     this.invoiceFields = _kDefaultInvoiceFields,
+    this.expenseFields = _kDefaultExpenseFields,
   });
 
   final bool dark;
@@ -37,6 +55,7 @@ class Tweaks extends Equatable {
   final CardStyleChoice cardStyle;
   final FabPosition fabPosition;
   final Set<InvoiceCardField> invoiceFields;
+  final Set<ExpenseCardField> expenseFields;
 
   Tweaks copyWith({
     bool? dark,
@@ -46,6 +65,7 @@ class Tweaks extends Equatable {
     CardStyleChoice? cardStyle,
     FabPosition? fabPosition,
     Set<InvoiceCardField>? invoiceFields,
+    Set<ExpenseCardField>? expenseFields,
   }) =>
       Tweaks(
         dark: dark ?? this.dark,
@@ -55,6 +75,7 @@ class Tweaks extends Equatable {
         cardStyle: cardStyle ?? this.cardStyle,
         fabPosition: fabPosition ?? this.fabPosition,
         invoiceFields: invoiceFields ?? this.invoiceFields,
+        expenseFields: expenseFields ?? this.expenseFields,
       );
 
   @override
@@ -66,6 +87,7 @@ class Tweaks extends Equatable {
         cardStyle,
         fabPosition,
         invoiceFields,
+        expenseFields,
       ];
 }
 
@@ -76,6 +98,7 @@ const _kDensity = 'tweaks.density';
 const _kCardStyle = 'tweaks.cardStyle';
 const _kFab = 'tweaks.fabPosition';
 const _kInvoiceFields = 'tweaks.invoiceFields';
+const _kExpenseFields = 'tweaks.expenseFields';
 
 /// Provider du store de préférences (instancié à app boot).
 final sharedPreferencesProvider =
@@ -116,6 +139,9 @@ class TweaksNotifier extends Notifier<Tweaks> {
       invoiceFields: _decodeInvoiceFields(
         _prefs.getStringList(_kInvoiceFields),
       ),
+      expenseFields: _decodeExpenseFields(
+        _prefs.getStringList(_kExpenseFields),
+      ),
     );
   }
 
@@ -124,6 +150,17 @@ class TweaksNotifier extends Notifier<Tweaks> {
     final out = <InvoiceCardField>{};
     for (final name in raw) {
       for (final v in InvoiceCardField.values) {
+        if (v.name == name) out.add(v);
+      }
+    }
+    return out;
+  }
+
+  Set<ExpenseCardField> _decodeExpenseFields(List<String>? raw) {
+    if (raw == null) return _kDefaultExpenseFields;
+    final out = <ExpenseCardField>{};
+    for (final name in raw) {
+      for (final v in ExpenseCardField.values) {
         if (v.name == name) out.add(v);
       }
     }
@@ -166,6 +203,16 @@ class TweaksNotifier extends Notifier<Tweaks> {
     state = state.copyWith(invoiceFields: next);
     await _prefs.setStringList(
       _kInvoiceFields,
+      next.map((e) => e.name).toList(),
+    );
+  }
+
+  Future<void> toggleExpenseField(ExpenseCardField f) async {
+    final next = Set<ExpenseCardField>.from(state.expenseFields);
+    if (!next.add(f)) next.remove(f);
+    state = state.copyWith(expenseFields: next);
+    await _prefs.setStringList(
+      _kExpenseFields,
       next.map((e) => e.name).toList(),
     );
   }

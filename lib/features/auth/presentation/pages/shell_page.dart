@@ -46,6 +46,11 @@ class _ShellPageState extends ConsumerState<ShellPage> {
       icon: LucideIcons.receipt,
     ),
     _TabRoute(
+      path: RoutePaths.expenses,
+      label: 'Frais',
+      icon: LucideIcons.wallet,
+    ),
+    _TabRoute(
       path: RoutePaths.settings,
       label: 'Paramètres',
       icon: LucideIcons.settings,
