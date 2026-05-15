@@ -75,6 +75,8 @@ class _OpCard extends ConsumerWidget {
       PendingOpEntity.invoiceLine => 'Ligne facture',
       PendingOpEntity.proposal => 'Devis',
       PendingOpEntity.proposalLine => 'Ligne devis',
+      PendingOpEntity.expenseReport => 'Note de frais',
+      PendingOpEntity.expenseLine => 'Ligne note de frais',
     };
     final type = switch (op.opType) {
       PendingOpType.create => 'Création',

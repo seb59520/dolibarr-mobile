@@ -1,6 +1,7 @@
 import 'package:dolibarr_mobile/core/storage/collections/categories.dart';
 import 'package:dolibarr_mobile/core/storage/collections/contacts.dart';
 import 'package:dolibarr_mobile/core/storage/collections/drafts.dart';
+import 'package:dolibarr_mobile/core/storage/collections/expense_reports.dart';
 import 'package:dolibarr_mobile/core/storage/collections/extrafield_definitions.dart';
 import 'package:dolibarr_mobile/core/storage/collections/invoice_payments.dart';
 import 'package:dolibarr_mobile/core/storage/collections/invoices.dart';
@@ -27,6 +28,9 @@ part 'app_database.g.dart';
     Contacts,
     Categories,
     Drafts,
+    ExpenseLines,
+    ExpenseReports,
+    ExpenseTypes,
     ExtrafieldDefinitions,
     InvoiceLines,
     InvoicePayments,
@@ -47,7 +51,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -81,6 +85,11 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 8) {
             await m.createTable(invoicePayments);
+          }
+          if (from < 9) {
+            await m.createTable(expenseReports);
+            await m.createTable(expenseLines);
+            await m.createTable(expenseTypes);
           }
         },
       );

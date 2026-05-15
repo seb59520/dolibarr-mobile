@@ -3237,6 +3237,2594 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
   }
 }
 
+class $ExpenseLinesTable extends ExpenseLines
+    with TableInfo<$ExpenseLinesTable, ExpenseLineRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ExpenseLinesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<int> remoteId = GeneratedColumn<int>(
+    'remote_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _expenseReportRemoteMeta =
+      const VerificationMeta('expenseReportRemote');
+  @override
+  late final GeneratedColumn<int> expenseReportRemote = GeneratedColumn<int>(
+    'expense_report_remote',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _expenseReportLocalMeta =
+      const VerificationMeta('expenseReportLocal');
+  @override
+  late final GeneratedColumn<int> expenseReportLocal = GeneratedColumn<int>(
+    'expense_report_local',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fkCTypeFeesMeta = const VerificationMeta(
+    'fkCTypeFees',
+  );
+  @override
+  late final GeneratedColumn<int> fkCTypeFees = GeneratedColumn<int>(
+    'fk_c_type_fees',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _codeCTypeFeesMeta = const VerificationMeta(
+    'codeCTypeFees',
+  );
+  @override
+  late final GeneratedColumn<String> codeCTypeFees = GeneratedColumn<String>(
+    'code_c_type_fees',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _commentsMeta = const VerificationMeta(
+    'comments',
+  );
+  @override
+  late final GeneratedColumn<String> comments = GeneratedColumn<String>(
+    'comments',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _qtyMeta = const VerificationMeta('qty');
+  @override
+  late final GeneratedColumn<String> qty = GeneratedColumn<String>(
+    'qty',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('1'),
+  );
+  static const VerificationMeta _valueUnitMeta = const VerificationMeta(
+    'valueUnit',
+  );
+  @override
+  late final GeneratedColumn<String> valueUnit = GeneratedColumn<String>(
+    'value_unit',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tvaTxMeta = const VerificationMeta('tvaTx');
+  @override
+  late final GeneratedColumn<String> tvaTx = GeneratedColumn<String>(
+    'tva_tx',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _totalHtMeta = const VerificationMeta(
+    'totalHt',
+  );
+  @override
+  late final GeneratedColumn<String> totalHt = GeneratedColumn<String>(
+    'total_ht',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _totalTvaMeta = const VerificationMeta(
+    'totalTva',
+  );
+  @override
+  late final GeneratedColumn<String> totalTva = GeneratedColumn<String>(
+    'total_tva',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _totalTtcMeta = const VerificationMeta(
+    'totalTtc',
+  );
+  @override
+  late final GeneratedColumn<String> totalTtc = GeneratedColumn<String>(
+    'total_ttc',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _projetIdMeta = const VerificationMeta(
+    'projetId',
+  );
+  @override
+  late final GeneratedColumn<int> projetId = GeneratedColumn<int>(
+    'projet_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _rangMeta = const VerificationMeta('rang');
+  @override
+  late final GeneratedColumn<int> rang = GeneratedColumn<int>(
+    'rang',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _rawJsonMeta = const VerificationMeta(
+    'rawJson',
+  );
+  @override
+  late final GeneratedColumn<String> rawJson = GeneratedColumn<String>(
+    'raw_json',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tmsMeta = const VerificationMeta('tms');
+  @override
+  late final GeneratedColumn<DateTime> tms = GeneratedColumn<DateTime>(
+    'tms',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _localUpdatedAtMeta = const VerificationMeta(
+    'localUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> localUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'local_updated_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  @override
+  late final GeneratedColumnWithTypeConverter<SyncStatus, int> syncStatus =
+      GeneratedColumn<int>(
+        'sync_status',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: Constant(SyncStatus.synced.index),
+      ).withConverter<SyncStatus>($ExpenseLinesTable.$convertersyncStatus);
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    remoteId,
+    expenseReportRemote,
+    expenseReportLocal,
+    fkCTypeFees,
+    codeCTypeFees,
+    date,
+    comments,
+    qty,
+    valueUnit,
+    tvaTx,
+    totalHt,
+    totalTva,
+    totalTtc,
+    projetId,
+    rang,
+    rawJson,
+    tms,
+    localUpdatedAt,
+    syncStatus,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'expense_lines';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ExpenseLineRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    }
+    if (data.containsKey('expense_report_remote')) {
+      context.handle(
+        _expenseReportRemoteMeta,
+        expenseReportRemote.isAcceptableOrUnknown(
+          data['expense_report_remote']!,
+          _expenseReportRemoteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('expense_report_local')) {
+      context.handle(
+        _expenseReportLocalMeta,
+        expenseReportLocal.isAcceptableOrUnknown(
+          data['expense_report_local']!,
+          _expenseReportLocalMeta,
+        ),
+      );
+    }
+    if (data.containsKey('fk_c_type_fees')) {
+      context.handle(
+        _fkCTypeFeesMeta,
+        fkCTypeFees.isAcceptableOrUnknown(
+          data['fk_c_type_fees']!,
+          _fkCTypeFeesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('code_c_type_fees')) {
+      context.handle(
+        _codeCTypeFeesMeta,
+        codeCTypeFees.isAcceptableOrUnknown(
+          data['code_c_type_fees']!,
+          _codeCTypeFeesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    }
+    if (data.containsKey('comments')) {
+      context.handle(
+        _commentsMeta,
+        comments.isAcceptableOrUnknown(data['comments']!, _commentsMeta),
+      );
+    }
+    if (data.containsKey('qty')) {
+      context.handle(
+        _qtyMeta,
+        qty.isAcceptableOrUnknown(data['qty']!, _qtyMeta),
+      );
+    }
+    if (data.containsKey('value_unit')) {
+      context.handle(
+        _valueUnitMeta,
+        valueUnit.isAcceptableOrUnknown(data['value_unit']!, _valueUnitMeta),
+      );
+    }
+    if (data.containsKey('tva_tx')) {
+      context.handle(
+        _tvaTxMeta,
+        tvaTx.isAcceptableOrUnknown(data['tva_tx']!, _tvaTxMeta),
+      );
+    }
+    if (data.containsKey('total_ht')) {
+      context.handle(
+        _totalHtMeta,
+        totalHt.isAcceptableOrUnknown(data['total_ht']!, _totalHtMeta),
+      );
+    }
+    if (data.containsKey('total_tva')) {
+      context.handle(
+        _totalTvaMeta,
+        totalTva.isAcceptableOrUnknown(data['total_tva']!, _totalTvaMeta),
+      );
+    }
+    if (data.containsKey('total_ttc')) {
+      context.handle(
+        _totalTtcMeta,
+        totalTtc.isAcceptableOrUnknown(data['total_ttc']!, _totalTtcMeta),
+      );
+    }
+    if (data.containsKey('projet_id')) {
+      context.handle(
+        _projetIdMeta,
+        projetId.isAcceptableOrUnknown(data['projet_id']!, _projetIdMeta),
+      );
+    }
+    if (data.containsKey('rang')) {
+      context.handle(
+        _rangMeta,
+        rang.isAcceptableOrUnknown(data['rang']!, _rangMeta),
+      );
+    }
+    if (data.containsKey('raw_json')) {
+      context.handle(
+        _rawJsonMeta,
+        rawJson.isAcceptableOrUnknown(data['raw_json']!, _rawJsonMeta),
+      );
+    }
+    if (data.containsKey('tms')) {
+      context.handle(
+        _tmsMeta,
+        tms.isAcceptableOrUnknown(data['tms']!, _tmsMeta),
+      );
+    }
+    if (data.containsKey('local_updated_at')) {
+      context.handle(
+        _localUpdatedAtMeta,
+        localUpdatedAt.isAcceptableOrUnknown(
+          data['local_updated_at']!,
+          _localUpdatedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_localUpdatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ExpenseLineRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ExpenseLineRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}remote_id'],
+      ),
+      expenseReportRemote: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}expense_report_remote'],
+      ),
+      expenseReportLocal: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}expense_report_local'],
+      ),
+      fkCTypeFees: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fk_c_type_fees'],
+      ),
+      codeCTypeFees: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}code_c_type_fees'],
+      ),
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      ),
+      comments: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}comments'],
+      ),
+      qty: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}qty'],
+      )!,
+      valueUnit: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}value_unit'],
+      ),
+      tvaTx: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tva_tx'],
+      ),
+      totalHt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}total_ht'],
+      ),
+      totalTva: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}total_tva'],
+      ),
+      totalTtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}total_ttc'],
+      ),
+      projetId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}projet_id'],
+      ),
+      rang: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}rang'],
+      )!,
+      rawJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}raw_json'],
+      ),
+      tms: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}tms'],
+      ),
+      localUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}local_updated_at'],
+      )!,
+      syncStatus: $ExpenseLinesTable.$convertersyncStatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}sync_status'],
+        )!,
+      ),
+    );
+  }
+
+  @override
+  $ExpenseLinesTable createAlias(String alias) {
+    return $ExpenseLinesTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<SyncStatus, int, int> $convertersyncStatus =
+      const EnumIndexConverter<SyncStatus>(SyncStatus.values);
+}
+
+class ExpenseLineRow extends DataClass implements Insertable<ExpenseLineRow> {
+  final int id;
+
+  /// `rowid` Dolibarr (`llx_expensereport_det.rowid`).
+  final int? remoteId;
+
+  /// `fk_expensereport` côté Dolibarr (rowid du parent).
+  final int? expenseReportRemote;
+
+  /// FK locale vers ExpenseReports.id quand le parent est encore en
+  /// `pendingCreate` (cascade Outbox 2ᵉ niveau notes-de-frais → ligne).
+  final int? expenseReportLocal;
+
+  /// id Dolibarr (`llx_c_type_fees.id`).
+  final int? fkCTypeFees;
+
+  /// Code textuel correspondant (ex. `TF_LUNCH`) — utile pour les UIs
+  /// et pour reconstruire la FK numérique depuis le cache local des
+  /// types si la table ExpenseTypes a été régénérée entretemps.
+  final String? codeCTypeFees;
+
+  /// Date de la dépense (jour de l'achat).
+  final DateTime? date;
+  final String? comments;
+  final String qty;
+  final String? valueUnit;
+  final String? tvaTx;
+  final String? totalHt;
+  final String? totalTva;
+  final String? totalTtc;
+
+  /// Projet associé Dolibarr (`fk_project`), nullable.
+  final int? projetId;
+  final int rang;
+  final String? rawJson;
+  final DateTime? tms;
+  final DateTime localUpdatedAt;
+  final SyncStatus syncStatus;
+  const ExpenseLineRow({
+    required this.id,
+    this.remoteId,
+    this.expenseReportRemote,
+    this.expenseReportLocal,
+    this.fkCTypeFees,
+    this.codeCTypeFees,
+    this.date,
+    this.comments,
+    required this.qty,
+    this.valueUnit,
+    this.tvaTx,
+    this.totalHt,
+    this.totalTva,
+    this.totalTtc,
+    this.projetId,
+    required this.rang,
+    this.rawJson,
+    this.tms,
+    required this.localUpdatedAt,
+    required this.syncStatus,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<int>(remoteId);
+    }
+    if (!nullToAbsent || expenseReportRemote != null) {
+      map['expense_report_remote'] = Variable<int>(expenseReportRemote);
+    }
+    if (!nullToAbsent || expenseReportLocal != null) {
+      map['expense_report_local'] = Variable<int>(expenseReportLocal);
+    }
+    if (!nullToAbsent || fkCTypeFees != null) {
+      map['fk_c_type_fees'] = Variable<int>(fkCTypeFees);
+    }
+    if (!nullToAbsent || codeCTypeFees != null) {
+      map['code_c_type_fees'] = Variable<String>(codeCTypeFees);
+    }
+    if (!nullToAbsent || date != null) {
+      map['date'] = Variable<DateTime>(date);
+    }
+    if (!nullToAbsent || comments != null) {
+      map['comments'] = Variable<String>(comments);
+    }
+    map['qty'] = Variable<String>(qty);
+    if (!nullToAbsent || valueUnit != null) {
+      map['value_unit'] = Variable<String>(valueUnit);
+    }
+    if (!nullToAbsent || tvaTx != null) {
+      map['tva_tx'] = Variable<String>(tvaTx);
+    }
+    if (!nullToAbsent || totalHt != null) {
+      map['total_ht'] = Variable<String>(totalHt);
+    }
+    if (!nullToAbsent || totalTva != null) {
+      map['total_tva'] = Variable<String>(totalTva);
+    }
+    if (!nullToAbsent || totalTtc != null) {
+      map['total_ttc'] = Variable<String>(totalTtc);
+    }
+    if (!nullToAbsent || projetId != null) {
+      map['projet_id'] = Variable<int>(projetId);
+    }
+    map['rang'] = Variable<int>(rang);
+    if (!nullToAbsent || rawJson != null) {
+      map['raw_json'] = Variable<String>(rawJson);
+    }
+    if (!nullToAbsent || tms != null) {
+      map['tms'] = Variable<DateTime>(tms);
+    }
+    map['local_updated_at'] = Variable<DateTime>(localUpdatedAt);
+    {
+      map['sync_status'] = Variable<int>(
+        $ExpenseLinesTable.$convertersyncStatus.toSql(syncStatus),
+      );
+    }
+    return map;
+  }
+
+  ExpenseLinesCompanion toCompanion(bool nullToAbsent) {
+    return ExpenseLinesCompanion(
+      id: Value(id),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      expenseReportRemote: expenseReportRemote == null && nullToAbsent
+          ? const Value.absent()
+          : Value(expenseReportRemote),
+      expenseReportLocal: expenseReportLocal == null && nullToAbsent
+          ? const Value.absent()
+          : Value(expenseReportLocal),
+      fkCTypeFees: fkCTypeFees == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fkCTypeFees),
+      codeCTypeFees: codeCTypeFees == null && nullToAbsent
+          ? const Value.absent()
+          : Value(codeCTypeFees),
+      date: date == null && nullToAbsent ? const Value.absent() : Value(date),
+      comments: comments == null && nullToAbsent
+          ? const Value.absent()
+          : Value(comments),
+      qty: Value(qty),
+      valueUnit: valueUnit == null && nullToAbsent
+          ? const Value.absent()
+          : Value(valueUnit),
+      tvaTx: tvaTx == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tvaTx),
+      totalHt: totalHt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(totalHt),
+      totalTva: totalTva == null && nullToAbsent
+          ? const Value.absent()
+          : Value(totalTva),
+      totalTtc: totalTtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(totalTtc),
+      projetId: projetId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projetId),
+      rang: Value(rang),
+      rawJson: rawJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rawJson),
+      tms: tms == null && nullToAbsent ? const Value.absent() : Value(tms),
+      localUpdatedAt: Value(localUpdatedAt),
+      syncStatus: Value(syncStatus),
+    );
+  }
+
+  factory ExpenseLineRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ExpenseLineRow(
+      id: serializer.fromJson<int>(json['id']),
+      remoteId: serializer.fromJson<int?>(json['remoteId']),
+      expenseReportRemote: serializer.fromJson<int?>(
+        json['expenseReportRemote'],
+      ),
+      expenseReportLocal: serializer.fromJson<int?>(json['expenseReportLocal']),
+      fkCTypeFees: serializer.fromJson<int?>(json['fkCTypeFees']),
+      codeCTypeFees: serializer.fromJson<String?>(json['codeCTypeFees']),
+      date: serializer.fromJson<DateTime?>(json['date']),
+      comments: serializer.fromJson<String?>(json['comments']),
+      qty: serializer.fromJson<String>(json['qty']),
+      valueUnit: serializer.fromJson<String?>(json['valueUnit']),
+      tvaTx: serializer.fromJson<String?>(json['tvaTx']),
+      totalHt: serializer.fromJson<String?>(json['totalHt']),
+      totalTva: serializer.fromJson<String?>(json['totalTva']),
+      totalTtc: serializer.fromJson<String?>(json['totalTtc']),
+      projetId: serializer.fromJson<int?>(json['projetId']),
+      rang: serializer.fromJson<int>(json['rang']),
+      rawJson: serializer.fromJson<String?>(json['rawJson']),
+      tms: serializer.fromJson<DateTime?>(json['tms']),
+      localUpdatedAt: serializer.fromJson<DateTime>(json['localUpdatedAt']),
+      syncStatus: $ExpenseLinesTable.$convertersyncStatus.fromJson(
+        serializer.fromJson<int>(json['syncStatus']),
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'remoteId': serializer.toJson<int?>(remoteId),
+      'expenseReportRemote': serializer.toJson<int?>(expenseReportRemote),
+      'expenseReportLocal': serializer.toJson<int?>(expenseReportLocal),
+      'fkCTypeFees': serializer.toJson<int?>(fkCTypeFees),
+      'codeCTypeFees': serializer.toJson<String?>(codeCTypeFees),
+      'date': serializer.toJson<DateTime?>(date),
+      'comments': serializer.toJson<String?>(comments),
+      'qty': serializer.toJson<String>(qty),
+      'valueUnit': serializer.toJson<String?>(valueUnit),
+      'tvaTx': serializer.toJson<String?>(tvaTx),
+      'totalHt': serializer.toJson<String?>(totalHt),
+      'totalTva': serializer.toJson<String?>(totalTva),
+      'totalTtc': serializer.toJson<String?>(totalTtc),
+      'projetId': serializer.toJson<int?>(projetId),
+      'rang': serializer.toJson<int>(rang),
+      'rawJson': serializer.toJson<String?>(rawJson),
+      'tms': serializer.toJson<DateTime?>(tms),
+      'localUpdatedAt': serializer.toJson<DateTime>(localUpdatedAt),
+      'syncStatus': serializer.toJson<int>(
+        $ExpenseLinesTable.$convertersyncStatus.toJson(syncStatus),
+      ),
+    };
+  }
+
+  ExpenseLineRow copyWith({
+    int? id,
+    Value<int?> remoteId = const Value.absent(),
+    Value<int?> expenseReportRemote = const Value.absent(),
+    Value<int?> expenseReportLocal = const Value.absent(),
+    Value<int?> fkCTypeFees = const Value.absent(),
+    Value<String?> codeCTypeFees = const Value.absent(),
+    Value<DateTime?> date = const Value.absent(),
+    Value<String?> comments = const Value.absent(),
+    String? qty,
+    Value<String?> valueUnit = const Value.absent(),
+    Value<String?> tvaTx = const Value.absent(),
+    Value<String?> totalHt = const Value.absent(),
+    Value<String?> totalTva = const Value.absent(),
+    Value<String?> totalTtc = const Value.absent(),
+    Value<int?> projetId = const Value.absent(),
+    int? rang,
+    Value<String?> rawJson = const Value.absent(),
+    Value<DateTime?> tms = const Value.absent(),
+    DateTime? localUpdatedAt,
+    SyncStatus? syncStatus,
+  }) => ExpenseLineRow(
+    id: id ?? this.id,
+    remoteId: remoteId.present ? remoteId.value : this.remoteId,
+    expenseReportRemote: expenseReportRemote.present
+        ? expenseReportRemote.value
+        : this.expenseReportRemote,
+    expenseReportLocal: expenseReportLocal.present
+        ? expenseReportLocal.value
+        : this.expenseReportLocal,
+    fkCTypeFees: fkCTypeFees.present ? fkCTypeFees.value : this.fkCTypeFees,
+    codeCTypeFees: codeCTypeFees.present
+        ? codeCTypeFees.value
+        : this.codeCTypeFees,
+    date: date.present ? date.value : this.date,
+    comments: comments.present ? comments.value : this.comments,
+    qty: qty ?? this.qty,
+    valueUnit: valueUnit.present ? valueUnit.value : this.valueUnit,
+    tvaTx: tvaTx.present ? tvaTx.value : this.tvaTx,
+    totalHt: totalHt.present ? totalHt.value : this.totalHt,
+    totalTva: totalTva.present ? totalTva.value : this.totalTva,
+    totalTtc: totalTtc.present ? totalTtc.value : this.totalTtc,
+    projetId: projetId.present ? projetId.value : this.projetId,
+    rang: rang ?? this.rang,
+    rawJson: rawJson.present ? rawJson.value : this.rawJson,
+    tms: tms.present ? tms.value : this.tms,
+    localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+  );
+  ExpenseLineRow copyWithCompanion(ExpenseLinesCompanion data) {
+    return ExpenseLineRow(
+      id: data.id.present ? data.id.value : this.id,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      expenseReportRemote: data.expenseReportRemote.present
+          ? data.expenseReportRemote.value
+          : this.expenseReportRemote,
+      expenseReportLocal: data.expenseReportLocal.present
+          ? data.expenseReportLocal.value
+          : this.expenseReportLocal,
+      fkCTypeFees: data.fkCTypeFees.present
+          ? data.fkCTypeFees.value
+          : this.fkCTypeFees,
+      codeCTypeFees: data.codeCTypeFees.present
+          ? data.codeCTypeFees.value
+          : this.codeCTypeFees,
+      date: data.date.present ? data.date.value : this.date,
+      comments: data.comments.present ? data.comments.value : this.comments,
+      qty: data.qty.present ? data.qty.value : this.qty,
+      valueUnit: data.valueUnit.present ? data.valueUnit.value : this.valueUnit,
+      tvaTx: data.tvaTx.present ? data.tvaTx.value : this.tvaTx,
+      totalHt: data.totalHt.present ? data.totalHt.value : this.totalHt,
+      totalTva: data.totalTva.present ? data.totalTva.value : this.totalTva,
+      totalTtc: data.totalTtc.present ? data.totalTtc.value : this.totalTtc,
+      projetId: data.projetId.present ? data.projetId.value : this.projetId,
+      rang: data.rang.present ? data.rang.value : this.rang,
+      rawJson: data.rawJson.present ? data.rawJson.value : this.rawJson,
+      tms: data.tms.present ? data.tms.value : this.tms,
+      localUpdatedAt: data.localUpdatedAt.present
+          ? data.localUpdatedAt.value
+          : this.localUpdatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExpenseLineRow(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('expenseReportRemote: $expenseReportRemote, ')
+          ..write('expenseReportLocal: $expenseReportLocal, ')
+          ..write('fkCTypeFees: $fkCTypeFees, ')
+          ..write('codeCTypeFees: $codeCTypeFees, ')
+          ..write('date: $date, ')
+          ..write('comments: $comments, ')
+          ..write('qty: $qty, ')
+          ..write('valueUnit: $valueUnit, ')
+          ..write('tvaTx: $tvaTx, ')
+          ..write('totalHt: $totalHt, ')
+          ..write('totalTva: $totalTva, ')
+          ..write('totalTtc: $totalTtc, ')
+          ..write('projetId: $projetId, ')
+          ..write('rang: $rang, ')
+          ..write('rawJson: $rawJson, ')
+          ..write('tms: $tms, ')
+          ..write('localUpdatedAt: $localUpdatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    remoteId,
+    expenseReportRemote,
+    expenseReportLocal,
+    fkCTypeFees,
+    codeCTypeFees,
+    date,
+    comments,
+    qty,
+    valueUnit,
+    tvaTx,
+    totalHt,
+    totalTva,
+    totalTtc,
+    projetId,
+    rang,
+    rawJson,
+    tms,
+    localUpdatedAt,
+    syncStatus,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ExpenseLineRow &&
+          other.id == this.id &&
+          other.remoteId == this.remoteId &&
+          other.expenseReportRemote == this.expenseReportRemote &&
+          other.expenseReportLocal == this.expenseReportLocal &&
+          other.fkCTypeFees == this.fkCTypeFees &&
+          other.codeCTypeFees == this.codeCTypeFees &&
+          other.date == this.date &&
+          other.comments == this.comments &&
+          other.qty == this.qty &&
+          other.valueUnit == this.valueUnit &&
+          other.tvaTx == this.tvaTx &&
+          other.totalHt == this.totalHt &&
+          other.totalTva == this.totalTva &&
+          other.totalTtc == this.totalTtc &&
+          other.projetId == this.projetId &&
+          other.rang == this.rang &&
+          other.rawJson == this.rawJson &&
+          other.tms == this.tms &&
+          other.localUpdatedAt == this.localUpdatedAt &&
+          other.syncStatus == this.syncStatus);
+}
+
+class ExpenseLinesCompanion extends UpdateCompanion<ExpenseLineRow> {
+  final Value<int> id;
+  final Value<int?> remoteId;
+  final Value<int?> expenseReportRemote;
+  final Value<int?> expenseReportLocal;
+  final Value<int?> fkCTypeFees;
+  final Value<String?> codeCTypeFees;
+  final Value<DateTime?> date;
+  final Value<String?> comments;
+  final Value<String> qty;
+  final Value<String?> valueUnit;
+  final Value<String?> tvaTx;
+  final Value<String?> totalHt;
+  final Value<String?> totalTva;
+  final Value<String?> totalTtc;
+  final Value<int?> projetId;
+  final Value<int> rang;
+  final Value<String?> rawJson;
+  final Value<DateTime?> tms;
+  final Value<DateTime> localUpdatedAt;
+  final Value<SyncStatus> syncStatus;
+  const ExpenseLinesCompanion({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.expenseReportRemote = const Value.absent(),
+    this.expenseReportLocal = const Value.absent(),
+    this.fkCTypeFees = const Value.absent(),
+    this.codeCTypeFees = const Value.absent(),
+    this.date = const Value.absent(),
+    this.comments = const Value.absent(),
+    this.qty = const Value.absent(),
+    this.valueUnit = const Value.absent(),
+    this.tvaTx = const Value.absent(),
+    this.totalHt = const Value.absent(),
+    this.totalTva = const Value.absent(),
+    this.totalTtc = const Value.absent(),
+    this.projetId = const Value.absent(),
+    this.rang = const Value.absent(),
+    this.rawJson = const Value.absent(),
+    this.tms = const Value.absent(),
+    this.localUpdatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+  });
+  ExpenseLinesCompanion.insert({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.expenseReportRemote = const Value.absent(),
+    this.expenseReportLocal = const Value.absent(),
+    this.fkCTypeFees = const Value.absent(),
+    this.codeCTypeFees = const Value.absent(),
+    this.date = const Value.absent(),
+    this.comments = const Value.absent(),
+    this.qty = const Value.absent(),
+    this.valueUnit = const Value.absent(),
+    this.tvaTx = const Value.absent(),
+    this.totalHt = const Value.absent(),
+    this.totalTva = const Value.absent(),
+    this.totalTtc = const Value.absent(),
+    this.projetId = const Value.absent(),
+    this.rang = const Value.absent(),
+    this.rawJson = const Value.absent(),
+    this.tms = const Value.absent(),
+    required DateTime localUpdatedAt,
+    this.syncStatus = const Value.absent(),
+  }) : localUpdatedAt = Value(localUpdatedAt);
+  static Insertable<ExpenseLineRow> custom({
+    Expression<int>? id,
+    Expression<int>? remoteId,
+    Expression<int>? expenseReportRemote,
+    Expression<int>? expenseReportLocal,
+    Expression<int>? fkCTypeFees,
+    Expression<String>? codeCTypeFees,
+    Expression<DateTime>? date,
+    Expression<String>? comments,
+    Expression<String>? qty,
+    Expression<String>? valueUnit,
+    Expression<String>? tvaTx,
+    Expression<String>? totalHt,
+    Expression<String>? totalTva,
+    Expression<String>? totalTtc,
+    Expression<int>? projetId,
+    Expression<int>? rang,
+    Expression<String>? rawJson,
+    Expression<DateTime>? tms,
+    Expression<DateTime>? localUpdatedAt,
+    Expression<int>? syncStatus,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (expenseReportRemote != null)
+        'expense_report_remote': expenseReportRemote,
+      if (expenseReportLocal != null)
+        'expense_report_local': expenseReportLocal,
+      if (fkCTypeFees != null) 'fk_c_type_fees': fkCTypeFees,
+      if (codeCTypeFees != null) 'code_c_type_fees': codeCTypeFees,
+      if (date != null) 'date': date,
+      if (comments != null) 'comments': comments,
+      if (qty != null) 'qty': qty,
+      if (valueUnit != null) 'value_unit': valueUnit,
+      if (tvaTx != null) 'tva_tx': tvaTx,
+      if (totalHt != null) 'total_ht': totalHt,
+      if (totalTva != null) 'total_tva': totalTva,
+      if (totalTtc != null) 'total_ttc': totalTtc,
+      if (projetId != null) 'projet_id': projetId,
+      if (rang != null) 'rang': rang,
+      if (rawJson != null) 'raw_json': rawJson,
+      if (tms != null) 'tms': tms,
+      if (localUpdatedAt != null) 'local_updated_at': localUpdatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+    });
+  }
+
+  ExpenseLinesCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? remoteId,
+    Value<int?>? expenseReportRemote,
+    Value<int?>? expenseReportLocal,
+    Value<int?>? fkCTypeFees,
+    Value<String?>? codeCTypeFees,
+    Value<DateTime?>? date,
+    Value<String?>? comments,
+    Value<String>? qty,
+    Value<String?>? valueUnit,
+    Value<String?>? tvaTx,
+    Value<String?>? totalHt,
+    Value<String?>? totalTva,
+    Value<String?>? totalTtc,
+    Value<int?>? projetId,
+    Value<int>? rang,
+    Value<String?>? rawJson,
+    Value<DateTime?>? tms,
+    Value<DateTime>? localUpdatedAt,
+    Value<SyncStatus>? syncStatus,
+  }) {
+    return ExpenseLinesCompanion(
+      id: id ?? this.id,
+      remoteId: remoteId ?? this.remoteId,
+      expenseReportRemote: expenseReportRemote ?? this.expenseReportRemote,
+      expenseReportLocal: expenseReportLocal ?? this.expenseReportLocal,
+      fkCTypeFees: fkCTypeFees ?? this.fkCTypeFees,
+      codeCTypeFees: codeCTypeFees ?? this.codeCTypeFees,
+      date: date ?? this.date,
+      comments: comments ?? this.comments,
+      qty: qty ?? this.qty,
+      valueUnit: valueUnit ?? this.valueUnit,
+      tvaTx: tvaTx ?? this.tvaTx,
+      totalHt: totalHt ?? this.totalHt,
+      totalTva: totalTva ?? this.totalTva,
+      totalTtc: totalTtc ?? this.totalTtc,
+      projetId: projetId ?? this.projetId,
+      rang: rang ?? this.rang,
+      rawJson: rawJson ?? this.rawJson,
+      tms: tms ?? this.tms,
+      localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<int>(remoteId.value);
+    }
+    if (expenseReportRemote.present) {
+      map['expense_report_remote'] = Variable<int>(expenseReportRemote.value);
+    }
+    if (expenseReportLocal.present) {
+      map['expense_report_local'] = Variable<int>(expenseReportLocal.value);
+    }
+    if (fkCTypeFees.present) {
+      map['fk_c_type_fees'] = Variable<int>(fkCTypeFees.value);
+    }
+    if (codeCTypeFees.present) {
+      map['code_c_type_fees'] = Variable<String>(codeCTypeFees.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (comments.present) {
+      map['comments'] = Variable<String>(comments.value);
+    }
+    if (qty.present) {
+      map['qty'] = Variable<String>(qty.value);
+    }
+    if (valueUnit.present) {
+      map['value_unit'] = Variable<String>(valueUnit.value);
+    }
+    if (tvaTx.present) {
+      map['tva_tx'] = Variable<String>(tvaTx.value);
+    }
+    if (totalHt.present) {
+      map['total_ht'] = Variable<String>(totalHt.value);
+    }
+    if (totalTva.present) {
+      map['total_tva'] = Variable<String>(totalTva.value);
+    }
+    if (totalTtc.present) {
+      map['total_ttc'] = Variable<String>(totalTtc.value);
+    }
+    if (projetId.present) {
+      map['projet_id'] = Variable<int>(projetId.value);
+    }
+    if (rang.present) {
+      map['rang'] = Variable<int>(rang.value);
+    }
+    if (rawJson.present) {
+      map['raw_json'] = Variable<String>(rawJson.value);
+    }
+    if (tms.present) {
+      map['tms'] = Variable<DateTime>(tms.value);
+    }
+    if (localUpdatedAt.present) {
+      map['local_updated_at'] = Variable<DateTime>(localUpdatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<int>(
+        $ExpenseLinesTable.$convertersyncStatus.toSql(syncStatus.value),
+      );
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExpenseLinesCompanion(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('expenseReportRemote: $expenseReportRemote, ')
+          ..write('expenseReportLocal: $expenseReportLocal, ')
+          ..write('fkCTypeFees: $fkCTypeFees, ')
+          ..write('codeCTypeFees: $codeCTypeFees, ')
+          ..write('date: $date, ')
+          ..write('comments: $comments, ')
+          ..write('qty: $qty, ')
+          ..write('valueUnit: $valueUnit, ')
+          ..write('tvaTx: $tvaTx, ')
+          ..write('totalHt: $totalHt, ')
+          ..write('totalTva: $totalTva, ')
+          ..write('totalTtc: $totalTtc, ')
+          ..write('projetId: $projetId, ')
+          ..write('rang: $rang, ')
+          ..write('rawJson: $rawJson, ')
+          ..write('tms: $tms, ')
+          ..write('localUpdatedAt: $localUpdatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ExpenseReportsTable extends ExpenseReports
+    with TableInfo<$ExpenseReportsTable, ExpenseReportRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ExpenseReportsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<int> remoteId = GeneratedColumn<int>(
+    'remote_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _refMeta = const VerificationMeta('ref');
+  @override
+  late final GeneratedColumn<String> ref = GeneratedColumn<String>(
+    'ref',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<int> status = GeneratedColumn<int>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _fkUserAuthorMeta = const VerificationMeta(
+    'fkUserAuthor',
+  );
+  @override
+  late final GeneratedColumn<int> fkUserAuthor = GeneratedColumn<int>(
+    'fk_user_author',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fkUserValidMeta = const VerificationMeta(
+    'fkUserValid',
+  );
+  @override
+  late final GeneratedColumn<int> fkUserValid = GeneratedColumn<int>(
+    'fk_user_valid',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateDebutMeta = const VerificationMeta(
+    'dateDebut',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateDebut = GeneratedColumn<DateTime>(
+    'date_debut',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateFinMeta = const VerificationMeta(
+    'dateFin',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateFin = GeneratedColumn<DateTime>(
+    'date_fin',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _totalHtMeta = const VerificationMeta(
+    'totalHt',
+  );
+  @override
+  late final GeneratedColumn<String> totalHt = GeneratedColumn<String>(
+    'total_ht',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _totalTvaMeta = const VerificationMeta(
+    'totalTva',
+  );
+  @override
+  late final GeneratedColumn<String> totalTva = GeneratedColumn<String>(
+    'total_tva',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _totalTtcMeta = const VerificationMeta(
+    'totalTtc',
+  );
+  @override
+  late final GeneratedColumn<String> totalTtc = GeneratedColumn<String>(
+    'total_ttc',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _notePublicMeta = const VerificationMeta(
+    'notePublic',
+  );
+  @override
+  late final GeneratedColumn<String> notePublic = GeneratedColumn<String>(
+    'note_public',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _notePrivateMeta = const VerificationMeta(
+    'notePrivate',
+  );
+  @override
+  late final GeneratedColumn<String> notePrivate = GeneratedColumn<String>(
+    'note_private',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _extrafieldsMeta = const VerificationMeta(
+    'extrafields',
+  );
+  @override
+  late final GeneratedColumn<String> extrafields = GeneratedColumn<String>(
+    'extrafields',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
+  static const VerificationMeta _rawJsonMeta = const VerificationMeta(
+    'rawJson',
+  );
+  @override
+  late final GeneratedColumn<String> rawJson = GeneratedColumn<String>(
+    'raw_json',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tmsMeta = const VerificationMeta('tms');
+  @override
+  late final GeneratedColumn<DateTime> tms = GeneratedColumn<DateTime>(
+    'tms',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _localUpdatedAtMeta = const VerificationMeta(
+    'localUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> localUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'local_updated_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  @override
+  late final GeneratedColumnWithTypeConverter<SyncStatus, int> syncStatus =
+      GeneratedColumn<int>(
+        'sync_status',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: Constant(SyncStatus.synced.index),
+      ).withConverter<SyncStatus>($ExpenseReportsTable.$convertersyncStatus);
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    remoteId,
+    ref,
+    status,
+    fkUserAuthor,
+    fkUserValid,
+    dateDebut,
+    dateFin,
+    totalHt,
+    totalTva,
+    totalTtc,
+    notePublic,
+    notePrivate,
+    extrafields,
+    rawJson,
+    tms,
+    localUpdatedAt,
+    syncStatus,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'expense_reports';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ExpenseReportRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    }
+    if (data.containsKey('ref')) {
+      context.handle(
+        _refMeta,
+        ref.isAcceptableOrUnknown(data['ref']!, _refMeta),
+      );
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('fk_user_author')) {
+      context.handle(
+        _fkUserAuthorMeta,
+        fkUserAuthor.isAcceptableOrUnknown(
+          data['fk_user_author']!,
+          _fkUserAuthorMeta,
+        ),
+      );
+    }
+    if (data.containsKey('fk_user_valid')) {
+      context.handle(
+        _fkUserValidMeta,
+        fkUserValid.isAcceptableOrUnknown(
+          data['fk_user_valid']!,
+          _fkUserValidMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date_debut')) {
+      context.handle(
+        _dateDebutMeta,
+        dateDebut.isAcceptableOrUnknown(data['date_debut']!, _dateDebutMeta),
+      );
+    }
+    if (data.containsKey('date_fin')) {
+      context.handle(
+        _dateFinMeta,
+        dateFin.isAcceptableOrUnknown(data['date_fin']!, _dateFinMeta),
+      );
+    }
+    if (data.containsKey('total_ht')) {
+      context.handle(
+        _totalHtMeta,
+        totalHt.isAcceptableOrUnknown(data['total_ht']!, _totalHtMeta),
+      );
+    }
+    if (data.containsKey('total_tva')) {
+      context.handle(
+        _totalTvaMeta,
+        totalTva.isAcceptableOrUnknown(data['total_tva']!, _totalTvaMeta),
+      );
+    }
+    if (data.containsKey('total_ttc')) {
+      context.handle(
+        _totalTtcMeta,
+        totalTtc.isAcceptableOrUnknown(data['total_ttc']!, _totalTtcMeta),
+      );
+    }
+    if (data.containsKey('note_public')) {
+      context.handle(
+        _notePublicMeta,
+        notePublic.isAcceptableOrUnknown(data['note_public']!, _notePublicMeta),
+      );
+    }
+    if (data.containsKey('note_private')) {
+      context.handle(
+        _notePrivateMeta,
+        notePrivate.isAcceptableOrUnknown(
+          data['note_private']!,
+          _notePrivateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('extrafields')) {
+      context.handle(
+        _extrafieldsMeta,
+        extrafields.isAcceptableOrUnknown(
+          data['extrafields']!,
+          _extrafieldsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('raw_json')) {
+      context.handle(
+        _rawJsonMeta,
+        rawJson.isAcceptableOrUnknown(data['raw_json']!, _rawJsonMeta),
+      );
+    }
+    if (data.containsKey('tms')) {
+      context.handle(
+        _tmsMeta,
+        tms.isAcceptableOrUnknown(data['tms']!, _tmsMeta),
+      );
+    }
+    if (data.containsKey('local_updated_at')) {
+      context.handle(
+        _localUpdatedAtMeta,
+        localUpdatedAt.isAcceptableOrUnknown(
+          data['local_updated_at']!,
+          _localUpdatedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_localUpdatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ExpenseReportRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ExpenseReportRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}remote_id'],
+      ),
+      ref: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ref'],
+      ),
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}status'],
+      )!,
+      fkUserAuthor: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fk_user_author'],
+      ),
+      fkUserValid: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fk_user_valid'],
+      ),
+      dateDebut: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_debut'],
+      ),
+      dateFin: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_fin'],
+      ),
+      totalHt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}total_ht'],
+      ),
+      totalTva: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}total_tva'],
+      ),
+      totalTtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}total_ttc'],
+      ),
+      notePublic: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}note_public'],
+      ),
+      notePrivate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}note_private'],
+      ),
+      extrafields: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}extrafields'],
+      )!,
+      rawJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}raw_json'],
+      ),
+      tms: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}tms'],
+      ),
+      localUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}local_updated_at'],
+      )!,
+      syncStatus: $ExpenseReportsTable.$convertersyncStatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}sync_status'],
+        )!,
+      ),
+    );
+  }
+
+  @override
+  $ExpenseReportsTable createAlias(String alias) {
+    return $ExpenseReportsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<SyncStatus, int, int> $convertersyncStatus =
+      const EnumIndexConverter<SyncStatus>(SyncStatus.values);
+}
+
+class ExpenseReportRow extends DataClass
+    implements Insertable<ExpenseReportRow> {
+  final int id;
+  final int? remoteId;
+
+  /// Référence Dolibarr (ex : `ND2026-0042`). Générée à la validation —
+  /// `(PROVxx)` en brouillon.
+  final String? ref;
+
+  /// 0=draft, 2=validated, 4=approved, 6=paid, 99=refused.
+  final int status;
+
+  /// Auteur de la note de frais (`fk_user_author`).
+  final int? fkUserAuthor;
+
+  /// Valideur souhaité (`fk_user_valid`).
+  final int? fkUserValid;
+
+  /// Date de début de période couverte par la note.
+  final DateTime? dateDebut;
+
+  /// Date de fin de période.
+  final DateTime? dateFin;
+  final String? totalHt;
+  final String? totalTva;
+  final String? totalTtc;
+
+  /// Note publique sur la note de frais (visible dans le PDF).
+  final String? notePublic;
+
+  /// Note privée (interne).
+  final String? notePrivate;
+  final String extrafields;
+  final String? rawJson;
+  final DateTime? tms;
+  final DateTime localUpdatedAt;
+  final SyncStatus syncStatus;
+  const ExpenseReportRow({
+    required this.id,
+    this.remoteId,
+    this.ref,
+    required this.status,
+    this.fkUserAuthor,
+    this.fkUserValid,
+    this.dateDebut,
+    this.dateFin,
+    this.totalHt,
+    this.totalTva,
+    this.totalTtc,
+    this.notePublic,
+    this.notePrivate,
+    required this.extrafields,
+    this.rawJson,
+    this.tms,
+    required this.localUpdatedAt,
+    required this.syncStatus,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<int>(remoteId);
+    }
+    if (!nullToAbsent || ref != null) {
+      map['ref'] = Variable<String>(ref);
+    }
+    map['status'] = Variable<int>(status);
+    if (!nullToAbsent || fkUserAuthor != null) {
+      map['fk_user_author'] = Variable<int>(fkUserAuthor);
+    }
+    if (!nullToAbsent || fkUserValid != null) {
+      map['fk_user_valid'] = Variable<int>(fkUserValid);
+    }
+    if (!nullToAbsent || dateDebut != null) {
+      map['date_debut'] = Variable<DateTime>(dateDebut);
+    }
+    if (!nullToAbsent || dateFin != null) {
+      map['date_fin'] = Variable<DateTime>(dateFin);
+    }
+    if (!nullToAbsent || totalHt != null) {
+      map['total_ht'] = Variable<String>(totalHt);
+    }
+    if (!nullToAbsent || totalTva != null) {
+      map['total_tva'] = Variable<String>(totalTva);
+    }
+    if (!nullToAbsent || totalTtc != null) {
+      map['total_ttc'] = Variable<String>(totalTtc);
+    }
+    if (!nullToAbsent || notePublic != null) {
+      map['note_public'] = Variable<String>(notePublic);
+    }
+    if (!nullToAbsent || notePrivate != null) {
+      map['note_private'] = Variable<String>(notePrivate);
+    }
+    map['extrafields'] = Variable<String>(extrafields);
+    if (!nullToAbsent || rawJson != null) {
+      map['raw_json'] = Variable<String>(rawJson);
+    }
+    if (!nullToAbsent || tms != null) {
+      map['tms'] = Variable<DateTime>(tms);
+    }
+    map['local_updated_at'] = Variable<DateTime>(localUpdatedAt);
+    {
+      map['sync_status'] = Variable<int>(
+        $ExpenseReportsTable.$convertersyncStatus.toSql(syncStatus),
+      );
+    }
+    return map;
+  }
+
+  ExpenseReportsCompanion toCompanion(bool nullToAbsent) {
+    return ExpenseReportsCompanion(
+      id: Value(id),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      ref: ref == null && nullToAbsent ? const Value.absent() : Value(ref),
+      status: Value(status),
+      fkUserAuthor: fkUserAuthor == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fkUserAuthor),
+      fkUserValid: fkUserValid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fkUserValid),
+      dateDebut: dateDebut == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateDebut),
+      dateFin: dateFin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateFin),
+      totalHt: totalHt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(totalHt),
+      totalTva: totalTva == null && nullToAbsent
+          ? const Value.absent()
+          : Value(totalTva),
+      totalTtc: totalTtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(totalTtc),
+      notePublic: notePublic == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notePublic),
+      notePrivate: notePrivate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notePrivate),
+      extrafields: Value(extrafields),
+      rawJson: rawJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rawJson),
+      tms: tms == null && nullToAbsent ? const Value.absent() : Value(tms),
+      localUpdatedAt: Value(localUpdatedAt),
+      syncStatus: Value(syncStatus),
+    );
+  }
+
+  factory ExpenseReportRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ExpenseReportRow(
+      id: serializer.fromJson<int>(json['id']),
+      remoteId: serializer.fromJson<int?>(json['remoteId']),
+      ref: serializer.fromJson<String?>(json['ref']),
+      status: serializer.fromJson<int>(json['status']),
+      fkUserAuthor: serializer.fromJson<int?>(json['fkUserAuthor']),
+      fkUserValid: serializer.fromJson<int?>(json['fkUserValid']),
+      dateDebut: serializer.fromJson<DateTime?>(json['dateDebut']),
+      dateFin: serializer.fromJson<DateTime?>(json['dateFin']),
+      totalHt: serializer.fromJson<String?>(json['totalHt']),
+      totalTva: serializer.fromJson<String?>(json['totalTva']),
+      totalTtc: serializer.fromJson<String?>(json['totalTtc']),
+      notePublic: serializer.fromJson<String?>(json['notePublic']),
+      notePrivate: serializer.fromJson<String?>(json['notePrivate']),
+      extrafields: serializer.fromJson<String>(json['extrafields']),
+      rawJson: serializer.fromJson<String?>(json['rawJson']),
+      tms: serializer.fromJson<DateTime?>(json['tms']),
+      localUpdatedAt: serializer.fromJson<DateTime>(json['localUpdatedAt']),
+      syncStatus: $ExpenseReportsTable.$convertersyncStatus.fromJson(
+        serializer.fromJson<int>(json['syncStatus']),
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'remoteId': serializer.toJson<int?>(remoteId),
+      'ref': serializer.toJson<String?>(ref),
+      'status': serializer.toJson<int>(status),
+      'fkUserAuthor': serializer.toJson<int?>(fkUserAuthor),
+      'fkUserValid': serializer.toJson<int?>(fkUserValid),
+      'dateDebut': serializer.toJson<DateTime?>(dateDebut),
+      'dateFin': serializer.toJson<DateTime?>(dateFin),
+      'totalHt': serializer.toJson<String?>(totalHt),
+      'totalTva': serializer.toJson<String?>(totalTva),
+      'totalTtc': serializer.toJson<String?>(totalTtc),
+      'notePublic': serializer.toJson<String?>(notePublic),
+      'notePrivate': serializer.toJson<String?>(notePrivate),
+      'extrafields': serializer.toJson<String>(extrafields),
+      'rawJson': serializer.toJson<String?>(rawJson),
+      'tms': serializer.toJson<DateTime?>(tms),
+      'localUpdatedAt': serializer.toJson<DateTime>(localUpdatedAt),
+      'syncStatus': serializer.toJson<int>(
+        $ExpenseReportsTable.$convertersyncStatus.toJson(syncStatus),
+      ),
+    };
+  }
+
+  ExpenseReportRow copyWith({
+    int? id,
+    Value<int?> remoteId = const Value.absent(),
+    Value<String?> ref = const Value.absent(),
+    int? status,
+    Value<int?> fkUserAuthor = const Value.absent(),
+    Value<int?> fkUserValid = const Value.absent(),
+    Value<DateTime?> dateDebut = const Value.absent(),
+    Value<DateTime?> dateFin = const Value.absent(),
+    Value<String?> totalHt = const Value.absent(),
+    Value<String?> totalTva = const Value.absent(),
+    Value<String?> totalTtc = const Value.absent(),
+    Value<String?> notePublic = const Value.absent(),
+    Value<String?> notePrivate = const Value.absent(),
+    String? extrafields,
+    Value<String?> rawJson = const Value.absent(),
+    Value<DateTime?> tms = const Value.absent(),
+    DateTime? localUpdatedAt,
+    SyncStatus? syncStatus,
+  }) => ExpenseReportRow(
+    id: id ?? this.id,
+    remoteId: remoteId.present ? remoteId.value : this.remoteId,
+    ref: ref.present ? ref.value : this.ref,
+    status: status ?? this.status,
+    fkUserAuthor: fkUserAuthor.present ? fkUserAuthor.value : this.fkUserAuthor,
+    fkUserValid: fkUserValid.present ? fkUserValid.value : this.fkUserValid,
+    dateDebut: dateDebut.present ? dateDebut.value : this.dateDebut,
+    dateFin: dateFin.present ? dateFin.value : this.dateFin,
+    totalHt: totalHt.present ? totalHt.value : this.totalHt,
+    totalTva: totalTva.present ? totalTva.value : this.totalTva,
+    totalTtc: totalTtc.present ? totalTtc.value : this.totalTtc,
+    notePublic: notePublic.present ? notePublic.value : this.notePublic,
+    notePrivate: notePrivate.present ? notePrivate.value : this.notePrivate,
+    extrafields: extrafields ?? this.extrafields,
+    rawJson: rawJson.present ? rawJson.value : this.rawJson,
+    tms: tms.present ? tms.value : this.tms,
+    localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+  );
+  ExpenseReportRow copyWithCompanion(ExpenseReportsCompanion data) {
+    return ExpenseReportRow(
+      id: data.id.present ? data.id.value : this.id,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      ref: data.ref.present ? data.ref.value : this.ref,
+      status: data.status.present ? data.status.value : this.status,
+      fkUserAuthor: data.fkUserAuthor.present
+          ? data.fkUserAuthor.value
+          : this.fkUserAuthor,
+      fkUserValid: data.fkUserValid.present
+          ? data.fkUserValid.value
+          : this.fkUserValid,
+      dateDebut: data.dateDebut.present ? data.dateDebut.value : this.dateDebut,
+      dateFin: data.dateFin.present ? data.dateFin.value : this.dateFin,
+      totalHt: data.totalHt.present ? data.totalHt.value : this.totalHt,
+      totalTva: data.totalTva.present ? data.totalTva.value : this.totalTva,
+      totalTtc: data.totalTtc.present ? data.totalTtc.value : this.totalTtc,
+      notePublic: data.notePublic.present
+          ? data.notePublic.value
+          : this.notePublic,
+      notePrivate: data.notePrivate.present
+          ? data.notePrivate.value
+          : this.notePrivate,
+      extrafields: data.extrafields.present
+          ? data.extrafields.value
+          : this.extrafields,
+      rawJson: data.rawJson.present ? data.rawJson.value : this.rawJson,
+      tms: data.tms.present ? data.tms.value : this.tms,
+      localUpdatedAt: data.localUpdatedAt.present
+          ? data.localUpdatedAt.value
+          : this.localUpdatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExpenseReportRow(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('ref: $ref, ')
+          ..write('status: $status, ')
+          ..write('fkUserAuthor: $fkUserAuthor, ')
+          ..write('fkUserValid: $fkUserValid, ')
+          ..write('dateDebut: $dateDebut, ')
+          ..write('dateFin: $dateFin, ')
+          ..write('totalHt: $totalHt, ')
+          ..write('totalTva: $totalTva, ')
+          ..write('totalTtc: $totalTtc, ')
+          ..write('notePublic: $notePublic, ')
+          ..write('notePrivate: $notePrivate, ')
+          ..write('extrafields: $extrafields, ')
+          ..write('rawJson: $rawJson, ')
+          ..write('tms: $tms, ')
+          ..write('localUpdatedAt: $localUpdatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    remoteId,
+    ref,
+    status,
+    fkUserAuthor,
+    fkUserValid,
+    dateDebut,
+    dateFin,
+    totalHt,
+    totalTva,
+    totalTtc,
+    notePublic,
+    notePrivate,
+    extrafields,
+    rawJson,
+    tms,
+    localUpdatedAt,
+    syncStatus,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ExpenseReportRow &&
+          other.id == this.id &&
+          other.remoteId == this.remoteId &&
+          other.ref == this.ref &&
+          other.status == this.status &&
+          other.fkUserAuthor == this.fkUserAuthor &&
+          other.fkUserValid == this.fkUserValid &&
+          other.dateDebut == this.dateDebut &&
+          other.dateFin == this.dateFin &&
+          other.totalHt == this.totalHt &&
+          other.totalTva == this.totalTva &&
+          other.totalTtc == this.totalTtc &&
+          other.notePublic == this.notePublic &&
+          other.notePrivate == this.notePrivate &&
+          other.extrafields == this.extrafields &&
+          other.rawJson == this.rawJson &&
+          other.tms == this.tms &&
+          other.localUpdatedAt == this.localUpdatedAt &&
+          other.syncStatus == this.syncStatus);
+}
+
+class ExpenseReportsCompanion extends UpdateCompanion<ExpenseReportRow> {
+  final Value<int> id;
+  final Value<int?> remoteId;
+  final Value<String?> ref;
+  final Value<int> status;
+  final Value<int?> fkUserAuthor;
+  final Value<int?> fkUserValid;
+  final Value<DateTime?> dateDebut;
+  final Value<DateTime?> dateFin;
+  final Value<String?> totalHt;
+  final Value<String?> totalTva;
+  final Value<String?> totalTtc;
+  final Value<String?> notePublic;
+  final Value<String?> notePrivate;
+  final Value<String> extrafields;
+  final Value<String?> rawJson;
+  final Value<DateTime?> tms;
+  final Value<DateTime> localUpdatedAt;
+  final Value<SyncStatus> syncStatus;
+  const ExpenseReportsCompanion({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.ref = const Value.absent(),
+    this.status = const Value.absent(),
+    this.fkUserAuthor = const Value.absent(),
+    this.fkUserValid = const Value.absent(),
+    this.dateDebut = const Value.absent(),
+    this.dateFin = const Value.absent(),
+    this.totalHt = const Value.absent(),
+    this.totalTva = const Value.absent(),
+    this.totalTtc = const Value.absent(),
+    this.notePublic = const Value.absent(),
+    this.notePrivate = const Value.absent(),
+    this.extrafields = const Value.absent(),
+    this.rawJson = const Value.absent(),
+    this.tms = const Value.absent(),
+    this.localUpdatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+  });
+  ExpenseReportsCompanion.insert({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.ref = const Value.absent(),
+    this.status = const Value.absent(),
+    this.fkUserAuthor = const Value.absent(),
+    this.fkUserValid = const Value.absent(),
+    this.dateDebut = const Value.absent(),
+    this.dateFin = const Value.absent(),
+    this.totalHt = const Value.absent(),
+    this.totalTva = const Value.absent(),
+    this.totalTtc = const Value.absent(),
+    this.notePublic = const Value.absent(),
+    this.notePrivate = const Value.absent(),
+    this.extrafields = const Value.absent(),
+    this.rawJson = const Value.absent(),
+    this.tms = const Value.absent(),
+    required DateTime localUpdatedAt,
+    this.syncStatus = const Value.absent(),
+  }) : localUpdatedAt = Value(localUpdatedAt);
+  static Insertable<ExpenseReportRow> custom({
+    Expression<int>? id,
+    Expression<int>? remoteId,
+    Expression<String>? ref,
+    Expression<int>? status,
+    Expression<int>? fkUserAuthor,
+    Expression<int>? fkUserValid,
+    Expression<DateTime>? dateDebut,
+    Expression<DateTime>? dateFin,
+    Expression<String>? totalHt,
+    Expression<String>? totalTva,
+    Expression<String>? totalTtc,
+    Expression<String>? notePublic,
+    Expression<String>? notePrivate,
+    Expression<String>? extrafields,
+    Expression<String>? rawJson,
+    Expression<DateTime>? tms,
+    Expression<DateTime>? localUpdatedAt,
+    Expression<int>? syncStatus,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (ref != null) 'ref': ref,
+      if (status != null) 'status': status,
+      if (fkUserAuthor != null) 'fk_user_author': fkUserAuthor,
+      if (fkUserValid != null) 'fk_user_valid': fkUserValid,
+      if (dateDebut != null) 'date_debut': dateDebut,
+      if (dateFin != null) 'date_fin': dateFin,
+      if (totalHt != null) 'total_ht': totalHt,
+      if (totalTva != null) 'total_tva': totalTva,
+      if (totalTtc != null) 'total_ttc': totalTtc,
+      if (notePublic != null) 'note_public': notePublic,
+      if (notePrivate != null) 'note_private': notePrivate,
+      if (extrafields != null) 'extrafields': extrafields,
+      if (rawJson != null) 'raw_json': rawJson,
+      if (tms != null) 'tms': tms,
+      if (localUpdatedAt != null) 'local_updated_at': localUpdatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+    });
+  }
+
+  ExpenseReportsCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? remoteId,
+    Value<String?>? ref,
+    Value<int>? status,
+    Value<int?>? fkUserAuthor,
+    Value<int?>? fkUserValid,
+    Value<DateTime?>? dateDebut,
+    Value<DateTime?>? dateFin,
+    Value<String?>? totalHt,
+    Value<String?>? totalTva,
+    Value<String?>? totalTtc,
+    Value<String?>? notePublic,
+    Value<String?>? notePrivate,
+    Value<String>? extrafields,
+    Value<String?>? rawJson,
+    Value<DateTime?>? tms,
+    Value<DateTime>? localUpdatedAt,
+    Value<SyncStatus>? syncStatus,
+  }) {
+    return ExpenseReportsCompanion(
+      id: id ?? this.id,
+      remoteId: remoteId ?? this.remoteId,
+      ref: ref ?? this.ref,
+      status: status ?? this.status,
+      fkUserAuthor: fkUserAuthor ?? this.fkUserAuthor,
+      fkUserValid: fkUserValid ?? this.fkUserValid,
+      dateDebut: dateDebut ?? this.dateDebut,
+      dateFin: dateFin ?? this.dateFin,
+      totalHt: totalHt ?? this.totalHt,
+      totalTva: totalTva ?? this.totalTva,
+      totalTtc: totalTtc ?? this.totalTtc,
+      notePublic: notePublic ?? this.notePublic,
+      notePrivate: notePrivate ?? this.notePrivate,
+      extrafields: extrafields ?? this.extrafields,
+      rawJson: rawJson ?? this.rawJson,
+      tms: tms ?? this.tms,
+      localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<int>(remoteId.value);
+    }
+    if (ref.present) {
+      map['ref'] = Variable<String>(ref.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<int>(status.value);
+    }
+    if (fkUserAuthor.present) {
+      map['fk_user_author'] = Variable<int>(fkUserAuthor.value);
+    }
+    if (fkUserValid.present) {
+      map['fk_user_valid'] = Variable<int>(fkUserValid.value);
+    }
+    if (dateDebut.present) {
+      map['date_debut'] = Variable<DateTime>(dateDebut.value);
+    }
+    if (dateFin.present) {
+      map['date_fin'] = Variable<DateTime>(dateFin.value);
+    }
+    if (totalHt.present) {
+      map['total_ht'] = Variable<String>(totalHt.value);
+    }
+    if (totalTva.present) {
+      map['total_tva'] = Variable<String>(totalTva.value);
+    }
+    if (totalTtc.present) {
+      map['total_ttc'] = Variable<String>(totalTtc.value);
+    }
+    if (notePublic.present) {
+      map['note_public'] = Variable<String>(notePublic.value);
+    }
+    if (notePrivate.present) {
+      map['note_private'] = Variable<String>(notePrivate.value);
+    }
+    if (extrafields.present) {
+      map['extrafields'] = Variable<String>(extrafields.value);
+    }
+    if (rawJson.present) {
+      map['raw_json'] = Variable<String>(rawJson.value);
+    }
+    if (tms.present) {
+      map['tms'] = Variable<DateTime>(tms.value);
+    }
+    if (localUpdatedAt.present) {
+      map['local_updated_at'] = Variable<DateTime>(localUpdatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<int>(
+        $ExpenseReportsTable.$convertersyncStatus.toSql(syncStatus.value),
+      );
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExpenseReportsCompanion(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('ref: $ref, ')
+          ..write('status: $status, ')
+          ..write('fkUserAuthor: $fkUserAuthor, ')
+          ..write('fkUserValid: $fkUserValid, ')
+          ..write('dateDebut: $dateDebut, ')
+          ..write('dateFin: $dateFin, ')
+          ..write('totalHt: $totalHt, ')
+          ..write('totalTva: $totalTva, ')
+          ..write('totalTtc: $totalTtc, ')
+          ..write('notePublic: $notePublic, ')
+          ..write('notePrivate: $notePrivate, ')
+          ..write('extrafields: $extrafields, ')
+          ..write('rawJson: $rawJson, ')
+          ..write('tms: $tms, ')
+          ..write('localUpdatedAt: $localUpdatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ExpenseTypesTable extends ExpenseTypes
+    with TableInfo<$ExpenseTypesTable, ExpenseTypeRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ExpenseTypesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _codeMeta = const VerificationMeta('code');
+  @override
+  late final GeneratedColumn<String> code = GeneratedColumn<String>(
+    'code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<int> remoteId = GeneratedColumn<int>(
+    'remote_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _labelMeta = const VerificationMeta('label');
+  @override
+  late final GeneratedColumn<String> label = GeneratedColumn<String>(
+    'label',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _accountancyCodeMeta = const VerificationMeta(
+    'accountancyCode',
+  );
+  @override
+  late final GeneratedColumn<String> accountancyCode = GeneratedColumn<String>(
+    'accountancy_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _activeMeta = const VerificationMeta('active');
+  @override
+  late final GeneratedColumn<bool> active = GeneratedColumn<bool>(
+    'active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("active" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _fetchedAtMeta = const VerificationMeta(
+    'fetchedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> fetchedAt = GeneratedColumn<DateTime>(
+    'fetched_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    code,
+    remoteId,
+    label,
+    accountancyCode,
+    active,
+    fetchedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'expense_types';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ExpenseTypeRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('code')) {
+      context.handle(
+        _codeMeta,
+        code.isAcceptableOrUnknown(data['code']!, _codeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_codeMeta);
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_remoteIdMeta);
+    }
+    if (data.containsKey('label')) {
+      context.handle(
+        _labelMeta,
+        label.isAcceptableOrUnknown(data['label']!, _labelMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_labelMeta);
+    }
+    if (data.containsKey('accountancy_code')) {
+      context.handle(
+        _accountancyCodeMeta,
+        accountancyCode.isAcceptableOrUnknown(
+          data['accountancy_code']!,
+          _accountancyCodeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('active')) {
+      context.handle(
+        _activeMeta,
+        active.isAcceptableOrUnknown(data['active']!, _activeMeta),
+      );
+    }
+    if (data.containsKey('fetched_at')) {
+      context.handle(
+        _fetchedAtMeta,
+        fetchedAt.isAcceptableOrUnknown(data['fetched_at']!, _fetchedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fetchedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {code};
+  @override
+  ExpenseTypeRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ExpenseTypeRow(
+      code: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}code'],
+      )!,
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}remote_id'],
+      )!,
+      label: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}label'],
+      )!,
+      accountancyCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}accountancy_code'],
+      ),
+      active: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}active'],
+      )!,
+      fetchedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}fetched_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ExpenseTypesTable createAlias(String alias) {
+    return $ExpenseTypesTable(attachedDatabase, alias);
+  }
+}
+
+class ExpenseTypeRow extends DataClass implements Insertable<ExpenseTypeRow> {
+  /// Code stable (ex. `TF_LUNCH`).
+  final String code;
+
+  /// id Dolibarr (`llx_c_type_fees.id`), nécessaire pour le POST.
+  final int remoteId;
+  final String label;
+  final String? accountancyCode;
+  final bool active;
+  final DateTime fetchedAt;
+  const ExpenseTypeRow({
+    required this.code,
+    required this.remoteId,
+    required this.label,
+    this.accountancyCode,
+    required this.active,
+    required this.fetchedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['code'] = Variable<String>(code);
+    map['remote_id'] = Variable<int>(remoteId);
+    map['label'] = Variable<String>(label);
+    if (!nullToAbsent || accountancyCode != null) {
+      map['accountancy_code'] = Variable<String>(accountancyCode);
+    }
+    map['active'] = Variable<bool>(active);
+    map['fetched_at'] = Variable<DateTime>(fetchedAt);
+    return map;
+  }
+
+  ExpenseTypesCompanion toCompanion(bool nullToAbsent) {
+    return ExpenseTypesCompanion(
+      code: Value(code),
+      remoteId: Value(remoteId),
+      label: Value(label),
+      accountancyCode: accountancyCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(accountancyCode),
+      active: Value(active),
+      fetchedAt: Value(fetchedAt),
+    );
+  }
+
+  factory ExpenseTypeRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ExpenseTypeRow(
+      code: serializer.fromJson<String>(json['code']),
+      remoteId: serializer.fromJson<int>(json['remoteId']),
+      label: serializer.fromJson<String>(json['label']),
+      accountancyCode: serializer.fromJson<String?>(json['accountancyCode']),
+      active: serializer.fromJson<bool>(json['active']),
+      fetchedAt: serializer.fromJson<DateTime>(json['fetchedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'code': serializer.toJson<String>(code),
+      'remoteId': serializer.toJson<int>(remoteId),
+      'label': serializer.toJson<String>(label),
+      'accountancyCode': serializer.toJson<String?>(accountancyCode),
+      'active': serializer.toJson<bool>(active),
+      'fetchedAt': serializer.toJson<DateTime>(fetchedAt),
+    };
+  }
+
+  ExpenseTypeRow copyWith({
+    String? code,
+    int? remoteId,
+    String? label,
+    Value<String?> accountancyCode = const Value.absent(),
+    bool? active,
+    DateTime? fetchedAt,
+  }) => ExpenseTypeRow(
+    code: code ?? this.code,
+    remoteId: remoteId ?? this.remoteId,
+    label: label ?? this.label,
+    accountancyCode: accountancyCode.present
+        ? accountancyCode.value
+        : this.accountancyCode,
+    active: active ?? this.active,
+    fetchedAt: fetchedAt ?? this.fetchedAt,
+  );
+  ExpenseTypeRow copyWithCompanion(ExpenseTypesCompanion data) {
+    return ExpenseTypeRow(
+      code: data.code.present ? data.code.value : this.code,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      label: data.label.present ? data.label.value : this.label,
+      accountancyCode: data.accountancyCode.present
+          ? data.accountancyCode.value
+          : this.accountancyCode,
+      active: data.active.present ? data.active.value : this.active,
+      fetchedAt: data.fetchedAt.present ? data.fetchedAt.value : this.fetchedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExpenseTypeRow(')
+          ..write('code: $code, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('label: $label, ')
+          ..write('accountancyCode: $accountancyCode, ')
+          ..write('active: $active, ')
+          ..write('fetchedAt: $fetchedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(code, remoteId, label, accountancyCode, active, fetchedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ExpenseTypeRow &&
+          other.code == this.code &&
+          other.remoteId == this.remoteId &&
+          other.label == this.label &&
+          other.accountancyCode == this.accountancyCode &&
+          other.active == this.active &&
+          other.fetchedAt == this.fetchedAt);
+}
+
+class ExpenseTypesCompanion extends UpdateCompanion<ExpenseTypeRow> {
+  final Value<String> code;
+  final Value<int> remoteId;
+  final Value<String> label;
+  final Value<String?> accountancyCode;
+  final Value<bool> active;
+  final Value<DateTime> fetchedAt;
+  final Value<int> rowid;
+  const ExpenseTypesCompanion({
+    this.code = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.label = const Value.absent(),
+    this.accountancyCode = const Value.absent(),
+    this.active = const Value.absent(),
+    this.fetchedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ExpenseTypesCompanion.insert({
+    required String code,
+    required int remoteId,
+    required String label,
+    this.accountancyCode = const Value.absent(),
+    this.active = const Value.absent(),
+    required DateTime fetchedAt,
+    this.rowid = const Value.absent(),
+  }) : code = Value(code),
+       remoteId = Value(remoteId),
+       label = Value(label),
+       fetchedAt = Value(fetchedAt);
+  static Insertable<ExpenseTypeRow> custom({
+    Expression<String>? code,
+    Expression<int>? remoteId,
+    Expression<String>? label,
+    Expression<String>? accountancyCode,
+    Expression<bool>? active,
+    Expression<DateTime>? fetchedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (code != null) 'code': code,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (label != null) 'label': label,
+      if (accountancyCode != null) 'accountancy_code': accountancyCode,
+      if (active != null) 'active': active,
+      if (fetchedAt != null) 'fetched_at': fetchedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ExpenseTypesCompanion copyWith({
+    Value<String>? code,
+    Value<int>? remoteId,
+    Value<String>? label,
+    Value<String?>? accountancyCode,
+    Value<bool>? active,
+    Value<DateTime>? fetchedAt,
+    Value<int>? rowid,
+  }) {
+    return ExpenseTypesCompanion(
+      code: code ?? this.code,
+      remoteId: remoteId ?? this.remoteId,
+      label: label ?? this.label,
+      accountancyCode: accountancyCode ?? this.accountancyCode,
+      active: active ?? this.active,
+      fetchedAt: fetchedAt ?? this.fetchedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (code.present) {
+      map['code'] = Variable<String>(code.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<int>(remoteId.value);
+    }
+    if (label.present) {
+      map['label'] = Variable<String>(label.value);
+    }
+    if (accountancyCode.present) {
+      map['accountancy_code'] = Variable<String>(accountancyCode.value);
+    }
+    if (active.present) {
+      map['active'] = Variable<bool>(active.value);
+    }
+    if (fetchedAt.present) {
+      map['fetched_at'] = Variable<DateTime>(fetchedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExpenseTypesCompanion(')
+          ..write('code: $code, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('label: $label, ')
+          ..write('accountancyCode: $accountancyCode, ')
+          ..write('active: $active, ')
+          ..write('fetchedAt: $fetchedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ExtrafieldDefinitionsTable extends ExtrafieldDefinitions
     with TableInfo<$ExtrafieldDefinitionsTable, ExtrafieldDefinitionRow> {
   @override
@@ -13207,6 +15795,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $ContactsTable contacts = $ContactsTable(this);
   late final $CategoriesTable categories = $CategoriesTable(this);
   late final $DraftsTable drafts = $DraftsTable(this);
+  late final $ExpenseLinesTable expenseLines = $ExpenseLinesTable(this);
+  late final $ExpenseReportsTable expenseReports = $ExpenseReportsTable(this);
+  late final $ExpenseTypesTable expenseTypes = $ExpenseTypesTable(this);
   late final $ExtrafieldDefinitionsTable extrafieldDefinitions =
       $ExtrafieldDefinitionsTable(this);
   late final $InvoiceLinesTable invoiceLines = $InvoiceLinesTable(this);
@@ -13231,6 +15822,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     contacts,
     categories,
     drafts,
+    expenseLines,
+    expenseReports,
+    expenseTypes,
     extrafieldDefinitions,
     invoiceLines,
     invoicePayments,
@@ -14740,6 +17334,1183 @@ typedef $$DraftsTableProcessedTableManager =
       $$DraftsTableUpdateCompanionBuilder,
       (DraftRow, BaseReferences<_$AppDatabase, $DraftsTable, DraftRow>),
       DraftRow,
+      PrefetchHooks Function()
+    >;
+typedef $$ExpenseLinesTableCreateCompanionBuilder =
+    ExpenseLinesCompanion Function({
+      Value<int> id,
+      Value<int?> remoteId,
+      Value<int?> expenseReportRemote,
+      Value<int?> expenseReportLocal,
+      Value<int?> fkCTypeFees,
+      Value<String?> codeCTypeFees,
+      Value<DateTime?> date,
+      Value<String?> comments,
+      Value<String> qty,
+      Value<String?> valueUnit,
+      Value<String?> tvaTx,
+      Value<String?> totalHt,
+      Value<String?> totalTva,
+      Value<String?> totalTtc,
+      Value<int?> projetId,
+      Value<int> rang,
+      Value<String?> rawJson,
+      Value<DateTime?> tms,
+      required DateTime localUpdatedAt,
+      Value<SyncStatus> syncStatus,
+    });
+typedef $$ExpenseLinesTableUpdateCompanionBuilder =
+    ExpenseLinesCompanion Function({
+      Value<int> id,
+      Value<int?> remoteId,
+      Value<int?> expenseReportRemote,
+      Value<int?> expenseReportLocal,
+      Value<int?> fkCTypeFees,
+      Value<String?> codeCTypeFees,
+      Value<DateTime?> date,
+      Value<String?> comments,
+      Value<String> qty,
+      Value<String?> valueUnit,
+      Value<String?> tvaTx,
+      Value<String?> totalHt,
+      Value<String?> totalTva,
+      Value<String?> totalTtc,
+      Value<int?> projetId,
+      Value<int> rang,
+      Value<String?> rawJson,
+      Value<DateTime?> tms,
+      Value<DateTime> localUpdatedAt,
+      Value<SyncStatus> syncStatus,
+    });
+
+class $$ExpenseLinesTableFilterComposer
+    extends Composer<_$AppDatabase, $ExpenseLinesTable> {
+  $$ExpenseLinesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get expenseReportRemote => $composableBuilder(
+    column: $table.expenseReportRemote,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get expenseReportLocal => $composableBuilder(
+    column: $table.expenseReportLocal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get fkCTypeFees => $composableBuilder(
+    column: $table.fkCTypeFees,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get codeCTypeFees => $composableBuilder(
+    column: $table.codeCTypeFees,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get comments => $composableBuilder(
+    column: $table.comments,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get qty => $composableBuilder(
+    column: $table.qty,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get valueUnit => $composableBuilder(
+    column: $table.valueUnit,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tvaTx => $composableBuilder(
+    column: $table.tvaTx,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get totalHt => $composableBuilder(
+    column: $table.totalHt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get totalTva => $composableBuilder(
+    column: $table.totalTva,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get totalTtc => $composableBuilder(
+    column: $table.totalTtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get projetId => $composableBuilder(
+    column: $table.projetId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get rang => $composableBuilder(
+    column: $table.rang,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rawJson => $composableBuilder(
+    column: $table.rawJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get tms => $composableBuilder(
+    column: $table.tms,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<SyncStatus, SyncStatus, int> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+}
+
+class $$ExpenseLinesTableOrderingComposer
+    extends Composer<_$AppDatabase, $ExpenseLinesTable> {
+  $$ExpenseLinesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get expenseReportRemote => $composableBuilder(
+    column: $table.expenseReportRemote,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get expenseReportLocal => $composableBuilder(
+    column: $table.expenseReportLocal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get fkCTypeFees => $composableBuilder(
+    column: $table.fkCTypeFees,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get codeCTypeFees => $composableBuilder(
+    column: $table.codeCTypeFees,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get comments => $composableBuilder(
+    column: $table.comments,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get qty => $composableBuilder(
+    column: $table.qty,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get valueUnit => $composableBuilder(
+    column: $table.valueUnit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tvaTx => $composableBuilder(
+    column: $table.tvaTx,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get totalHt => $composableBuilder(
+    column: $table.totalHt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get totalTva => $composableBuilder(
+    column: $table.totalTva,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get totalTtc => $composableBuilder(
+    column: $table.totalTtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get projetId => $composableBuilder(
+    column: $table.projetId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get rang => $composableBuilder(
+    column: $table.rang,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rawJson => $composableBuilder(
+    column: $table.rawJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get tms => $composableBuilder(
+    column: $table.tms,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ExpenseLinesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ExpenseLinesTable> {
+  $$ExpenseLinesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<int> get expenseReportRemote => $composableBuilder(
+    column: $table.expenseReportRemote,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get expenseReportLocal => $composableBuilder(
+    column: $table.expenseReportLocal,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get fkCTypeFees => $composableBuilder(
+    column: $table.fkCTypeFees,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get codeCTypeFees => $composableBuilder(
+    column: $table.codeCTypeFees,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get comments =>
+      $composableBuilder(column: $table.comments, builder: (column) => column);
+
+  GeneratedColumn<String> get qty =>
+      $composableBuilder(column: $table.qty, builder: (column) => column);
+
+  GeneratedColumn<String> get valueUnit =>
+      $composableBuilder(column: $table.valueUnit, builder: (column) => column);
+
+  GeneratedColumn<String> get tvaTx =>
+      $composableBuilder(column: $table.tvaTx, builder: (column) => column);
+
+  GeneratedColumn<String> get totalHt =>
+      $composableBuilder(column: $table.totalHt, builder: (column) => column);
+
+  GeneratedColumn<String> get totalTva =>
+      $composableBuilder(column: $table.totalTva, builder: (column) => column);
+
+  GeneratedColumn<String> get totalTtc =>
+      $composableBuilder(column: $table.totalTtc, builder: (column) => column);
+
+  GeneratedColumn<int> get projetId =>
+      $composableBuilder(column: $table.projetId, builder: (column) => column);
+
+  GeneratedColumn<int> get rang =>
+      $composableBuilder(column: $table.rang, builder: (column) => column);
+
+  GeneratedColumn<String> get rawJson =>
+      $composableBuilder(column: $table.rawJson, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get tms =>
+      $composableBuilder(column: $table.tms, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<SyncStatus, int> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => column,
+      );
+}
+
+class $$ExpenseLinesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ExpenseLinesTable,
+          ExpenseLineRow,
+          $$ExpenseLinesTableFilterComposer,
+          $$ExpenseLinesTableOrderingComposer,
+          $$ExpenseLinesTableAnnotationComposer,
+          $$ExpenseLinesTableCreateCompanionBuilder,
+          $$ExpenseLinesTableUpdateCompanionBuilder,
+          (
+            ExpenseLineRow,
+            BaseReferences<_$AppDatabase, $ExpenseLinesTable, ExpenseLineRow>,
+          ),
+          ExpenseLineRow,
+          PrefetchHooks Function()
+        > {
+  $$ExpenseLinesTableTableManager(_$AppDatabase db, $ExpenseLinesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ExpenseLinesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ExpenseLinesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ExpenseLinesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> remoteId = const Value.absent(),
+                Value<int?> expenseReportRemote = const Value.absent(),
+                Value<int?> expenseReportLocal = const Value.absent(),
+                Value<int?> fkCTypeFees = const Value.absent(),
+                Value<String?> codeCTypeFees = const Value.absent(),
+                Value<DateTime?> date = const Value.absent(),
+                Value<String?> comments = const Value.absent(),
+                Value<String> qty = const Value.absent(),
+                Value<String?> valueUnit = const Value.absent(),
+                Value<String?> tvaTx = const Value.absent(),
+                Value<String?> totalHt = const Value.absent(),
+                Value<String?> totalTva = const Value.absent(),
+                Value<String?> totalTtc = const Value.absent(),
+                Value<int?> projetId = const Value.absent(),
+                Value<int> rang = const Value.absent(),
+                Value<String?> rawJson = const Value.absent(),
+                Value<DateTime?> tms = const Value.absent(),
+                Value<DateTime> localUpdatedAt = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
+              }) => ExpenseLinesCompanion(
+                id: id,
+                remoteId: remoteId,
+                expenseReportRemote: expenseReportRemote,
+                expenseReportLocal: expenseReportLocal,
+                fkCTypeFees: fkCTypeFees,
+                codeCTypeFees: codeCTypeFees,
+                date: date,
+                comments: comments,
+                qty: qty,
+                valueUnit: valueUnit,
+                tvaTx: tvaTx,
+                totalHt: totalHt,
+                totalTva: totalTva,
+                totalTtc: totalTtc,
+                projetId: projetId,
+                rang: rang,
+                rawJson: rawJson,
+                tms: tms,
+                localUpdatedAt: localUpdatedAt,
+                syncStatus: syncStatus,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> remoteId = const Value.absent(),
+                Value<int?> expenseReportRemote = const Value.absent(),
+                Value<int?> expenseReportLocal = const Value.absent(),
+                Value<int?> fkCTypeFees = const Value.absent(),
+                Value<String?> codeCTypeFees = const Value.absent(),
+                Value<DateTime?> date = const Value.absent(),
+                Value<String?> comments = const Value.absent(),
+                Value<String> qty = const Value.absent(),
+                Value<String?> valueUnit = const Value.absent(),
+                Value<String?> tvaTx = const Value.absent(),
+                Value<String?> totalHt = const Value.absent(),
+                Value<String?> totalTva = const Value.absent(),
+                Value<String?> totalTtc = const Value.absent(),
+                Value<int?> projetId = const Value.absent(),
+                Value<int> rang = const Value.absent(),
+                Value<String?> rawJson = const Value.absent(),
+                Value<DateTime?> tms = const Value.absent(),
+                required DateTime localUpdatedAt,
+                Value<SyncStatus> syncStatus = const Value.absent(),
+              }) => ExpenseLinesCompanion.insert(
+                id: id,
+                remoteId: remoteId,
+                expenseReportRemote: expenseReportRemote,
+                expenseReportLocal: expenseReportLocal,
+                fkCTypeFees: fkCTypeFees,
+                codeCTypeFees: codeCTypeFees,
+                date: date,
+                comments: comments,
+                qty: qty,
+                valueUnit: valueUnit,
+                tvaTx: tvaTx,
+                totalHt: totalHt,
+                totalTva: totalTva,
+                totalTtc: totalTtc,
+                projetId: projetId,
+                rang: rang,
+                rawJson: rawJson,
+                tms: tms,
+                localUpdatedAt: localUpdatedAt,
+                syncStatus: syncStatus,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ExpenseLinesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ExpenseLinesTable,
+      ExpenseLineRow,
+      $$ExpenseLinesTableFilterComposer,
+      $$ExpenseLinesTableOrderingComposer,
+      $$ExpenseLinesTableAnnotationComposer,
+      $$ExpenseLinesTableCreateCompanionBuilder,
+      $$ExpenseLinesTableUpdateCompanionBuilder,
+      (
+        ExpenseLineRow,
+        BaseReferences<_$AppDatabase, $ExpenseLinesTable, ExpenseLineRow>,
+      ),
+      ExpenseLineRow,
+      PrefetchHooks Function()
+    >;
+typedef $$ExpenseReportsTableCreateCompanionBuilder =
+    ExpenseReportsCompanion Function({
+      Value<int> id,
+      Value<int?> remoteId,
+      Value<String?> ref,
+      Value<int> status,
+      Value<int?> fkUserAuthor,
+      Value<int?> fkUserValid,
+      Value<DateTime?> dateDebut,
+      Value<DateTime?> dateFin,
+      Value<String?> totalHt,
+      Value<String?> totalTva,
+      Value<String?> totalTtc,
+      Value<String?> notePublic,
+      Value<String?> notePrivate,
+      Value<String> extrafields,
+      Value<String?> rawJson,
+      Value<DateTime?> tms,
+      required DateTime localUpdatedAt,
+      Value<SyncStatus> syncStatus,
+    });
+typedef $$ExpenseReportsTableUpdateCompanionBuilder =
+    ExpenseReportsCompanion Function({
+      Value<int> id,
+      Value<int?> remoteId,
+      Value<String?> ref,
+      Value<int> status,
+      Value<int?> fkUserAuthor,
+      Value<int?> fkUserValid,
+      Value<DateTime?> dateDebut,
+      Value<DateTime?> dateFin,
+      Value<String?> totalHt,
+      Value<String?> totalTva,
+      Value<String?> totalTtc,
+      Value<String?> notePublic,
+      Value<String?> notePrivate,
+      Value<String> extrafields,
+      Value<String?> rawJson,
+      Value<DateTime?> tms,
+      Value<DateTime> localUpdatedAt,
+      Value<SyncStatus> syncStatus,
+    });
+
+class $$ExpenseReportsTableFilterComposer
+    extends Composer<_$AppDatabase, $ExpenseReportsTable> {
+  $$ExpenseReportsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ref => $composableBuilder(
+    column: $table.ref,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get fkUserAuthor => $composableBuilder(
+    column: $table.fkUserAuthor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get fkUserValid => $composableBuilder(
+    column: $table.fkUserValid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateDebut => $composableBuilder(
+    column: $table.dateDebut,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateFin => $composableBuilder(
+    column: $table.dateFin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get totalHt => $composableBuilder(
+    column: $table.totalHt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get totalTva => $composableBuilder(
+    column: $table.totalTva,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get totalTtc => $composableBuilder(
+    column: $table.totalTtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notePublic => $composableBuilder(
+    column: $table.notePublic,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notePrivate => $composableBuilder(
+    column: $table.notePrivate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rawJson => $composableBuilder(
+    column: $table.rawJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get tms => $composableBuilder(
+    column: $table.tms,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<SyncStatus, SyncStatus, int> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+}
+
+class $$ExpenseReportsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ExpenseReportsTable> {
+  $$ExpenseReportsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ref => $composableBuilder(
+    column: $table.ref,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get fkUserAuthor => $composableBuilder(
+    column: $table.fkUserAuthor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get fkUserValid => $composableBuilder(
+    column: $table.fkUserValid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateDebut => $composableBuilder(
+    column: $table.dateDebut,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateFin => $composableBuilder(
+    column: $table.dateFin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get totalHt => $composableBuilder(
+    column: $table.totalHt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get totalTva => $composableBuilder(
+    column: $table.totalTva,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get totalTtc => $composableBuilder(
+    column: $table.totalTtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notePublic => $composableBuilder(
+    column: $table.notePublic,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notePrivate => $composableBuilder(
+    column: $table.notePrivate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rawJson => $composableBuilder(
+    column: $table.rawJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get tms => $composableBuilder(
+    column: $table.tms,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ExpenseReportsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ExpenseReportsTable> {
+  $$ExpenseReportsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<String> get ref =>
+      $composableBuilder(column: $table.ref, builder: (column) => column);
+
+  GeneratedColumn<int> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<int> get fkUserAuthor => $composableBuilder(
+    column: $table.fkUserAuthor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get fkUserValid => $composableBuilder(
+    column: $table.fkUserValid,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dateDebut =>
+      $composableBuilder(column: $table.dateDebut, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateFin =>
+      $composableBuilder(column: $table.dateFin, builder: (column) => column);
+
+  GeneratedColumn<String> get totalHt =>
+      $composableBuilder(column: $table.totalHt, builder: (column) => column);
+
+  GeneratedColumn<String> get totalTva =>
+      $composableBuilder(column: $table.totalTva, builder: (column) => column);
+
+  GeneratedColumn<String> get totalTtc =>
+      $composableBuilder(column: $table.totalTtc, builder: (column) => column);
+
+  GeneratedColumn<String> get notePublic => $composableBuilder(
+    column: $table.notePublic,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get notePrivate => $composableBuilder(
+    column: $table.notePrivate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get extrafields => $composableBuilder(
+    column: $table.extrafields,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get rawJson =>
+      $composableBuilder(column: $table.rawJson, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get tms =>
+      $composableBuilder(column: $table.tms, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<SyncStatus, int> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => column,
+      );
+}
+
+class $$ExpenseReportsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ExpenseReportsTable,
+          ExpenseReportRow,
+          $$ExpenseReportsTableFilterComposer,
+          $$ExpenseReportsTableOrderingComposer,
+          $$ExpenseReportsTableAnnotationComposer,
+          $$ExpenseReportsTableCreateCompanionBuilder,
+          $$ExpenseReportsTableUpdateCompanionBuilder,
+          (
+            ExpenseReportRow,
+            BaseReferences<
+              _$AppDatabase,
+              $ExpenseReportsTable,
+              ExpenseReportRow
+            >,
+          ),
+          ExpenseReportRow,
+          PrefetchHooks Function()
+        > {
+  $$ExpenseReportsTableTableManager(
+    _$AppDatabase db,
+    $ExpenseReportsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ExpenseReportsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ExpenseReportsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ExpenseReportsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> remoteId = const Value.absent(),
+                Value<String?> ref = const Value.absent(),
+                Value<int> status = const Value.absent(),
+                Value<int?> fkUserAuthor = const Value.absent(),
+                Value<int?> fkUserValid = const Value.absent(),
+                Value<DateTime?> dateDebut = const Value.absent(),
+                Value<DateTime?> dateFin = const Value.absent(),
+                Value<String?> totalHt = const Value.absent(),
+                Value<String?> totalTva = const Value.absent(),
+                Value<String?> totalTtc = const Value.absent(),
+                Value<String?> notePublic = const Value.absent(),
+                Value<String?> notePrivate = const Value.absent(),
+                Value<String> extrafields = const Value.absent(),
+                Value<String?> rawJson = const Value.absent(),
+                Value<DateTime?> tms = const Value.absent(),
+                Value<DateTime> localUpdatedAt = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
+              }) => ExpenseReportsCompanion(
+                id: id,
+                remoteId: remoteId,
+                ref: ref,
+                status: status,
+                fkUserAuthor: fkUserAuthor,
+                fkUserValid: fkUserValid,
+                dateDebut: dateDebut,
+                dateFin: dateFin,
+                totalHt: totalHt,
+                totalTva: totalTva,
+                totalTtc: totalTtc,
+                notePublic: notePublic,
+                notePrivate: notePrivate,
+                extrafields: extrafields,
+                rawJson: rawJson,
+                tms: tms,
+                localUpdatedAt: localUpdatedAt,
+                syncStatus: syncStatus,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> remoteId = const Value.absent(),
+                Value<String?> ref = const Value.absent(),
+                Value<int> status = const Value.absent(),
+                Value<int?> fkUserAuthor = const Value.absent(),
+                Value<int?> fkUserValid = const Value.absent(),
+                Value<DateTime?> dateDebut = const Value.absent(),
+                Value<DateTime?> dateFin = const Value.absent(),
+                Value<String?> totalHt = const Value.absent(),
+                Value<String?> totalTva = const Value.absent(),
+                Value<String?> totalTtc = const Value.absent(),
+                Value<String?> notePublic = const Value.absent(),
+                Value<String?> notePrivate = const Value.absent(),
+                Value<String> extrafields = const Value.absent(),
+                Value<String?> rawJson = const Value.absent(),
+                Value<DateTime?> tms = const Value.absent(),
+                required DateTime localUpdatedAt,
+                Value<SyncStatus> syncStatus = const Value.absent(),
+              }) => ExpenseReportsCompanion.insert(
+                id: id,
+                remoteId: remoteId,
+                ref: ref,
+                status: status,
+                fkUserAuthor: fkUserAuthor,
+                fkUserValid: fkUserValid,
+                dateDebut: dateDebut,
+                dateFin: dateFin,
+                totalHt: totalHt,
+                totalTva: totalTva,
+                totalTtc: totalTtc,
+                notePublic: notePublic,
+                notePrivate: notePrivate,
+                extrafields: extrafields,
+                rawJson: rawJson,
+                tms: tms,
+                localUpdatedAt: localUpdatedAt,
+                syncStatus: syncStatus,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ExpenseReportsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ExpenseReportsTable,
+      ExpenseReportRow,
+      $$ExpenseReportsTableFilterComposer,
+      $$ExpenseReportsTableOrderingComposer,
+      $$ExpenseReportsTableAnnotationComposer,
+      $$ExpenseReportsTableCreateCompanionBuilder,
+      $$ExpenseReportsTableUpdateCompanionBuilder,
+      (
+        ExpenseReportRow,
+        BaseReferences<_$AppDatabase, $ExpenseReportsTable, ExpenseReportRow>,
+      ),
+      ExpenseReportRow,
+      PrefetchHooks Function()
+    >;
+typedef $$ExpenseTypesTableCreateCompanionBuilder =
+    ExpenseTypesCompanion Function({
+      required String code,
+      required int remoteId,
+      required String label,
+      Value<String?> accountancyCode,
+      Value<bool> active,
+      required DateTime fetchedAt,
+      Value<int> rowid,
+    });
+typedef $$ExpenseTypesTableUpdateCompanionBuilder =
+    ExpenseTypesCompanion Function({
+      Value<String> code,
+      Value<int> remoteId,
+      Value<String> label,
+      Value<String?> accountancyCode,
+      Value<bool> active,
+      Value<DateTime> fetchedAt,
+      Value<int> rowid,
+    });
+
+class $$ExpenseTypesTableFilterComposer
+    extends Composer<_$AppDatabase, $ExpenseTypesTable> {
+  $$ExpenseTypesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get code => $composableBuilder(
+    column: $table.code,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get label => $composableBuilder(
+    column: $table.label,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get accountancyCode => $composableBuilder(
+    column: $table.accountancyCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get active => $composableBuilder(
+    column: $table.active,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get fetchedAt => $composableBuilder(
+    column: $table.fetchedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ExpenseTypesTableOrderingComposer
+    extends Composer<_$AppDatabase, $ExpenseTypesTable> {
+  $$ExpenseTypesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get code => $composableBuilder(
+    column: $table.code,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get label => $composableBuilder(
+    column: $table.label,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get accountancyCode => $composableBuilder(
+    column: $table.accountancyCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get active => $composableBuilder(
+    column: $table.active,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get fetchedAt => $composableBuilder(
+    column: $table.fetchedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ExpenseTypesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ExpenseTypesTable> {
+  $$ExpenseTypesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get code =>
+      $composableBuilder(column: $table.code, builder: (column) => column);
+
+  GeneratedColumn<int> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<String> get label =>
+      $composableBuilder(column: $table.label, builder: (column) => column);
+
+  GeneratedColumn<String> get accountancyCode => $composableBuilder(
+    column: $table.accountancyCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get active =>
+      $composableBuilder(column: $table.active, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get fetchedAt =>
+      $composableBuilder(column: $table.fetchedAt, builder: (column) => column);
+}
+
+class $$ExpenseTypesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ExpenseTypesTable,
+          ExpenseTypeRow,
+          $$ExpenseTypesTableFilterComposer,
+          $$ExpenseTypesTableOrderingComposer,
+          $$ExpenseTypesTableAnnotationComposer,
+          $$ExpenseTypesTableCreateCompanionBuilder,
+          $$ExpenseTypesTableUpdateCompanionBuilder,
+          (
+            ExpenseTypeRow,
+            BaseReferences<_$AppDatabase, $ExpenseTypesTable, ExpenseTypeRow>,
+          ),
+          ExpenseTypeRow,
+          PrefetchHooks Function()
+        > {
+  $$ExpenseTypesTableTableManager(_$AppDatabase db, $ExpenseTypesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ExpenseTypesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ExpenseTypesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ExpenseTypesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> code = const Value.absent(),
+                Value<int> remoteId = const Value.absent(),
+                Value<String> label = const Value.absent(),
+                Value<String?> accountancyCode = const Value.absent(),
+                Value<bool> active = const Value.absent(),
+                Value<DateTime> fetchedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ExpenseTypesCompanion(
+                code: code,
+                remoteId: remoteId,
+                label: label,
+                accountancyCode: accountancyCode,
+                active: active,
+                fetchedAt: fetchedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String code,
+                required int remoteId,
+                required String label,
+                Value<String?> accountancyCode = const Value.absent(),
+                Value<bool> active = const Value.absent(),
+                required DateTime fetchedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => ExpenseTypesCompanion.insert(
+                code: code,
+                remoteId: remoteId,
+                label: label,
+                accountancyCode: accountancyCode,
+                active: active,
+                fetchedAt: fetchedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ExpenseTypesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ExpenseTypesTable,
+      ExpenseTypeRow,
+      $$ExpenseTypesTableFilterComposer,
+      $$ExpenseTypesTableOrderingComposer,
+      $$ExpenseTypesTableAnnotationComposer,
+      $$ExpenseTypesTableCreateCompanionBuilder,
+      $$ExpenseTypesTableUpdateCompanionBuilder,
+      (
+        ExpenseTypeRow,
+        BaseReferences<_$AppDatabase, $ExpenseTypesTable, ExpenseTypeRow>,
+      ),
+      ExpenseTypeRow,
       PrefetchHooks Function()
     >;
 typedef $$ExtrafieldDefinitionsTableCreateCompanionBuilder =
@@ -19268,6 +23039,12 @@ class $AppDatabaseManager {
       $$CategoriesTableTableManager(_db, _db.categories);
   $$DraftsTableTableManager get drafts =>
       $$DraftsTableTableManager(_db, _db.drafts);
+  $$ExpenseLinesTableTableManager get expenseLines =>
+      $$ExpenseLinesTableTableManager(_db, _db.expenseLines);
+  $$ExpenseReportsTableTableManager get expenseReports =>
+      $$ExpenseReportsTableTableManager(_db, _db.expenseReports);
+  $$ExpenseTypesTableTableManager get expenseTypes =>
+      $$ExpenseTypesTableTableManager(_db, _db.expenseTypes);
   $$ExtrafieldDefinitionsTableTableManager get extrafieldDefinitions =>
       $$ExtrafieldDefinitionsTableTableManager(_db, _db.extrafieldDefinitions);
   $$InvoiceLinesTableTableManager get invoiceLines =>

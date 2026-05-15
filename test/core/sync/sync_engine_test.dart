@@ -10,6 +10,8 @@ import 'package:dolibarr_mobile/core/sync/sync_engine.dart';
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_local_dao.dart';
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/contacts/domain/entities/contact.dart';
+import 'package:dolibarr_mobile/features/expenses/data/datasources/expense_local_dao.dart';
+import 'package:dolibarr_mobile/features/expenses/data/datasources/expense_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_local_dao.dart';
 import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/projects/data/datasources/project_local_dao.dart';
@@ -49,6 +51,10 @@ class _MockInvDao extends Mock implements InvoiceLocalDao {}
 class _MockPrRemote extends Mock implements ProposalRemoteDataSource {}
 
 class _MockPrDao extends Mock implements ProposalLocalDao {}
+
+class _MockExpRemote extends Mock implements ExpenseRemoteDataSource {}
+
+class _MockExpDao extends Mock implements ExpenseLocalDao {}
 
 class _StubNetwork implements NetworkInfo {
   _StubNetwork({bool online = true}) : _online = online;
@@ -115,6 +121,8 @@ void main() {
   late _MockInvDao invDao;
   late _MockPrRemote prRemote;
   late _MockPrDao prDao;
+  late _MockExpRemote expRemote;
+  late _MockExpDao expDao;
   late _StubNetwork network;
   late SyncEngine engine;
 
@@ -134,6 +142,8 @@ void main() {
     invDao = _MockInvDao();
     prRemote = _MockPrRemote();
     prDao = _MockPrDao();
+    expRemote = _MockExpRemote();
+    expDao = _MockExpDao();
     network = _StubNetwork();
     now = DateTime(2026, 5, 9, 12);
 
@@ -151,6 +161,8 @@ void main() {
       invoiceDao: invDao,
       proposalRemote: prRemote,
       proposalDao: prDao,
+      expenseRemote: expRemote,
+      expenseDao: expDao,
       network: network,
       now: () => now,
     );

@@ -8,6 +8,8 @@ import 'package:dolibarr_mobile/core/storage/pending_operation_dao.dart';
 import 'package:dolibarr_mobile/core/storage/sync_status.dart';
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_local_dao.dart';
 import 'package:dolibarr_mobile/features/contacts/data/datasources/contact_remote_datasource.dart';
+import 'package:dolibarr_mobile/features/expenses/data/datasources/expense_local_dao.dart';
+import 'package:dolibarr_mobile/features/expenses/data/datasources/expense_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_local_dao.dart';
 import 'package:dolibarr_mobile/features/invoices/data/datasources/invoice_remote_datasource.dart';
 import 'package:dolibarr_mobile/features/projects/data/datasources/project_local_dao.dart';
@@ -78,6 +80,8 @@ class SyncEngine {
     required InvoiceLocalDao invoiceDao,
     required ProposalRemoteDataSource proposalRemote,
     required ProposalLocalDao proposalDao,
+    required ExpenseRemoteDataSource expenseRemote,
+    required ExpenseLocalDao expenseDao,
     required NetworkInfo network,
     Logger? logger,
     DateTime Function() now = DateTime.now,
@@ -94,6 +98,8 @@ class SyncEngine {
         _invoiceDao = invoiceDao,
         _proposalRemote = proposalRemote,
         _proposalDao = proposalDao,
+        _expenseRemote = expenseRemote,
+        _expenseDao = expenseDao,
         _network = network,
         _logger = logger ?? Logger(printer: SimplePrinter()),
         _now = now;
@@ -111,6 +117,8 @@ class SyncEngine {
   final InvoiceLocalDao _invoiceDao;
   final ProposalRemoteDataSource _proposalRemote;
   final ProposalLocalDao _proposalDao;
+  final ExpenseRemoteDataSource _expenseRemote;
+  final ExpenseLocalDao _expenseDao;
   final NetworkInfo _network;
   final Logger _logger;
   final DateTime Function() _now;
@@ -214,6 +222,10 @@ class SyncEngine {
           await _proposalDao.hardDelete(row.targetLocalId);
         case PendingOpEntity.proposalLine:
           await _proposalDao.hardDeleteLine(row.targetLocalId);
+        case PendingOpEntity.expenseReport:
+          await _expenseDao.hardDelete(row.targetLocalId);
+        case PendingOpEntity.expenseLine:
+          await _expenseDao.hardDeleteLine(row.targetLocalId);
       }
     }
     await _outbox.deleteById(opId);
@@ -241,6 +253,10 @@ class SyncEngine {
           await _dispatchProposal(op);
         case PendingOpEntity.proposalLine:
           await _dispatchProposalLine(op);
+        case PendingOpEntity.expenseReport:
+          await _dispatchExpenseReport(op);
+        case PendingOpEntity.expenseLine:
+          await _dispatchExpenseLine(op);
       }
       await _outbox.completeAndUnblockChildren(op.id);
       return _Outcome.success;
@@ -306,6 +322,10 @@ class SyncEngine {
         await _proposalDao.markConflict(op.targetLocalId);
       case PendingOpEntity.proposalLine:
         await _proposalDao.markLineConflict(op.targetLocalId);
+      case PendingOpEntity.expenseReport:
+        await _expenseDao.markConflict(op.targetLocalId);
+      case PendingOpEntity.expenseLine:
+        await _expenseDao.markLineConflict(op.targetLocalId);
     }
   }
 
@@ -826,6 +846,126 @@ class SyncEngine {
     }
   }
 
+  // -------------------------- Expense report ---------------------------
+
+  Future<void> _dispatchExpenseReport(PendingOperationRow op) async {
+    final payload = _decodePayload(op.payload);
+    switch (op.opType) {
+      case PendingOpType.create:
+        final remoteId = await _expenseRemote.create(payload);
+        DateTime? serverTms;
+        try {
+          final got = await _expenseRemote.fetchById(remoteId);
+          serverTms = _parseTms(got['tms']);
+        } catch (_) {
+          // pas critique
+        }
+        await _expenseDao.markSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: remoteId,
+          tms: serverTms,
+        );
+        // Cascade 2ᵉ niveau : patche les lignes orphelines en attente.
+        await _expenseDao.patchExpenseReportRemoteByParent(
+          parentLocalId: op.targetLocalId,
+          parentRemoteId: remoteId,
+        );
+
+      case PendingOpType.update:
+        if (op.expectedTms != null) {
+          final freshFromServer =
+              await _expenseRemote.fetchById(op.targetRemoteId!);
+          final serverTms = _parseTms(freshFromServer['tms']);
+          if (serverTms != null && serverTms.isAfter(op.expectedTms!)) {
+            throw _ConflictDetected(
+              'Modifié sur le serveur (tms=$serverTms vs ${op.expectedTms})',
+            );
+          }
+        }
+        final body = await _expenseRemote.update(
+          op.targetRemoteId!,
+          payload,
+        );
+        await _expenseDao.markSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: op.targetRemoteId!,
+          tms: _parseTms(body['tms']),
+        );
+
+      case PendingOpType.delete:
+        await _expenseRemote.delete(op.targetRemoteId!);
+        await _expenseDao.clearAfterServerDelete(op.targetLocalId);
+    }
+  }
+
+  // -------------------------- Expense line -----------------------------
+
+  Future<void> _dispatchExpenseLine(PendingOperationRow op) async {
+    final payload = _decodePayload(op.payload);
+    switch (op.opType) {
+      case PendingOpType.create:
+        // Ré-injecte le code_type_fees → fk_c_type_fees depuis le cache
+        // local si la note parente est désormais résolue.
+        final fresh =
+            await _expenseDao.watchLineById(op.targetLocalId).first;
+        final reportRemote = fresh?.expenseReportRemote;
+        if (reportRemote == null) {
+          throw const ValidationException(
+            message: 'Note de frais parente non synchronisée — '
+                'impossible de créer la ligne.',
+          );
+        }
+        // Garde-fou : si le payload a un code mais pas d'id (lookup
+        // raté côté repo), on essaie de résoudre depuis le cache local.
+        if (payload['fk_c_type_fees'] == null &&
+            fresh?.codeCTypeFees != null) {
+          final id = await _expenseDao
+              .resolveTypeIdByCode(fresh!.codeCTypeFees!);
+          if (id != null) payload['fk_c_type_fees'] = id;
+        }
+        final remoteId =
+            await _expenseRemote.createLine(reportRemote, payload);
+        await _expenseDao.markLineSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: remoteId,
+        );
+
+      case PendingOpType.update:
+        final fresh =
+            await _expenseDao.findLineByLocalId(op.targetLocalId);
+        final reportRemote = fresh?.expenseReportRemote;
+        if (reportRemote == null) {
+          throw const ValidationException(
+            message: 'Note de frais parente non synchronisée — '
+                'impossible de modifier la ligne.',
+          );
+        }
+        await _expenseRemote.updateLine(
+          reportRemote,
+          op.targetRemoteId!,
+          payload,
+        );
+        await _expenseDao.markLineSyncedWithRemote(
+          localId: op.targetLocalId,
+          remoteId: op.targetRemoteId!,
+        );
+
+      case PendingOpType.delete:
+        final fresh =
+            await _expenseDao.findLineByLocalId(op.targetLocalId);
+        final reportRemote = fresh?.expenseReportRemote;
+        if (reportRemote == null) {
+          await _expenseDao.clearLineAfterServerDelete(op.targetLocalId);
+          return;
+        }
+        await _expenseRemote.deleteLine(
+          reportRemote,
+          op.targetRemoteId!,
+        );
+        await _expenseDao.clearLineAfterServerDelete(op.targetLocalId);
+    }
+  }
+
   // -------------------------- Helpers ----------------------------------
 
   Future<void> _applyAfterDelete(PendingOperationRow op) async {
@@ -846,6 +986,10 @@ class SyncEngine {
         await _proposalDao.clearAfterServerDelete(op.targetLocalId);
       case PendingOpEntity.proposalLine:
         await _proposalDao.clearLineAfterServerDelete(op.targetLocalId);
+      case PendingOpEntity.expenseReport:
+        await _expenseDao.clearAfterServerDelete(op.targetLocalId);
+      case PendingOpEntity.expenseLine:
+        await _expenseDao.clearLineAfterServerDelete(op.targetLocalId);
     }
   }
 

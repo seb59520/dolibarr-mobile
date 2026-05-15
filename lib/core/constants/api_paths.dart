@@ -59,6 +59,31 @@ abstract final class ApiPaths {
   static String proposalClose(int id) => '/proposals/$id/close';
   static String proposalSetInvoiced(int id) => '/proposals/$id/setinvoiced';
 
+  // Notes de frais (expense reports)
+  static const String expenseReports = '/expensereports';
+  static String expenseReportById(int id) => '/expensereports/$id';
+  static String expenseReportLines(int id) => '/expensereports/$id/lines';
+  // ATTENTION : POST utilise `/line` (singulier) côté Dolibarr, alors que
+  // GET liste l'utilise au pluriel. Voir api_expensereports.class.php
+  // (@url POST {id}/line vs @url GET {id}/lines).
+  static String expenseReportLineCreate(int id) =>
+      '/expensereports/$id/line';
+  static String expenseReportLineById(int id, int lineId) =>
+      '/expensereports/$id/lines/$lineId';
+  static String expenseReportValidate(int id) =>
+      '/expensereports/$id/validate';
+  static String expenseReportApprove(int id) =>
+      '/expensereports/$id/approve';
+
+  /// Cache local du dictionnaire `c_type_fees` (codes et IDs des types
+  /// de frais : TF_LUNCH, EX_HOT, etc.).
+  static const String expenseReportTypes =
+      '/setup/dictionary/expensereport_types';
+
+  // Documents (upload + download). Upload utilisé pour les justificatifs
+  // ECM (modulepart=expensereport, ref=<ref note>).
+  static const String documentUpload = '/documents/upload';
+
   // Documents (PDF). Le module appelant + le nom du fichier serveur
   // sont passés en query string : ?modulepart=facture&original_file=...
   static const String documentDownload = '/documents/download';

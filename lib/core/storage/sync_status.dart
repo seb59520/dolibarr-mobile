@@ -50,4 +50,6 @@ enum PendingOpEntity {
   invoiceLine,
   proposal,
   proposalLine,
+  expenseReport,
+  expenseLine,
 }
